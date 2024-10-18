@@ -1,0 +1,3 @@
+encryption of local storage data 
+implement logout by calling a logout endpoint
+receiving device details ( browser, OS, device name)

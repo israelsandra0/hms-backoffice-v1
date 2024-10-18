@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+  body{
+    @apply bg-slate-50 
+  }
+  /* form{
+    @apply bg-gray-900 w-[400px] h-full text-center py-[2.5rem] rounded-[15px]
+  }*/
+  /* form input {
+    @apply focus-visible:ring-0
+  } */
+  /* form i {
+    @apply text-black p-1 pl-2 absolute rounded-l-[15px]
+  }
+  form button{
+    @apply mx-2
+  }
+  .signUpBox input{
+    @apply  pl-4
+  } */
+/* } */
+
+/* body{
+    @apply bg-gray-800 text-white grid place-items-center mt-[5rem]
+  }*/
+}
