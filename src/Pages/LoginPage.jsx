@@ -12,6 +12,8 @@ import { AUTH_DATA_KEY, USER_DATA_KEY } from "@/constants"
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query"
 import { UAParser } from "ua-parser-js"
 // import UAParser from "ua-parser-js"
+import { BACKEND_URL } from "@/constants"
+
 
 
 const queryClient = new  QueryClient()
@@ -56,7 +58,7 @@ function QueryCode() {
         console.log("access token: ", token)
 
         try {
-            const res = await fetch('https://hms.atslng.com/api/me', {
+            const res = await fetch(`${BACKEND_URL}/auth/me`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`, // Pass JWT via Authorization header
@@ -157,20 +159,18 @@ function QueryCode() {
             
             setDisabledButton(true)
 
-            const res = await fetch('https://hms.atslng.com/api/login', {
+            const res = await fetch(`${BACKEND_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     username: userInput.username,
                     password: userInput.password,
-                    deviceDetails:[
-                        {
+                    deviceDetails:{
                             "deviceName": !parserResults?.device?.name ? 'unknown' : `${parserResults.device.vendor} - ${parserResults.device.model} (${parserResults.device.type}) ` ,
                             "os": `${parserResults.os.name} ${parserResults.os.version}`,
                             "browserName": `${parserResults.browser.name} ${parserResults.browser.version}`
                         }
-                    ]
-                })
+                    })
             })
             if(res.status === 400 ){
                 setDisabledButton(false)
