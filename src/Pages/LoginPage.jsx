@@ -13,6 +13,7 @@ import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-quer
 import { UAParser } from "ua-parser-js"
 // import UAParser from "ua-parser-js"
 import { BACKEND_URL } from "@/constants"
+import { encode } from "@/functions"
 
 
 
@@ -51,8 +52,6 @@ function QueryCode() {
     const [disabledButton, setDisabledButton] = useState(false)
 
     
-    
-    
     //getting the user access token from the response then passing it as a parameter
     async function getAuthUser(token){ 
         console.log("access token: ", token)
@@ -68,7 +67,7 @@ function QueryCode() {
 
             const response = await res.json()
             console.log(response)
-            localStorage.setItem(USER_DATA_KEY, JSON.stringify(response.data)) 
+            localStorage.setItem(USER_DATA_KEY, encode(JSON.stringify(response.data))) 
 
             
             // console.log(data)
@@ -143,12 +142,54 @@ function QueryCode() {
     
     //using refetch allows to trigger the useQuery manually
     
+    // const username = document.querySelector('#inpPlain')
+    // const $inpEncoded = document.querySelector('#inpEncoded');
+
+    // function bytesToBase64(bytes) {
+    //     const binString = Array.from(bytes, (byte) =>
+    //         String.fromCodePoint(byte),
+    //     ).join("");
+    //     return btoa(binString);
+    // }
+
+    // function secretReplace(plain) {
+    //     return plain
+    //         .replace(/[a]/g, '?x_')
+    //         .replace(/[m]/g, '?n_')
+    //         .replace(/[z]/g, '?a_')
+    // }
+    // function encode(text) {
+    //     // replace carriage returns and new line feeds
+    //     text = text.replace(/[\r\n]/g, '', new TextEncoder().encode(text))
+        
+    //     // base64 encode
+    //     const base64Encoded = bytesToBase64(Uint8Array.from(text, (m) => m.codePointAt(0)))
+    //     console.log('Here: ', {base64Encoded})
+    //     localStorage.setItem('dataKey', JSON.stringify(base64Encoded));
+
+    //     // replace a, b, c
+    //     const replaced = secretReplace(base64Encoded)
+
+    //     // return string
+    //     return replaced
+    // }
+    
+
+    // const value = username.trim()
+
+    // if (!value.length) alert("enter value to encode")
+
+    // $inpEncoded.textContent = encode();
+
+
+
     const {refetch} = useQuery({
         enabled: false, //disables it from executing immediately 
         queryKey: ['login'],
         queryFn: async () => {
             const userInput = getValues() //hook form function to get user input data
             console.log('working', {userInput})
+
 
             //getting user device details
             let parser = new UAParser(window.navigator.userAgent) // you need to pass the user-agent for nodejs
@@ -163,7 +204,7 @@ function QueryCode() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    username: userInput.username,
+                    username: userInput.username, 
                     password: userInput.password,
                     deviceDetails:{
                             "deviceName": !parserResults?.device?.name ? 'unknown' : `${parserResults.device.vendor} - ${parserResults.device.model} (${parserResults.device.type}) ` ,
@@ -175,23 +216,23 @@ function QueryCode() {
             if(res.status === 400 ){
                 setDisabledButton(false)
                 return setErrorMessage('Invalid credentials')
-            }
-            
+            }   
+               
             const responseData = await res.json();
+            console.log("fetched data:", responseData)
 
-             console.log("fetched data:", responseData)
+
 
             //user data storage and page navigation
-            localStorage.setItem(AUTH_DATA_KEY, JSON.stringify(responseData));
+            localStorage.setItem(AUTH_DATA_KEY, encode(JSON.stringify(responseData)));
             
             // Call your function to get the authenticated user
             //passed the access token as an argument to access the token from the data
             await getAuthUser(responseData.accessToken);
+
             
             // navigate("/Dashboard")
-
-            setTimeout(() =>  window.location.href = '/dashboard', 100)
-
+            // setTimeout(() =>  window.location.href = '/dashboard', 100)
             // setTimeout(() =>  navigate("/Dashboard"), 100)
             
             setDisabledButton(false)
@@ -253,7 +294,7 @@ function QueryCode() {
                             <div className="flex flex-col space-y-1.5">
                                 {/* <Label className="text-white">Username</Label> */}
                                 {/* registers the username as a data */}
-                                <Input  {...register('username')} placeholder="Username"/>
+                                <Input  {...register('username')} placeholder="Username" id="inpPlain"/>
                                 <p  className="text-red-700">{errors.username?.message}</p>
                             </div>
 
@@ -262,8 +303,10 @@ function QueryCode() {
                                 <Input type="password" {...register('password')} placeholder="Password" />
                                 <p  className="text-red-700">{errors.password?.message}</p>
                             </div>
+
                         </div><br />
                         <Button variant="outline" disabled={!!disabledButton} type='submit' className=" bg-gray-500 text-white">{disabledButton ? 'Submitting...' : 'Log In'}</Button>
+                        {/* <Button variant="outline"type='submit' className=" bg-gray-500 text-white" id="btnEncode">Log</Button> */}
                     
                     </form>
                 </CardContent>

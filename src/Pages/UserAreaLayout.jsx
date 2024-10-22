@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { useNavigate } from "react-router-dom";
 import { RequireAuth } from "./Auth";
-import { AUTH_DATA_KEY } from "@/constants"
+import { AUTH_DATA_KEY, BACKEND_URL } from "@/constants"
 
 export const description = 
     "A products dashboard with a sidebar navigation and a main content area. The dashboard has a header with a search input and a user menu. The sidebar has a logo, navigation links, and a card with a call to action. The main content area shows an empty state with a call to action."
@@ -21,7 +21,7 @@ export default function UserAreaLayout() {
     async function logOut() {
         try{
             const token = JSON.parse(localStorage.getItem(AUTH_DATA_KEY))?.accessToken
-            const res = await fetch('https://hms.atslng.com/api/logout', {
+            const res = await fetch(`${BACKEND_URL}/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
