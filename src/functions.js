@@ -48,3 +48,19 @@ export function decode(text) {
     // decode
     return new TextDecoder().decode(base64ToBytes(secretReplaceReverse(replaced)))
 }
+
+
+
+export function getData(key){
+
+    if (!localStorage.getItem(key, decode(JSON.stringify(key).length))){
+        return ''
+    }
+
+   return localStorage.getItemItem(key, decode(JSON.stringify(key)))
+}
+
+export function getDataObject(key){
+
+   return JSON.parse(localStorage.getItem(key, decode(JSON.stringify(key))) || '{}')
+}
