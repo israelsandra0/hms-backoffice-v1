@@ -14,7 +14,7 @@ export default function ClientsPage(){
 
     const { data, error} = useQuery({
         queryKey: ['clientsData'],
-        queryFn: async () => {
+        queryFn: async (token) => {
             const res = await fetch(`${BACKEND_URL}/clients`, {
                 method: 'GET',
                 headers: {
