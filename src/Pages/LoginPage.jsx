@@ -1,34 +1,22 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-// import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription} from "@/components/ui/alert"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup'
-// import { useNavigate } from "react-router-dom";
 import { useState } from "react"
 import { AUTH_DATA_KEY, USER_DATA_KEY } from "@/constants"
-import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { UAParser } from "ua-parser-js"
-// import UAParser from "ua-parser-js"
 import { BACKEND_URL } from "@/constants"
 import { encode } from "@/functions"
 
 
 
-const queryClient = new  QueryClient()
-
-export default function LoginPage(){
-    return(
-        <QueryClientProvider client={queryClient}>
-            <QueryCode />
-        </QueryClientProvider>
-    )
-}
 
 
-function QueryCode() {
+export default function LoginPage() {
 
     //yup builder for input error msg
     const yupBuild = yup.object({
@@ -182,7 +170,6 @@ function QueryCode() {
     // $inpEncoded.textContent = encode();
 
 
-
     const {refetch} = useQuery({
         enabled: false, //disables it from executing immediately 
         queryKey: ['login'],
@@ -200,43 +187,55 @@ function QueryCode() {
             
             setDisabledButton(true)
 
-            const res = await fetch(`${BACKEND_URL}/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username: userInput.username, 
-                    password: userInput.password,
-                    deviceDetails:{
-                            "deviceName": !parserResults?.device?.name ? 'unknown' : `${parserResults.device.vendor} - ${parserResults.device.model} (${parserResults.device.type}) ` ,
-                            "os": `${parserResults.os.name} ${parserResults.os.version}`,
-                            "browserName": `${parserResults.browser.name} ${parserResults.browser.version}`
-                        }
-                    })
-            })
-            if(res.status === 400 ){
+           try{
+                const res = await fetch(`${BACKEND_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: userInput.username, 
+                        password: userInput.password,
+                        deviceDetails:{
+                                "deviceName": !parserResults?.device?.name ? 'unknown' : `${parserResults.device.vendor} - ${parserResults.device.model} (${parserResults.device.type}) ` ,
+                                "os": `${parserResults.os.name} ${parserResults.os.version}`,
+                                "browserName": `${parserResults.browser.name} ${parserResults.browser.version}`
+                            }
+                        })
+                })
+                if(res.status === 400 ){
+                    setDisabledButton(false)
+                    setErrorMessage('Invalid credentials')
+                    return {}
+                }   
+                if(res.status === 500 ){
+                    setDisabledButton(false)
+                    setErrorMessage('An error occurred, please try again')
+                    return {}
+                }   
+                const responseData = await res.json();
+                console.log("fetched data:", responseData)
+
+                localStorage.setItem(AUTH_DATA_KEY, encode(JSON.stringify(responseData)));
+
+                // Call your function to get the authenticated user
+                //passed the access token as an argument to access the token from the data
+                await getAuthUser(responseData.accessToken);
+
+                
+                // navigate("/Dashboard")
+                setTimeout(() =>  window.location.href = '/dashboard', 100)
+                // setTimeout(() =>  navigate("/Dashboard"), 100)
+                
                 setDisabledButton(false)
-                return setErrorMessage('Invalid credentials')
-            }   
+                return responseData;
+
+            }catch(error){
+                console.log(error)
+            }
                
-            const responseData = await res.json();
-            console.log("fetched data:", responseData)
 
 
 
-            //user data storage and page navigation
-            localStorage.setItem(AUTH_DATA_KEY, encode(JSON.stringify(responseData)));
-            
-            // Call your function to get the authenticated user
-            //passed the access token as an argument to access the token from the data
-            await getAuthUser(responseData.accessToken);
 
-            
-            // navigate("/Dashboard")
-            // setTimeout(() =>  window.location.href = '/dashboard', 100)
-            // setTimeout(() =>  navigate("/Dashboard"), 100)
-            
-            setDisabledButton(false)
-            return responseData;
         }
 
     })
@@ -277,12 +276,6 @@ function QueryCode() {
                 </AlertDescription>
                         
             </Alert>}
-            {/* {!!error?.length && <Alert className="alert text-red-900 border-0 h-full w-[320px]  bg-[#fee]" >
-                <AlertDescription>
-                    {error}
-                </AlertDescription>
-                        
-            </Alert>} */}
 
             <Card className="w-[350px] static shadow-2xl rounded-[15px] p-4">
                 <CardHeader>
@@ -292,22 +285,19 @@ function QueryCode() {
                     <form onSubmit={handleSubmit(refetch)}>
                         <div className="grid w-full items-center gap-4">
                             <div className="flex flex-col space-y-1.5">
-                                {/* <Label className="text-white">Username</Label> */}
                                 {/* registers the username as a data */}
                                 <Input  {...register('username')} placeholder="Username" id="inpPlain"/>
                                 <p  className="text-red-700">{errors.username?.message}</p>
                             </div>
 
                             <div className="flex flex-col space-y-1.5">
-                                {/* <Label className="text-white">Password</Label> */}
                                 <Input type="password" {...register('password')} placeholder="Password" />
                                 <p  className="text-red-700">{errors.password?.message}</p>
                             </div>
 
                         </div><br />
                         <Button variant="outline" disabled={!!disabledButton} type='submit' className=" bg-gray-500 text-white">{disabledButton ? 'Submitting...' : 'Log In'}</Button>
-                        {/* <Button variant="outline"type='submit' className=" bg-gray-500 text-white" id="btnEncode">Log</Button> */}
-                    
+                        
                     </form>
                 </CardContent>
                 
