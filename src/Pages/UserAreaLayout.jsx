@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom"
-import { CircleUser, Home, Menu} from "lucide-react"
+import { CircleUser, Home, Menu, Users} from "lucide-react"
 // import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 // import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { useNavigate } from "react-router-dom";
 import { RequireAuth } from "./Auth";
 import { AUTH_DATA_KEY, BACKEND_URL } from "@/constants"
+import { getDataObject } from "@/functions"
 
 export const description = 
     "A products dashboard with a sidebar navigation and a main content area. The dashboard has a header with a search input and a user menu. The sidebar has a logo, navigation links, and a card with a call to action. The main content area shows an empty state with a call to action."
@@ -20,7 +21,7 @@ export default function UserAreaLayout() {
 
     async function logOut() {
         try{
-            const token = JSON.parse(localStorage.getItem(AUTH_DATA_KEY))?.accessToken
+            const token = getDataObject(AUTH_DATA_KEY)?.accessToken
             const res = await fetch(`${BACKEND_URL}/auth/logout`, {
                 method: 'POST',
                 headers: {
@@ -28,13 +29,13 @@ export default function UserAreaLayout() {
                 },  
             })
 
-            if (!res.ok) return alert('Login failed ! try again.')
+            if (!res.ok) return alert('Logout failed! Try again.')
 
             window.localStorage.clear();
             console.log("All data cleared from localStorage.");
             navigate("/");
        }catch(error){
-            alert('Login failed ! try again.')
+            alert('Logout failed! Try again.')
             console.log('logout error:', error)
        }
     }
@@ -63,16 +64,13 @@ export default function UserAreaLayout() {
                         <nav className="grid items-start px-2 mt-6 text-sm font-medium lg:px-4">
                             <Link to={'/dashboard'} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                                 <Home className="h-4 w-4" />
-                                 Dashboard
+                                Dashboard
                             </Link>
-                            {/* <Link href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-                                <ShoppingCart className="h-4 w-4" />
-                                    Orders
-                                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                                    6
-                                </Badge>
+                            <Link to={'/clients'} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                                <Users className="h-4 w-4" />
+                                Clients   
                             </Link>
-                            <Link href="#" className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary">
+                            {/*<Link href="#" className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary">
                                 <Package className="h-4 w-4" />
                                     Products{" "}
                             </Link>
@@ -124,9 +122,13 @@ export default function UserAreaLayout() {
                                     <Package2 className="h-6 w-6" />
                                     <span className="sr-only text-black">{auth.username}</span>
                                 </Link> */}
-                                <Link href="#" className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground">
+                                <Link to={'/dashboard'}className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground">
                                     <Home className="h-5 w-5" />
                                     Dashboard
+                                </Link>
+                                <Link to={'/clients'} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                                    <Users className="h-4 w-4" />
+                                    Clients   
                                 </Link>
                                 {/* <Link href="#" className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground">
                                     <ShoppingCart className="h-5 w-5" />
