@@ -7,7 +7,9 @@ import LoginPage from './Pages/LoginPage';
 import { AuthProvider } from './Pages/Auth';
 import UserAreaLayout from './Pages/UserAreaLayout';
 import Dashboard from './Pages/Dashboard';
-import Apps from './components/Tables/Tables';
+// import Apps from './components/Tables/Tables';
+import ClientsPage from './Pages/Client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 
 
@@ -18,6 +20,7 @@ const router = createBrowserRouter(
       <Route path='/' element={<LoginPage />} />
       <Route path='' element={<UserAreaLayout/>}>
         <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/clients' element={<ClientsPage />} />
       </Route>
         {/* <Route path='/Apps' element={Apps} /> */}
     </Route>
@@ -41,11 +44,15 @@ const router = createBrowserRouter(
 //   // },
 // ]);
 
+const queryClient = new  QueryClient()
+
 createRoot(document.getElementById('root')).render(
 
     <StrictMode>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <QueryClientProvider client={queryClient}>
+          < RouterProvider router={router} />
+        </QueryClientProvider>
       </AuthProvider>
     </StrictMode>
 )
