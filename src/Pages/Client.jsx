@@ -7,10 +7,10 @@ import { useQuery } from "@tanstack/react-query"
 
 export default function ClientsPage(){
 
-    const clients = {
-        name: 'sandra',
-        website: 'https://www.com'
-    }
+    // const clients = {
+    //     name: 'sandra',
+    //     website: 'https://www.com'
+    // }
 
     const { data, error} = useQuery({
         queryKey: ['clientsData'],
@@ -42,12 +42,12 @@ export default function ClientsPage(){
                 </tr>
             </thead>
 
-            <tbody>
+            {/* <tbody>
                 <tr>
                     <td>{clients.name}</td>
                     <td><a href={clients.website}>{clients.website}</a></td>
                 </tr>
-            </tbody>
+            </tbody> */}
             
             {/* {data.map(client => (
                 <tr key={client.id}>
