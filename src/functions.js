@@ -1,3 +1,5 @@
+
+
 function bytesToBase64(bytes) {
     const binString = Array.from(bytes, (byte) =>
         String.fromCodePoint(byte),
@@ -34,6 +36,7 @@ export function encode(text) {
     // return string
     return replaced
 }
+
 function base64ToBytes(base64) {
     const binString = atob(base64);
     return Uint8Array.from(binString, (m) => m.codePointAt(0));
@@ -53,14 +56,14 @@ export function decode(text) {
 
 export function getData(key){
 
-    if (!localStorage.getItem(key, decode(JSON.stringify(key).length))){
+    if (!localStorage.getItem(key).length){
         return ''
     }
 
-   return localStorage.getItemItem(key, decode(JSON.stringify(key)))
+   return decode(localStorage.getItem(key))
 }
 
 export function getDataObject(key){
 
-   return JSON.parse(localStorage.getItem(key, decode(JSON.stringify(key))) || '{}')
+   return JSON.parse(getData(key) || '{}')
 }
