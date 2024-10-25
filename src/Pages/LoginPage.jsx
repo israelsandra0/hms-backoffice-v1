@@ -195,13 +195,13 @@ export default function LoginPage() {
                         username: userInput.username, 
                         password: userInput.password,
                         deviceDetails:{
-                                "deviceName": !parserResults?.device?.name ? 'unknown' : `${parserResults.device.vendor} - ${parserResults.device.model} (${parserResults.device.type}) ` ,
-                                "os": `${parserResults.os.name} ${parserResults.os.version}`,
-                                "browserName": `${parserResults.browser.name} ${parserResults.browser.version}`
-                            }
-                        })
+                            "deviceName": !parserResults?.device?.name ? 'unknown' : `${parserResults.device.vendor} - ${parserResults.device.model} (${parserResults.device.type}) ` ,
+                            "os": `${parserResults.os.name} ${parserResults.os.version}`,
+                            "browserName": `${parserResults.browser.name} ${parserResults.browser.version}`
+                        }
+                    })
                 })
-                if(res.status === 400 ){
+                if(res.status === 400 || res.status === 404 ){
                     setDisabledButton(false)
                     setErrorMessage('Invalid credentials')
                     return {}
