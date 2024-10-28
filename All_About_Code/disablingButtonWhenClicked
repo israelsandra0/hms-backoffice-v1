@@ -1,0 +1,12 @@
+//import useState
+
+const [disabledButton, setDisabledButton] = useState(false)
+
+// add these in the body before the fetch
+setDisabledButton(true)
+
+//enable the button when necessary
+setDisabledButton(false)
+
+// return this when the button is enabled 
+{/* <Button variant="outline" disabled={!!disabledButton} type='submit'>{disabledButton ? 'Submitting...' : 'Log In'}</Button> */}

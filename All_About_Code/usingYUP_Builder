@@ -21,8 +21,8 @@ const {register, handleSubmit, formState: {errors}} = useForm({
 
 
 //apply it where needed just like in line 27
-<div className="flex flex-col space-y-1.5">
-    <Label className="text-white">Password</Label>
+<div>
+    {/* <Label className="text-white">Password</Label>
     <Input type="password" {...register('password')} placeholder="Enter your password" />
-    <p  className="text-red-700">{errors.password?.message}</p>
+    <p  className="text-red-700">{errors.password?.message}</p> */}
 </div>

@@ -1,0 +1,16 @@
+//import useState
+const [errorMessage, setErrorMessage] = useState("")
+
+// add these in the body before the fetch
+setErrorMessage()
+
+//add error message to be displayed
+setErrorMessage('Invalid credentials')
+
+//return the error message box
+{!!errorMessage?.length && <Alert className="alert text-red-900 border-0 h-full w-[320px]  bg-[#fee]" >
+    <AlertDescription>
+        {errorMessage}
+    </AlertDescription>
+                        
+</Alert>}

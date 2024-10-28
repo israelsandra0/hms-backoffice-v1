@@ -1,0 +1,7 @@
+// import the function 
+import { useNavigate } from "react-router-dom"
+
+// use either of these 
+navigate("/Dashboard")
+setTimeout(() =>  window.location.href = '/dashboard', 100)
+setTimeout(() =>  navigate("/Dashboard"), 100)
