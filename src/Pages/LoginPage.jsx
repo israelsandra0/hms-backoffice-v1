@@ -16,6 +16,7 @@ import { encode } from "@/functions"
 
 
 
+
 export default function LoginPage() {
 
     //yup builder for input error msg
@@ -29,9 +30,6 @@ export default function LoginPage() {
         defaultValues: {username: '', password: ''},
         resolver: yupResolver(yupBuild)
     })  
-
-    //navigate when clicked
-    // const navigate = useNavigate();
 
     // alert error message
     const [errorMessage, setErrorMessage] = useState("")
