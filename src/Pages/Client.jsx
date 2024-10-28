@@ -1,17 +1,21 @@
 import { AUTH_DATA_KEY, BACKEND_URL } from "@/constants"
 import { getDataObject } from "@/functions"
 import { useQuery } from "@tanstack/react-query"
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 
 
 
 
 export default function ClientsPage(){
-
-    // const clients = {
-    //     name: 'sandra',
-    //     website: 'https://www.com'
-    // }
 
     const { data, error, isPending} = useQuery({
         queryKey: ['clientsData'],
@@ -38,30 +42,34 @@ export default function ClientsPage(){
     if(isPending){
         return <div>Loading ...</div>
     }
-    console.log(data)       
-
-    return (
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Name:</th>
-                    <th>Website:</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {data.map(client => (
-                    <tr key={client.id}>
-                        <td>{client.name}</td>
-                        <td><a href={client.website}>{client.website}</a></td>
-                    </tr>
-                ))}
-                
-            </tbody>
-            
-        </table>
+    console.log(data)  
     
-  )
 
+  return (
+    <Table>
+        <TableCaption>A list of clients and their websites .</TableCaption>
+        <TableHeader>
+            <TableRow>
+                <TableHead>NAME</TableHead>
+                <TableHead>WEBSITE</TableHead>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            <TableRow key={data.id}>
+                <TableCell>{data.name}</TableCell>
+                <TableCell>{data.website}</TableCell>
+            </TableRow>
+        </TableBody>
+    </Table>
+  )
 }
+
+
+
+
+
+
+
+
+
+
