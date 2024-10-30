@@ -108,7 +108,7 @@ export default function LoginPage() {
            
                 setTimeout(() =>  window.location.href = '/dashboard', 100)
 
-                setDisabledButton(false)
+                setDisabledButton(true)
                 return responseData;
 
             }catch(error){
