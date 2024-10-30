@@ -83,7 +83,6 @@ export function setData(key, value ){
 // reueable function for accessToken
 export async function get(urlPath) {
     const token = getDataObject(AUTH_DATA_KEY).accessToken;
-    console.log(token)
 
     return fetch(urlPath, {
         method: 'GET',
@@ -97,7 +96,6 @@ export async function get(urlPath) {
 // reueable function for user login
 export async function post(urlPath, data) {
     const token = getDataObject(AUTH_DATA_KEY).accessToken;
-    console.log(token)
     return fetch(urlPath, {
         method: 'POST',
         headers: {
