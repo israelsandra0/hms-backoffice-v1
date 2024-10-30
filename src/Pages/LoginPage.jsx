@@ -103,7 +103,7 @@ export default function LoginPage() {
 
                 setData(AUTH_DATA_KEY, responseData)
                 
-                await getAuthUser(responseData.accessToken);
+                await getAuthUser();
 
            
                 setTimeout(() =>  window.location.href = '/dashboard', 100)

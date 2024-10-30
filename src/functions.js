@@ -13,6 +13,7 @@ function secretReplace(plain) {
         .replace(/[a]/g, '?x_')
         .replace(/[m]/g, '?n_')
         .replace(/[z]/g, '?a_')
+        .replace(/[\=]/g, '')
 }
 function secretReplaceReverse(plain) {
     return plain
@@ -56,11 +57,11 @@ export function decode(text) {
 //reding and writing local storage data
 export function getData(key){
 
-    if (!localStorage.getItem(key)?.length){
+    if (!localStorage.getItem(encode(key))?.length){
         return ''
     }
 
-   return decode(localStorage.getItem(key))
+   return decode(localStorage.getItem(encode(key)))
 //    return localStorage.getItem(key)
 }
 
@@ -71,7 +72,7 @@ export function getDataObject(key){
 
 //reuseable function for putting data into local storage 
 export function setData(key, value ){
-   localStorage.setItem(key, encode(typeof value === 'string' ? value : JSON.stringify(value)))
+   localStorage.setItem(encode(key), encode(typeof value === 'string' ? value : JSON.stringify(value)))
 
 }
 
@@ -82,6 +83,7 @@ export function setData(key, value ){
 // reueable function for accessToken
 export async function get(urlPath) {
     const token = getDataObject(AUTH_DATA_KEY).accessToken;
+    console.log(token)
 
     return fetch(urlPath, {
         method: 'GET',
@@ -95,6 +97,7 @@ export async function get(urlPath) {
 // reueable function for user login
 export async function post(urlPath, data) {
     const token = getDataObject(AUTH_DATA_KEY).accessToken;
+    console.log(token)
     return fetch(urlPath, {
         method: 'POST',
         headers: {
