@@ -10,7 +10,7 @@ import { AUTH_DATA_KEY, USER_DATA_KEY } from "@/constants"
 import { useQuery } from "@tanstack/react-query"
 import { UAParser } from "ua-parser-js"
 import { BACKEND_URL } from "@/constants"
-import { encode, get, post } from "@/functions"
+import { encode, get, post, setData } from "@/functions"
 
 
 
@@ -46,9 +46,9 @@ export default function LoginPage() {
             const response = await get(`${BACKEND_URL}/auth/me`)
 
             const {data} = await response.json()
-            console.log('res', data)
 
-            localStorage.setItem(USER_DATA_KEY, encode(JSON.stringify(data))) 
+            setData(USER_DATA_KEY, data)
+
 
         }catch(error){
             console.log(error)
@@ -64,14 +64,12 @@ export default function LoginPage() {
         enabled: false,                                          //disables it from executing immediately 
         queryKey: ['login'],
         queryFn: async () => {
-            const userInput = getValues()                        //hook form function to get user input data
-            console.log('working', {userInput})
+            const userInput = getValues()       
 
 
             //getting user device details
             let parser = new UAParser(window.navigator.userAgent) 
             let parserResults = parser.getResult();
-            console.log(parserResults);
 
             setErrorMessage()
             
@@ -102,19 +100,14 @@ export default function LoginPage() {
                     return {}
                 }   
                 const responseData = await res.json();
-                console.log("fetched data:", responseData)
 
-                
-                localStorage.setItem(AUTH_DATA_KEY, encode(JSON.stringify(responseData)));
-                
+                setData(AUTH_DATA_KEY, responseData)
                 
                 await getAuthUser(responseData.accessToken);
 
-                
-                // navigate("/Dashboard")
+           
                 setTimeout(() =>  window.location.href = '/dashboard', 100)
-                // setTimeout(() =>  navigate("/Dashboard"), 100)
-                
+
                 setDisabledButton(false)
                 return responseData;
 

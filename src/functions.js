@@ -29,7 +29,6 @@ export function encode(text) {
 
     // base64 encode
     const base64Encoded = bytesToBase64(Uint8Array.from(text, (m) => m.codePointAt(0)))
-    console.log('Here: ', { base64Encoded })
 
     // replace a, b, c
     const replaced = secretReplace(base64Encoded)
@@ -57,7 +56,7 @@ export function decode(text) {
 //reding and writing local storage data
 export function getData(key){
 
-    if (!localStorage.getItem(key).length){
+    if (!localStorage.getItem(key)?.length){
         return ''
     }
 
@@ -69,6 +68,14 @@ export function getDataObject(key){
 
    return JSON.parse(getData(key) || '{}')
 }
+
+//reuseable function for putting data into local storage 
+export function setData(key, value ){
+   localStorage.setItem(key, encode(typeof value === 'string' ? value : JSON.stringify(value)))
+
+}
+
+
 
 
 
