@@ -1,3 +1,4 @@
+import { AUTH_DATA_KEY, BACKEND_URL, USER_DATA_KEY } from "./constants";
 
 
 function bytesToBase64(bytes) {
@@ -53,7 +54,7 @@ export function decode(text) {
 }
 
 
-
+//reding and writing local storage data
 export function getData(key){
 
     if (!localStorage.getItem(key).length){
@@ -61,9 +62,38 @@ export function getData(key){
     }
 
    return decode(localStorage.getItem(key))
+//    return localStorage.getItem(key)
 }
 
 export function getDataObject(key){
 
    return JSON.parse(getData(key) || '{}')
+}
+
+
+
+// reueable function for accessToken
+export async function get(urlPath) {
+    const token = getDataObject(AUTH_DATA_KEY).accessToken;
+
+    return fetch(urlPath, {
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    });
+}
+
+
+// reueable function for user login
+export async function post(urlPath, data) {
+    const token = getDataObject(AUTH_DATA_KEY).accessToken;
+    return fetch(urlPath, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
 }

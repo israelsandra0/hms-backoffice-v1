@@ -2,20 +2,27 @@ import { AUTH_DATA_KEY, BACKEND_URL } from "@/constants"
 import { getDataObject } from "@/functions"
 import { useQuery } from "@tanstack/react-query"
 import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from "@/components/ui/table"
+  
+  
 
 
 
 
 
 export default function ClientsPage(){
+
+    // const clients = {
+    //     name: 'sandra',
+    //     website: 'https://www.com'
+    // }
 
     const { data, error, isPending} = useQuery({
         queryKey: ['clientsData'],
@@ -42,12 +49,12 @@ export default function ClientsPage(){
     if(isPending){
         return <div>Loading ...</div>
     }
-    console.log(data)  
-    
+    console.log(data)       
 
-  return (
-    <Table>
-        <TableCaption>A list of clients and their websites .</TableCaption>
+    return (
+
+        <Table>
+        <TableCaption>A list of clients and their websites.</TableCaption>
         <TableHeader>
             <TableRow>
                 <TableHead>NAME</TableHead>
@@ -61,15 +68,7 @@ export default function ClientsPage(){
             </TableRow>
         </TableBody>
     </Table>
+  
   )
+
 }
-
-
-
-
-
-
-
-
-
-

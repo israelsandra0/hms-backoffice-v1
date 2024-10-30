@@ -1,0 +1,95 @@
+// // API fetching using promise (synchronous)
+
+// fetch('https://dummyjson.com/auth/login', {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({
+                
+//                 username: '',
+//                 password: '',
+//                 // expiresInMins: 30, // optional, defaults to 60
+//             }),
+//             // credentials: 'include' // Include cookies (e.g., accessToken) in the request
+// })
+// .then(res => {
+//     console.log(res.status)
+//     res.json()
+// })
+// .then((data) => console.log(data))
+// .catch((error) => console.log(error))
+// .finally(() => console.log('done'))
+
+
+// //API fetching using trycatch (synchronous)
+// async () => {
+   
+//     try{
+//         const res = await fetch(`${BACKEND_URL}/auth/login`, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({
+//                 username: userInput.username, 
+//                 password: userInput.password,
+//                 deviceDetails:{}
+//             })
+//         })
+        
+//         const responseData = await res.json();
+//         return responseData;
+
+//     }catch(error){
+//         console.log(error)
+//     }           
+// }
+
+// // API fetching using REACT Query 
+// const {refetch} = useQuery({
+//     enabled: false,                                          //disables it from executing immediately 
+//     queryKey: ['login'],
+//     queryFn: async () => {
+//         const userInput = getValues()                        //hook form function to get user input data
+//         console.log('working', {userInput})
+
+
+//         //getting user device details
+//         let parser = new UAParser(window.navigator.userAgent) 
+//         let parserResults = parser.getResult();
+//         console.log(parserResults);
+
+//         setErrorMessage()
+        
+//         setDisabledButton(true)
+
+//         try{
+//             const res = await fetch(`${BACKEND_URL}/auth/login`, {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({
+//                     username: userInput.username, 
+//                     password: userInput.password,
+//                     deviceDetails:{
+//                         "deviceName": !parserResults?.device?.name ? 'unknown' : `${parserResults.device.vendor} - ${parserResults.device.model} (${parserResults.device.type}) ` ,
+//                         "os": `${parserResults.os.name} ${parserResults.os.version}`,
+//                         "browserName": `${parserResults.browser.name} ${parserResults.browser.version}`
+//                     }
+//                 })
+//             })
+//             if(res.status === 400 || res.status === 404 ){
+//                 setDisabledButton(false)
+//                 setErrorMessage('Invalid credentials')
+//                 return {}
+//             }   
+//             if(res.status === 500 ){
+//                 setDisabledButton(false)
+//                 setErrorMessage('An error occurred, please try again')
+//                 return {}
+//             }   
+//             const responseData = await res.json();
+//             console.log("fetched data:", responseData)
+//             return responseData;
+
+//         }catch(error){
+//             console.log(error)
+//         }           
+//     }
+// })

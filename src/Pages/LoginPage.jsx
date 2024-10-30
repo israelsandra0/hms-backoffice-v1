@@ -10,7 +10,7 @@ import { AUTH_DATA_KEY, USER_DATA_KEY } from "@/constants"
 import { useQuery } from "@tanstack/react-query"
 import { UAParser } from "ua-parser-js"
 import { BACKEND_URL } from "@/constants"
-import { encode } from "@/functions"
+import { encode, get, post } from "@/functions"
 
 
 
@@ -37,147 +37,39 @@ export default function LoginPage() {
     //for disabling button after first click
     const [disabledButton, setDisabledButton] = useState(false)
 
-    
-    //getting the user access token from the response then passing it as a parameter
-    async function getAuthUser(token){ 
-        console.log("access token: ", token)
+
+
+
+    async function getAuthUser(){ 
 
         try {
-            const res = await fetch(`${BACKEND_URL}/auth/me`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`, // Pass JWT via Authorization header
-                },  
-            })
+            const response = await get(`${BACKEND_URL}/auth/me`)
 
+            const {data} = await response.json()
+            console.log('res', data)
 
-            const response = await res.json()
-            console.log(response)
-            localStorage.setItem(USER_DATA_KEY, encode(JSON.stringify(response.data))) 
+            localStorage.setItem(USER_DATA_KEY, encode(JSON.stringify(data))) 
 
-            
-            // console.log(data)
         }catch(error){
             console.log(error)
         }finally{
             console.log('done')
-        }   
-      
-
-    }
-
-    // async function login(userInput) {
-    //     //error mgs clears for new one && comes before another submission
-    //     setErrorMessage()
-
-
-    //     try {
-    //         //added the disabled button
-    //         setDisabledButton(true)
-    //         const res = await fetch('https://dummyjson.com/auth/login', {
-    //             method: 'POST',
-    //             headers: { 'Content-Type': 'application/json' },
-    //             body: JSON.stringify({
-    //                 username: userInput.username,
-    //                 password: userInput.password,
-    //             })
-    //         })
-        
-    //         //waits for api response and returns as json_string
-    //         const data = await res.json()
-
-    //         //response status that displays error message 
-    //         if (res.status === 400 ){
-    //             setDisabledButton(false)
-    //             return setErrorMessage(data.message)
-    //         }
-
-    //         //user data storage and page navigation
-    //         localStorage.setItem(AUTH_DATA_KEY, JSON.stringify(data));
-
-    //         //passed the access token as an arguement to access the token from the data
-    //         await getAuthUser(data.accessToken)     
-            
-
-                  
-    //         // navigate("/Dashboard")
-    //         setTimeout(() =>  window.location.href = '/dashboard', 100)
-    //         // setTimeout(() =>  navigate("/Dashboard"), 100)
-         
-    //         console.log(data)
-            
-    //     }catch(error){
-    //         setDisabledButton(false)
-    //         console.log(error)
-    //     }finally{
-    //         console.log('done')
-    //     }
-        
-    // }
-     
-
+        }
+    } 
+ 
+   
     
-    //  if (res.status === 400 ){
-    //             setDisabledButton(false)
-    //             return setErrorMessage(data.message)
-    //         }
-
-    // if(isPending) return 'loading ...'
-    // if(error) return 'loading ...'
-    
-    
-    //using refetch allows to trigger the useQuery manually
-    
-    // const username = document.querySelector('#inpPlain')
-    // const $inpEncoded = document.querySelector('#inpEncoded');
-
-    // function bytesToBase64(bytes) {
-    //     const binString = Array.from(bytes, (byte) =>
-    //         String.fromCodePoint(byte),
-    //     ).join("");
-    //     return btoa(binString);
-    // }
-
-    // function secretReplace(plain) {
-    //     return plain
-    //         .replace(/[a]/g, '?x_')
-    //         .replace(/[m]/g, '?n_')
-    //         .replace(/[z]/g, '?a_')
-    // }
-    // function encode(text) {
-    //     // replace carriage returns and new line feeds
-    //     text = text.replace(/[\r\n]/g, '', new TextEncoder().encode(text))
-        
-    //     // base64 encode
-    //     const base64Encoded = bytesToBase64(Uint8Array.from(text, (m) => m.codePointAt(0)))
-    //     console.log('Here: ', {base64Encoded})
-    //     localStorage.setItem('dataKey', JSON.stringify(base64Encoded));
-
-    //     // replace a, b, c
-    //     const replaced = secretReplace(base64Encoded)
-
-    //     // return string
-    //     return replaced
-    // }
-    
-
-    // const value = username.trim()
-
-    // if (!value.length) alert("enter value to encode")
-
-    // $inpEncoded.textContent = encode();
-
 
     const {refetch} = useQuery({
-        enabled: false, //disables it from executing immediately 
+        enabled: false,                                          //disables it from executing immediately 
         queryKey: ['login'],
         queryFn: async () => {
-            const userInput = getValues() //hook form function to get user input data
+            const userInput = getValues()                        //hook form function to get user input data
             console.log('working', {userInput})
 
 
             //getting user device details
-            let parser = new UAParser(window.navigator.userAgent) // you need to pass the user-agent for nodejs
+            let parser = new UAParser(window.navigator.userAgent) 
             let parserResults = parser.getResult();
             console.log(parserResults);
 
@@ -185,20 +77,20 @@ export default function LoginPage() {
             
             setDisabledButton(true)
 
-           try{
-                const res = await fetch(`${BACKEND_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: userInput.username, 
-                        password: userInput.password,
-                        deviceDetails:{
-                            "deviceName": !parserResults?.device?.name ? 'unknown' : `${parserResults.device.vendor} - ${parserResults.device.model} (${parserResults.device.type}) ` ,
-                            "os": `${parserResults.os.name} ${parserResults.os.version}`,
-                            "browserName": `${parserResults.browser.name} ${parserResults.browser.version}`
-                        }
-                    })
-                })
+            try{
+
+                const loginData = {
+                    username: userInput.username, 
+                    password: userInput.password,
+                    deviceDetails:{
+                        "deviceName": !parserResults?.device?.name ? 'unknown' : `${parserResults.device.vendor} - ${parserResults.device.model} (${parserResults.device.type}) ` ,
+                        "os": `${parserResults.os.name} ${parserResults.os.version}`,
+                        "browserName": `${parserResults.browser.name} ${parserResults.browser.version}`
+                    }
+                }
+
+                const res = await post(`${BACKEND_URL}/auth/login`, loginData)
+                
                 if(res.status === 400 || res.status === 404 ){
                     setDisabledButton(false)
                     setErrorMessage('Invalid credentials')
@@ -212,10 +104,10 @@ export default function LoginPage() {
                 const responseData = await res.json();
                 console.log("fetched data:", responseData)
 
+                
                 localStorage.setItem(AUTH_DATA_KEY, encode(JSON.stringify(responseData)));
-
-                // Call your function to get the authenticated user
-                //passed the access token as an argument to access the token from the data
+                
+                
                 await getAuthUser(responseData.accessToken);
 
                 
@@ -228,46 +120,15 @@ export default function LoginPage() {
 
             }catch(error){
                 console.log(error)
-            }
-               
-
-
-
-
+            }           
         }
-
     })
-    // function getDeviceInfo() {
-    //     const userAgent = navigator.userAgent;
-
-    //     let deviceName = "Unknown Device";
-
-    //     // Check user agent for specific devices
-    //     if (/android/i.test(userAgent)) {
-    //         deviceName = "Android Device";
-    //     } else if (/iPhone/i.test(userAgent)) {
-    //         deviceName = "iPhone";
-    //     } else if (/iPad/i.test(userAgent)) {
-    //         deviceName = "iPad";
-    //     } else if (/Macintosh/i.test(userAgent)) {
-    //         deviceName = "Mac";
-    //     } else if (/Windows/i.test(userAgent)) {
-    //         deviceName = "Windows Device";
-    //     } else if (/Linux/i.test(userAgent)) {
-    //         deviceName = "Linux Device";
-    //     }
-
-    //     return console.log(deviceName)
-    // }
-
-    
-
+   
 
 
   return (
     <>
         <div className="grid place-items-center gap-12 mt-8"> 
-            {/* add the body containing the alert error mgs */}
             {!!errorMessage?.length && <Alert className="alert text-red-900 border-0 h-full w-[320px]  bg-[#fee]" >
                 <AlertDescription>
                     {errorMessage}
@@ -306,41 +167,6 @@ export default function LoginPage() {
   )
 
 }
-
-
-
-
-        // fetch('https://dummyjson.com/auth/login', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({
-                
-        //         username: '',
-        //         password: '',
-        //         // expiresInMins: 30, // optional, defaults to 60
-        //     }),
-        //     // credentials: 'include' // Include cookies (e.g., accessToken) in the request
-        // })
-        // .then(res => {
-        //     console.log(res.status)
-        //     res.json()
-        // })
-        // .then((data) => console.log(data))
-        // .catch((error) => console.log(error))
-        // .finally(() => console.log('done'))
-
-
-// export function Profile(){
-
-//     const [userData, setUserData] = useState('')
-//     const handleInputChange = (e) => {
-//         setUserData(e.target.value);
-//     };
-    
-//     return (
-//         <Dashboard user={userData}/>
-//     )
-// }
 
 
 
