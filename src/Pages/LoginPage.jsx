@@ -89,13 +89,11 @@ export default function LoginPage() {
                 }
 
                 const res = await post(`${BACKEND_URL}/auth/login`, loginData)
-                // const codes = [400, 401, 402, 403, 404]
                 
                 if (res.status.toString().startsWith(4)){
                     setDisabledButton(false)
                     setErrorMessage('invalid credentials')
 
-                    // return {}
                     return null
                 }   
                 if(res.status === 500 ){
@@ -110,7 +108,7 @@ export default function LoginPage() {
                 await getAuthUser();
 
            
-                // setTimeout(() =>  window.location.href = '/dashboard', 100)
+                setTimeout(() =>  window.location.href = '/dashboard', 100)
 
                 setDisabledButton(true)
                 return responseData;
