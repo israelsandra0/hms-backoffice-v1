@@ -1,4 +1,4 @@
-import { AUTH_DATA_KEY, BACKEND_URL, USER_DATA_KEY } from "./constants";
+import { AUTH_DATA_KEY } from "./constants";
 
 
 function bytesToBase64(bytes) {
@@ -7,6 +7,12 @@ function bytesToBase64(bytes) {
     ).join("");
     return btoa(binString);
 }
+
+function base64ToBytes(base64) {
+    const binString = atob(base64);
+    return Uint8Array.from(binString, (m) => m.codePointAt(0));
+}
+
 
 function secretReplace(plain) {
     return plain
@@ -37,12 +43,6 @@ export function encode(text) {
     // return string
     return replaced
 }
-
-function base64ToBytes(base64) {
-    const binString = atob(base64);
-    return Uint8Array.from(binString, (m) => m.codePointAt(0));
-}
-
 
 
 export function decode(text) {
