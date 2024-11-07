@@ -10,6 +10,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { Card } from "@/components/ui/card";
 
 export default function ClientsPage() {
 
@@ -36,6 +37,13 @@ export default function ClientsPage() {
     if (isPending) {
         return <div>Loading ...</div>;
     }
+    if (!clients?.length){
+        return (
+            <Card className='p-4'>
+                <p>No clients found!</p>
+            </Card>
+        )
+    }
 
     return (
         <Table>
@@ -46,10 +54,11 @@ export default function ClientsPage() {
                 </TableRow>
             </TableHeader>
             <TableBody>
+                
                 {clients.map((client) => (
-                    <TableRow key={client.id}>                        
-                        <TableCell>{client.name}</TableCell>
-                        <TableCell>{client.website}</TableCell>
+                    <TableRow key={client?.id}>                        
+                        <TableCell>{client?.name}</TableCell>
+                        <TableCell>{client?.website}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>

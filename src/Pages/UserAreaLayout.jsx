@@ -18,7 +18,6 @@ export const description =
 export default function UserAreaLayout() {
 
     const navigate = useNavigate();
-    // const auth = useContext(AuthContext)
 
     const [openSidebar, setOpenSidebar] = useState(false);
 
@@ -34,6 +33,7 @@ export default function UserAreaLayout() {
     async function logOut() {
         try{
             const token = getDataObject(AUTH_DATA_KEY)?.accessToken
+            console.log(getDataObject(AUTH_DATA_KEY))
             const res = await fetch(`${BACKEND_URL}/auth/logout`, {
                 method: 'POST',
                 headers: {

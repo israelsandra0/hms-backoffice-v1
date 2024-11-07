@@ -22,13 +22,13 @@ export default function LoginPage() {
 
     //yup builder for input error msg
     const yupBuild = yup.object({
-        username: yup.string().required('username is required'),
+        email: yup.string().required('user email is required').email(),
         password: yup.string().required('password is required').min(5).max(20)
     })
 
     //destructured hook form 
     const {register, handleSubmit, formState: {errors}, getValues} = useForm({
-        defaultValues: {username: '', password: ''},
+        defaultValues: {email: '', password: ''},
         resolver: yupResolver(yupBuild)
     })  
 
@@ -45,6 +45,7 @@ export default function LoginPage() {
 
         try {
             const response = await get(`${BACKEND_URL}/auth/me`)
+            console.log(response)
 
             const {data} = await response.json()
 
@@ -79,7 +80,7 @@ export default function LoginPage() {
             try{
 
                 const loginData = {
-                    username: userInput.username, 
+                    email: userInput.email, 
                     password: userInput.password,
                     deviceDetails:{
                         "deviceName": !parserResults?.device?.name ? 'unknown' : `${parserResults.device.vendor} - ${parserResults.device.model} (${parserResults.device.type}) ` ,
@@ -103,7 +104,7 @@ export default function LoginPage() {
                 }   
                 const responseData = await res.json();
 
-                setData(AUTH_DATA_KEY, responseData)
+                setData(AUTH_DATA_KEY, responseData.data)
                 
                 await getAuthUser();
 
@@ -140,7 +141,7 @@ export default function LoginPage() {
                         <div className="grid w-full items-center gap-4">
                             <div className="flex flex-col space-y-1.5">
                                 {/* registers the username as a data */}
-                                <Input  {...register('username')} placeholder="Username" id="inpPlain"/>
+                                <Input  {...register('email')} type="email" placeholder="Email" id="inpPlain"/>
                                 <p  className="text-red-700">{errors.username?.message}</p>
                             </div>
 
