@@ -3,13 +3,12 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from "react-router-dom";
 import './index.css'
 import LoginPage from './Pages/LoginPage';
-// import Dashboard from './Pages/Dashboard';
 import { AuthProvider } from './Pages/Auth';
 import UserAreaLayout from './Pages/UserAreaLayout';
 import Dashboard from './Pages/Dashboard';
-// import Apps from './components/Tables/Tables';
-import ClientsPage from './Pages/Client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import HotelsPage from './Pages/Hotels/Index';
+import Add from './Pages/Hotels/Add';
 
 
 
@@ -20,7 +19,8 @@ const router = createBrowserRouter(
       <Route path='/' element={<LoginPage />} />
       <Route path='' element={<UserAreaLayout/>}>
         <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/hotels' element={<ClientsPage />} />
+        <Route path='/hotels' element={<HotelsPage />} />
+        <Route path='/hotels/add' element={<Add />} />
       </Route>
         {/* <Route path='/Apps' element={Apps} /> */}
     </Route>
