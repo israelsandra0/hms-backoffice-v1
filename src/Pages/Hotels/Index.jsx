@@ -47,7 +47,7 @@ export default function HotelsPage() {
                 <ButtonLink to='/hotels/add'>Add Hotels</ButtonLink>
                 {/* <Button>Add Hotels</Button> */}
             </div>
-            <Table>
+            <Table className='content'>
                 <TableHeader>
                     <TableRow>
                         <TableHead>NAME</TableHead>
