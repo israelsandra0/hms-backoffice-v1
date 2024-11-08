@@ -78,9 +78,9 @@ export default function UserAreaLayout() {
                                 <Home className="h-4 w-4" />
                                 Dashboard
                             </Link>
-                            <Link to={'/clients'} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                            <Link to={'/hotels'} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                                 <Users className="h-4 w-4" />
-                                Clients   
+                                Hotels   
                             </Link>
                         </nav>
                     </div>
@@ -108,9 +108,9 @@ export default function UserAreaLayout() {
                                     <Home className="h-5 w-5" />
                                     Dashboard
                                 </Link>
-                                <Link to={'/clients'} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary" onClick={handleClose}>
+                                <Link to={'/hotels'} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary" onClick={handleClose}>
                                     <Users className="h-4 w-4" />
-                                    Clients   
+                                    Hotels  
                                 </Link>
                                
                             </nav>

@@ -18,7 +18,7 @@ export default function ClientsPage() {
         queryKey: ["clientsData"],
         queryFn: async () => {
             const token = getDataObject(AUTH_DATA_KEY)?.accessToken;
-            const res = await fetch(`${BACKEND_URL}/clients`, {
+            const res = await fetch(`${BACKEND_URL}/hotels`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -30,6 +30,7 @@ export default function ClientsPage() {
 
 
             const response = await res.json();
+
             return response.data;
         },
     });
@@ -40,7 +41,7 @@ export default function ClientsPage() {
     if (!clients?.length){
         return (
             <Card className='p-4'>
-                <p>No clients found!</p>
+                <p>No hotels found!</p>
             </Card>
         )
     }
