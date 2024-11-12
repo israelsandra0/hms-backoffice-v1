@@ -6,6 +6,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontFamily: {
+      // sans: ['Graphik', 'sans-serif'],
+      serif: ["IBM Plex Sans", "serif"],
+    },
   	extend: {
   		borderRadius: {
   			lg: 'var(--radius)',
