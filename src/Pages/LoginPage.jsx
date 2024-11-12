@@ -11,7 +11,8 @@ import { useQuery } from "@tanstack/react-query"
 import { UAParser } from "ua-parser-js"
 import { BACKEND_URL } from "@/constants"
 import { encode, get, post, setData } from "@/functions"
-import { Navigate } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
+import { Label } from "@/components/ui/label"
 
 
 
@@ -39,8 +40,6 @@ export default function LoginPage() {
     const [disabledButton, setDisabledButton] = useState(false)
 
 
-
-
     async function getAuthUser(){ 
 
         try {
@@ -59,9 +58,7 @@ export default function LoginPage() {
         }
     } 
  
-   
     
-
     const {refetch} = useQuery({
         enabled: false,                                          //disables it from executing immediately 
         queryKey: ['login'],
@@ -132,26 +129,32 @@ export default function LoginPage() {
                         
             </Alert>}
 
-            <Card className="w-[350px] static shadow-2xl rounded-[15px] p-4">
+            <Card className="w-2/5 static rounded-[15px] p-4">
                 <CardHeader>
-                    <CardTitle className=" text-center mb-2">Log In</CardTitle>
+                    <CardTitle className="loginText text-center mb-2 text-[#8D561E]">Login</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit(refetch)}>
-                        <div className="grid w-full items-center gap-4">
+                        <div className="grid w-full items-center gap-4 login">
                             <div className="flex flex-col space-y-1.5">
                                 {/* registers the username as a data */}
-                                <Input  {...register('email')} type="email" placeholder="Email" id="inpPlain"/>
+                                <Label htmlFor="email">Email</Label>
+                                <Input {...register('email')} type="email" placeholder="info@atslng.com" id='email'/>
                                 <p  className="text-red-700">{errors.username?.message}</p>
                             </div>
 
                             <div className="flex flex-col space-y-1.5">
-                                <Input type="password" {...register('password')} placeholder="Password" />
+                                <div>
+                                    <Label htmlFor="password">Password</Label>                                   
+                                    <p className="float-right text-[12px] reset">Forgotten password? <Link className="text-[#8D561E]">Reset it</Link></p>                                    
+                                                                     
+                                </div>
+                                <Input type="password" {...register('password')} placeholder="Password"  id='password'/>
                                 <p  className="text-red-700">{errors.password?.message}</p>
                             </div>
 
                         </div><br />
-                        <Button variant="outline" disabled={!!disabledButton} type='submit' className=" bg-gray-500 text-white">{disabledButton ? 'Submitting...' : 'Log In'}</Button>
+                        <Button variant="primary" disabled={!!disabledButton} type='submit' className=" w-full p-[16px] text-[16px]">{disabledButton ? 'Submitting...' : 'Log In'}</Button>
                         
                     </form>
                 </CardContent>

@@ -2,28 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components{
-  body{
-    @apply bg-slate-50 
+@layer components {
+  body {
+    @apply bg-slate-50 font-serif
+    
   }
-  /* form{
-    @apply bg-gray-900 w-[400px] h-full text-center py-[2.5rem] rounded-[15px]
-  }*/
-  /* form input {
-    @apply focus-visible:ring-0
-  } */
-  /* form i {
-    @apply text-black p-1 pl-2 absolute rounded-l-[15px]
-  }
-  form button{
-    @apply mx-2
-  }
-  .signUpBox input{
-    @apply  pl-4
-  } */
-/* } */
 
-/* body{
-    @apply bg-gray-800 text-white grid place-items-center mt-[5rem]
-  }*/
+  .bg-primary {
+    background-color: #8D561E;
+  }
+
+  .bg-secondary {
+    background-color: #E2A354;
+  }
+
+  .bg-grey {
+    background-color: #F2F2F5;
+  }
+
+  .login label,
+  .reset {
+    font-optical-sizing: auto;
+    font-weight: weight;
+    font-size: 14px;
+    font-style: normal;
+  }
+
+  .loginText, button {
+    font-weight: 600;
+    font-style: normal;
+    font-size: 40px;
+  }
+  .sidebar nav .active{
+    background-color: #F1E2D3;
+    border-radius: 50px;
+    color: #8D561E;
+  }
 }
