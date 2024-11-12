@@ -5,10 +5,17 @@ import './index.css'
 import LoginPage from './Pages/LoginPage';
 import { AuthProvider } from './Pages/Auth';
 import UserAreaLayout from './Pages/UserAreaLayout';
-import Dashboard from './Pages/Dashboard';
+import Dashboard from './Pages/Sidebar/Dashboard';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import HotelsPage from './Pages/Hotels/Index';
 import Add from './Pages/Hotels/Add';
+import Clickus from './click';
+import Account from './Pages/Sidebar/Account';
+import Reports from './Pages/Sidebar/Reports';
+import Communication from './Pages/Sidebar/Communication';
+import Support from './Pages/Sidebar/Support';
+import Settings from './Pages/Sidebar/Settings';
+import Users from './Pages/Sidebar/Users';
 
 
 
@@ -21,8 +28,14 @@ const router = createBrowserRouter(
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/hotels' element={<HotelsPage />} />
         <Route path='/hotels/add' element={<Add />} />
+        <Route path='/users' element={<Users />} />
+        <Route path='/accounts' element={<Account />} />
+        <Route path='/reports & analytics' element={<Reports />} />
+        <Route path='/communication' element={<Communication />} />
+        <Route path='/support & help' element={<Support />} />
+        <Route path='/settings' element={<Settings />} />
       </Route>
-        {/* <Route path='/Apps' element={Apps} /> */}
+      <Route path='/click' element={<Clickus />} />
     </Route>
   )
 )
