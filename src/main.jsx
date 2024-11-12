@@ -30,9 +30,9 @@ const router = createBrowserRouter(
         <Route path='/hotels/add' element={<Add />} />
         <Route path='/users' element={<Users />} />
         <Route path='/accounts' element={<Account />} />
-        <Route path='/reports & analytics' element={<Reports />} />
+        <Route path='/reports' element={<Reports />} />
         <Route path='/communication' element={<Communication />} />
-        <Route path='/support & help' element={<Support />} />
+        <Route path='/support' element={<Support />} />
         <Route path='/settings' element={<Settings />} />
       </Route>
       <Route path='/click' element={<Clickus />} />
