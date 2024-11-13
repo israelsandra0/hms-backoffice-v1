@@ -94,7 +94,7 @@ export async function get(urlPath) {
 
 
 // reueable function for user login
-export async function post(urlPath, data) {
+export async function post(urlPath, data={}) {
     const token = getDataObject(AUTH_DATA_KEY).accessToken;
     return fetch(urlPath, {
         method: 'POST',

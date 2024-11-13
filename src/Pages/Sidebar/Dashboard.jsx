@@ -1,23 +1,10 @@
-// import { Button } from "@/components/ui/button"
-// import { useContext } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { AuthContext, RequireAuth } from "./Auth";
-// import { Link } from "react-router-dom"
-// import { Profile } from "./LoginPage"
+import UserAreaHeader from "@/components/UserAreaHeader";
 
 export default function Dashboard(){
 
-    // const navigate = useNavigate();
-    // const auth = useContext(AuthContext)
-
-    // function handleSubmit() {
-    //     window.localStorage.clear();
-    //     console.log("All data cleared from localStorage.");
-    //     navigate("/");
-    // }
-
     return (
         <div>
+            <UserAreaHeader pageName="Dashboard overview"/>
             <h1>Dashboard</h1>
         </div>
     )

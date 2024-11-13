@@ -42,21 +42,6 @@ const router = createBrowserRouter(
 
 
 
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     Component: LoginPage
-//   },
-//   {
-//     path: '/Apps',
-//     Component: Apps
-//   },
-//   // {
-//   //   path: "/context",
-//   //   Component: 
-//   // },
-// ]);
-
 const queryClient = new  QueryClient()
 
 createRoot(document.getElementById('root')).render(

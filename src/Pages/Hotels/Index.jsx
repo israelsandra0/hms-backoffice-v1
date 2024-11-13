@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
 import { ButtonLink } from "@/components/ui/button_link";
+import UserAreaHeader from "@/components/UserAreaHeader";
 
 export default function HotelsPage() {
 
@@ -43,7 +44,8 @@ export default function HotelsPage() {
 
     return (
         <>
-            <div className="text-right">
+            <UserAreaHeader  pageName="Hotel Management"/>
+            <div className="text-right mr-4">
                 <ButtonLink to='/hotels/add'>Add Hotels</ButtonLink>
                 {/* <Button>Add Hotels</Button> */}
             </div>
