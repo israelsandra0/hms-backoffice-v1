@@ -1,7 +1,7 @@
 import { CircleUser, LayoutDashboard, Menu, Users } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, NavLink } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +12,12 @@ import {
 import { useState } from "react";
 import { AUTH_DATA_KEY, BACKEND_URL } from "@/constants";
 import { getDataObject, post } from "@/functions";
+import HotelIcon from "./icons/hotel";
+import AccountIcon from "./icons/account";
+import ReportIcon from "./icons/Report";
+import CommunicationIcon from "./icons/communication";
+import SupportIcon from "./icons/Support";
+import SettingsIcon from "./icons/Setting";
 
 export default function UserAreaHeader({ pageName }) {
   const [openSidebar, setOpenSidebar] = useState(false);
@@ -54,90 +60,41 @@ export default function UserAreaHeader({ pageName }) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col sidebar">
-          <nav className="grid gap-2 text-lg mt-6 font-medium">
-            <Link
-              to={"/dashboard"}
-              className="active mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-              onClick={handleClose}
-            >
-              <LayoutDashboard className="h-5 w-5" />
+          <nav className="grid items-start px-2 mt-6 text-sm font-medium lg:px-4">
+            <NavLink to="/dashboard" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
+              <LayoutDashboard className="h-4 w-4" />
               Dashboard
-            </Link>
-            <Link
-              to={"/hotels"}
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              onClick={handleClose}
-            >
-              <img
-                src="src/Pages/Sidebar/images&icons/hotel.svg"
-                className="h-4 w-4"
-              />
-              Hotel Management
-            </Link>
-            <Link
-              to={"/users"}
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              onClick={handleClose}
-            >
+            </NavLink>
+            <NavLink to="/hotels" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
+              <HotelIcon />
+              Hotels Management
+            </NavLink>
+            <NavLink to="/users" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
               <Users className="h-4 w-4" />
               Users
-            </Link>
-            <Link
-              to={"/accounts"}
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              onClick={handleClose}
-            >
-              <img
-                src="src/Pages/Sidebar/images&icons/account.svg"
-                className="h-4 w-4"
-              />
+            </NavLink>
+            <NavLink to="/accounts" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
+              <AccountIcon size='w-4' />
               Accounts
-            </Link>
-            <Link
-              to={"/reports"}
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              onClick={handleClose}
-            >
-              <img
-                src="src/Pages/Sidebar/images&icons/report.svg"
-                className="h-4 w-4"
-              />
+            </NavLink>
+            <NavLink to="/reports" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
+              <ReportIcon />
               Reports & Analytics
-            </Link>
-            <Link
-              to={"/communication"}
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              onClick={handleClose}
-            >
-              <img
-                src="src/Pages/Sidebar/images&icons/communication.svg"
-                className="h-4 w-4"
-              />
+            </NavLink>
+            <NavLink to="/communication" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
+              <CommunicationIcon />
               Communication
-            </Link>
-            <Link
-              to={"/support"}
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              onClick={handleClose}
-            >
-              <img
-                src="src/Pages/Sidebar/images&icons/support.svg"
-                className="h-4 w-4"
-              />
+            </NavLink>
+            <NavLink to="/support" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
+              <SupportIcon />
               Support & help
-            </Link>
-            <Link
-              to={"/settings"}
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              onClick={handleClose}
-            >
-              <img
-                src="src/Pages/Sidebar/images&icons/setting.svg"
-                className="h-4 w-4"
-              />
+            </NavLink>
+            <NavLink to="/settings" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
+              <SettingsIcon />
               Settings
-            </Link>
+            </NavLink>
           </nav>
+          
         </SheetContent>
       </Sheet>
       {/* {navLinks.map((link) => ( */}

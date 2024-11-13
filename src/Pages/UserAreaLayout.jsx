@@ -1,6 +1,12 @@
 import { NavLink, Outlet, } from "react-router-dom"
 import { LayoutDashboard, Users } from "lucide-react"
 import { RequireAuth } from "./Auth";
+import AccountIcon from "@/components/icons/account";
+import HotelIcon from "@/components/icons/hotel";
+import ReportIcon from "@/components/icons/Report";
+import CommunicationIcon from "@/components/icons/communication";
+import SupportIcon from "@/components/icons/Support";
+import SettingsIcon from "@/components/icons/Setting";
 
 
 
@@ -24,7 +30,7 @@ export default function UserAreaLayout() {
                                     Dashboard
                                 </NavLink>
                                 <NavLink to="/hotels" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                    <img src="src/Pages/Sidebar/images&icons/hotel.svg" className="h-4 w-4" />
+                                    <HotelIcon />
                                     Hotels Management
                                 </NavLink>
                                 <NavLink to="/users" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
@@ -32,31 +38,29 @@ export default function UserAreaLayout() {
                                     Users
                                 </NavLink>
                                 <NavLink to="/accounts" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                    <img src="src/Pages/Sidebar/images&icons/account.svg" className="h-4 w-4" />
+                                    <AccountIcon size='w-4' />
                                     Accounts
                                 </NavLink>
                                 <NavLink to="/reports" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                    <img src="src/Pages/Sidebar/images&icons/report.svg" className="h-4 w-4" />
+                                    <ReportIcon />
                                     Reports & Analytics
                                 </NavLink>
                                 <NavLink to="/communication" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                    <img src="src/Pages/Sidebar/images&icons/communication.svg" className="h-4 w-4" />
+                                    <CommunicationIcon />
                                     Communication
                                 </NavLink>
                                 <NavLink to="/support" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                    <img src="src/Pages/Sidebar/images&icons/support.svg" className="h-4 w-4" />
+                                    <SupportIcon />
                                     Support & help
                                 </NavLink>
                                 <NavLink to="/settings" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                    <img src="src/Pages/Sidebar/images&icons/setting.svg" className="h-4 w-4" />
+                                <   SettingsIcon />
                                     Settings
                                 </NavLink>
                             </nav>
                         </div>
                     </div>
                 </div>
-
-                {/* containing responsive sidebar */}
                 <div className="flex flex-col">
                     <Outlet />
                 </div>
