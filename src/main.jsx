@@ -5,17 +5,16 @@ import './index.css'
 import LoginPage from './Pages/LoginPage';
 import { AuthProvider } from './Pages/Auth';
 import UserAreaLayout from './Pages/UserAreaLayout';
-import Dashboard from './Pages/Sidebar/Dashboard';
+import Dashboard from './Pages/Dashboard';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import HotelsPage from './Pages/Hotels/Index';
 import Add from './Pages/Hotels/Add';
-import Clickus from './click';
-import Account from './Pages/Sidebar/Account';
-import Reports from './Pages/Sidebar/Reports';
-import Communication from './Pages/Sidebar/Communication';
-import Support from './Pages/Sidebar/Support';
-import Settings from './Pages/Sidebar/Settings';
-import Users from './Pages/Sidebar/Users';
+import Account from './Pages/Account';
+import Reports from './Pages/Reports';
+import Communication from './Pages/Communication';
+import Support from './Pages/Support';
+import Settings from './Pages/Settings';
+import Users from './Pages/Users';
 
 
 
@@ -35,7 +34,6 @@ const router = createBrowserRouter(
         <Route path='/support' element={<Support />} />
         <Route path='/settings' element={<Settings />} />
       </Route>
-      <Route path='/click' element={<Clickus />} />
     </Route>
   )
 )
