@@ -15,6 +15,7 @@ import Communication from './Pages/Communication';
 import Support from './Pages/Support';
 import Settings from './Pages/Settings';
 import Users from './Pages/Users';
+import PhoneField from './components/ui/phone-field';
 
 
 
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path='/' element={<LoginPage />} />
+      <Route path='/phone' element={<PhoneField />} />
       <Route path='' element={<UserAreaLayout/>}>
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/hotels' element={<HotelsPage />} />
