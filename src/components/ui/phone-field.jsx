@@ -33,7 +33,7 @@ const PhoneField = forwardRef(({...props}, ref) => {
             </option>
             ))}
         </select>
-        <Input id="phone" type="tel"   {...props} ref={ref} className='border-l-0' />
+        <Input id="phone" type="tel"   {...props} ref={ref} className='border-l-0 h-6' />
    
     </div>
   );
