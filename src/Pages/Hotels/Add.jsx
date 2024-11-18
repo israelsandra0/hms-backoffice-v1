@@ -1,27 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { ButtonLink } from "@/components/ui/button_link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent,} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { post } from "@/functions";
 import { BACKEND_URL } from "@/constants";
-import PhoneField from "@/components/ui/phone-field";
 import { Label } from "@/components/ui/label";
 import StateField from "@/components/ui/state-field";
 import CityField from "@/components/ui/city-field";
+import { Link, useNavigate } from "react-router-dom";
+import UserAreaHeader from "@/components/UserAreaHeader";
+import { ChevronLeft  } from "lucide-react";
+import IntlPhoneField from "@/components/ui/intlphone-field";
 
 export default function Add() {
     //yup builder for input error msg
@@ -29,7 +22,7 @@ export default function Add() {
         name: yup.string().required("name is required"),
         email: yup.string().required("email is required").email(),
         website: yup.string().required("website is required").url().nullable(),
-        phone: yup.number().required().positive().integer(),
+        phone: yup.string().required("phone number is required").min(10).max(15),
         address: yup.string().required("address is required"),
         state: yup.string().required("state is required"),
         city: yup.string().required("city is required")
@@ -48,6 +41,7 @@ export default function Add() {
     });
 
     const [disabledButton, setDisabledButton] = useState(false);
+    const navigate = useNavigate()
 
     const { refetch } = useQuery({
         enabled: false,
@@ -84,7 +78,8 @@ export default function Add() {
                 }
                 const responseData = await res.json();
 
-                setTimeout(() => (window.location.href = "/hotels"), 100);
+                // navigate("/hotels")
+                setTimeout(() => navigate("/hotels"), 100);
 
                 setDisabledButton(true);
                 return responseData;
@@ -96,67 +91,60 @@ export default function Add() {
 
     return (
         <>
-            <div className="mt-6 ml-6">
-                <ButtonLink to="/hotels">← Back</ButtonLink>
+            <div>
+                <div className=" absolute mt-5 ml-4">
+                    <Link to="/hotels" ><ChevronLeft className=" ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400"/></Link>
+                </div>
+                <UserAreaHeader pageName="Add Hotels" />
             </div>
 
-            <Card className="w-2/5 text-center mx-auto p-2 mt-[-2rem]">
-                <CardHeader className='p-0'>
-                    <CardTitle className='mt-4'>ADD HOTEL</CardTitle>
-                </CardHeader>
+            <div className="w-2/5 text-center mx-auto border-none bg-transparent ring-0">
                 <CardContent className='mt-4'>
                     <form onSubmit={handleSubmit(refetch)} className="hotelForm  text-left">
 
-                        {/* <Label htmlFor="picture">Logo</Label>
-                        <div className=" bg-[#F2F2F5] flex justify-between items-center h-[100px]">
-                            <img src="public/logo.png" className=" bg-red-700 w-[50px] h-[50px] mx-auto" />
-                            <Input id="picture" type="file" className='w-4/5 h-full border-none rounded-none' />
-                        </div> */}
                         <div className="mt-4">
                             <div className="mb-2">
-                                {JSON.stringify({errors})}
+                                {/* {JSON.stringify({ errors })} */}
                                 <Label htmlFor="name">Name of hotel</Label>
                                 <br />
-                                <Input {...register("name")} id="name" className=" outline-none text-black h-6 " />
+                                <Input {...register("name")} id="name" className=" outline-none text-black  " />
                                 <p className="text-red-700">{errors.name?.message}</p>
                             </div>
 
                             <div className="mb-2">
                                 <Label htmlFor="email">Email</Label>
                                 <br />
-                                <Input {...register("email")} type="email" id="email" className=" outline-none text-black  h-6" />
+                                <Input {...register("email")} type="email" id="email" className=" outline-none text-black  " />
                                 <p className="text-red-700">{errors.email?.message}</p>
                             </div>
 
                             <div className="mb-2">
                                 <Label htmlFor="website">Website</Label>
                                 <br />
-                                <Input {...register("website")} className=" outline-none text-black h-6" />
+                                <Input {...register("website")} className=" outline-none text-black " id="website" />
                                 <p className="text-red-700">{errors.website?.message}</p>
                             </div>
+
                             <div className="mb-2">
-                                <Label htmlFor="phone">Phone Number</Label>
+                                <Label htmlFor="phone">Phone</Label>
                                 <br />
                                 <Controller
                                     name="phone"
                                     control={control}
-                                    render={({ field }) => <PhoneField {...field} />}
+                                    render={({ field }) => <IntlPhoneField {...field}  id="phone"/>}
                                 />
                                 <p className="text-red-700">{errors.phone?.message}</p>
                             </div>
+
                             <div className="mb-2">
                                 <Label htmlFor="address">Address</Label>
                                 <br />
-                                <Input {...register("address")} id='address' className=" outline-none text-black h-6" />
+                                <Input {...register("address")} id='address' className=" outline-none text-black " />
                                 <p className="text-red-700">{errors.address?.message}</p>
                             </div>
-                            {/* <Controller
-                                name="state"
-                                control={control}
-                                render={({ field }) => <StateField {...field} />}
-                            /> */}
+
                             <div className="flex gap-2">
-                                <div className="mb-2 ">
+                                <div className="mb-2 w-full">
                                     <Label htmlFor="state">Location (state)</Label>
                                     <br />
                                     <Controller
@@ -185,7 +173,7 @@ export default function Add() {
                         </Button>
                     </form>
                 </CardContent>
-            </Card>
+            </div>
         </>
     );
 }

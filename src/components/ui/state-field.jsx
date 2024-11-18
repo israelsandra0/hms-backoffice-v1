@@ -32,7 +32,7 @@ const StateField = forwardRef(({ ...props }, ref) => {
     return (
         
 
-        <select id="state" value={selectedState.name} onChange={stateChange}  {...props} ref={ref} className='focus:outline-none bg-[#F2F2F5] border border-neutral-200' >
+        <select id="state" value={selectedState.name} onChange={stateChange}  {...props} ref={ref} className='focus:outline-none w-full rounded-[5px] h-10 bg-[#F2F2F5] border border-neutral-200' >
             {states.map((state, index) => (
                 <option key={index} value={state.name} >
                     {state.name}

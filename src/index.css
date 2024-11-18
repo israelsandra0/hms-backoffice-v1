@@ -4,7 +4,7 @@
 
 @layer components {
   body {
-    @apply bg-slate-50 font-serif
+    @apply font-serif
     
   }
 
@@ -15,6 +15,10 @@
   .bg-secondary {
     background-color: #E2A354;
   }
+/* 
+  .bg-input {
+    background-color: [#F2F2F5];
+  } */
 
   .bg-grey {
     background-color: #F2F2F5;

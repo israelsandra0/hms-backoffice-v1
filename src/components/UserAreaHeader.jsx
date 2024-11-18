@@ -97,12 +97,10 @@ export default function UserAreaHeader({ pageName }) {
           
         </SheetContent>
       </Sheet>
-      {/* {navLinks.map((link) => ( */}
-      <div className="w-full flex-1 overview">
-        {/* <h1>{link.name}</h1> */}
+     
+      <div className="w-full ml-8">
         <h1>{pageName}</h1>
       </div>
-      {/* ))} */}
 
       <DropdownMenu className="">
         <DropdownMenuTrigger asChild>
