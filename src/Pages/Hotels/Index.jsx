@@ -60,8 +60,8 @@ export default function HotelsPage() {
     return (
         <>
             <UserAreaHeader pageName="Hotel Management" />
-            <div className="text-right mr-4">
-                <ButtonLink to="/hotels/add">Add Hotels</ButtonLink>
+            <div className="text-right mr-4 mb-8">
+                <ButtonLink to="/hotels/add" variant='primary'>Add Hotels</ButtonLink>
                 {/* <Button>Add Hotels</Button> */}
             </div>
             <Table className="content">

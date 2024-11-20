@@ -23,6 +23,7 @@ const CityField = forwardRef(({ ...props }, ref) => {
     return (
         
         <select id="city" value={selectedCity.name} onChange={cityChange}  {...props} ref={ref} className='focus:outline-none bg-[#F2F2F5] border w-full rounded-[5px] h-10 border-neutral-200' >
+            <option value="">Select one</option>
             {cities.map((city, index) => (
                 <option key={index} value={city.name} >
                     {city.name}
