@@ -1,13 +1,13 @@
 import React, { forwardRef, useState } from 'react';
+import Select from 'react-select'
 
 const cities = [
     { name: "ago" },
     { name: "isolo" },
     { name: "okota" },
     { name: "amuwo" },
+    { name: "ojota" },
 ]
-
-
 
 const CityField = forwardRef(({ ...props }, ref) => {
     const [selectedCity, setSelectedCity] = useState(cities[0]);
@@ -21,8 +21,7 @@ const CityField = forwardRef(({ ...props }, ref) => {
     };
 
     return (
-
-
+        
         <select id="city" value={selectedCity.name} onChange={cityChange}  {...props} ref={ref} className='focus:outline-none bg-[#F2F2F5] border w-full rounded-[5px] h-10 border-neutral-200' >
             {cities.map((city, index) => (
                 <option key={index} value={city.name} >

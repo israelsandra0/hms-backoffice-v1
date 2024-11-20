@@ -34,7 +34,7 @@ const IntlPhoneField = forwardRef(({ ...props }, ref) => {
             <div className="w-full relative">
                 <div className="bg-grey flex p-1 border border-neutral-200 rounded-[5px]">
                     <div className="bg-white text-[#333333] px-2 flex rounded-[5px] gap-2 w-[150px] justify-start items-center" onClick={toggle}>
-                        <FlagImage iso2={country.iso2}  />
+                        <FlagImage iso2={country.iso2}  className="w-6" />
                         <span>+{country.dialCode}</span>  
                         <ChevronDown className="w-6 h-6" />
                     </div>
@@ -46,14 +46,14 @@ const IntlPhoneField = forwardRef(({ ...props }, ref) => {
 
                         <div 
                             key={shortName} 
-                            className={`flex justify-between cursor-pointer p-2 rounded-[5px] ${shortName == country.iso2 ? 'bg-blue-100' : 'hover:bg-gray-100'}`}  
+                            className={`flex justify-between cursor-pointer p-2  rounded-[5px] ${shortName == country.iso2 ? 'bg-blue-100' : 'hover:bg-gray-100'}`}  
                             onClick={() => {
                                 setCountry(shortName) 
                                 toggle() 
                             }}
                         >
                             <div className="flex  gap-2">
-                                <FlagImage iso2={shortName} /> {fullName} 
+                                <FlagImage iso2={shortName} className="w-6" /> {fullName} 
                             </div>
                             
                             <div className="text-gray-500">+{dialCode}</div>
