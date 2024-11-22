@@ -10,7 +10,6 @@ import { post } from "@/functions";
 import { BACKEND_URL } from "@/constants";
 import { Label } from "@/components/ui/label";
 import StateField from "@/components/ui/state-field";
-import CityField from "@/components/ui/city-field";
 import { Link, useNavigate } from "react-router-dom";
 import UserAreaHeader from "@/components/UserAreaHeader";
 import { Check, ChevronLeft } from "lucide-react";
@@ -18,7 +17,6 @@ import IntlPhoneField from "@/components/ui/intlphone-field";
 import {
     AlertDialog,
     AlertDialogContent,
-    AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
@@ -88,7 +86,7 @@ export default function Add() {
                             });
                         });
                     }
-                    return null;
+                    return null;`  `
                 }
 
                 if (res.status === 500) {
@@ -133,8 +131,8 @@ export default function Add() {
                             <div className="mb-2">
                                 <Label htmlFor="name">Name of hotel</Label>
                                 <br />
-                                <Input {...register("name")} id="name" className="outline-none text-black" />
-                                <p className="text-red-700 text-sm">{errors.name?.message}</p> 
+                                <Input {...register("name")} id="name" />
+                                <p>{errors.name?.message}</p> 
                                 
                             
                             </div>
@@ -142,16 +140,16 @@ export default function Add() {
                             <div className="mb-2">
                                 <Label htmlFor="email">Email</Label>
                                 <br />
-                                <Input {...register("email")} type="email" id="email" className="outline-none text-black" />
-                                <p className="text-red-700 text-sm">{errors.email?.message}</p>
+                                <Input {...register("email")} type="email" id="email" />
+                                <p>{errors.email?.message}</p>
                             
                             </div>
 
                             <div className="mb-2">
                                 <Label htmlFor="website">Website</Label>
                                 <br />
-                                <Input {...register("website")} className="outline-none text-black" id="website" />
-                                <p className="text-red-700 text-sm">{errors.website?.message}</p>
+                                <Input {...register("website")} id="website" />
+                                <p>{errors.website?.message}</p>
                                 
                             </div>
 
@@ -163,15 +161,15 @@ export default function Add() {
                                     control={control}
                                     render={({ field }) => <IntlPhoneField {...field} id="phone" />}
                                 />
-                                <p className="text-red-700 text-sm">{errors.phone?.message}</p>
+                                <p>{errors.phone?.message}</p>
                             
                             </div>
 
                             <div className="mb-2">
                                 <Label htmlFor="address">Address</Label>
                                 <br />
-                                <Input {...register("address")} id="address" className="outline-none text-black" />
-                                <p className="text-red-700 text-sm">{errors.address?.message}</p>
+                                <Input {...register("address")} id="address" />
+                                <p>{errors.address?.message}</p>
                             
                             </div>
 
@@ -184,21 +182,16 @@ export default function Add() {
                                         control={control}
                                         render={({ field }) => <StateField {...field} />}
                                     />
-                                    <p className="text-red-700 text-sm">{errors.state?.message}</p>
+                                    <p>{errors.state?.message}</p>
                                 
                                 </div>
 
                                 <div className="mb-2 w-full">
                                     <Label htmlFor="city">City</Label>
                                     <br />
-                                    <Controller
-                                        name="city"
-                                        control={control}
-                                        render={({ field }) => <CityField {...field} />}
-                                    />
-                                    <p className="text-red-700 text-sm">{errors.city?.message}</p>
-                                
-                                </div>
+                                    <Input {...register("city")} id="city" />
+                                    <p>{errors.city?.message}</p>
+                                 </div>
                             </div>
                         </div>
 
@@ -208,15 +201,12 @@ export default function Add() {
                         </Button>
 
                         <AlertDialog open={isSuccess} onOpenChange={(open) => setIsSuccess(open)}>
-                            <AlertDialogContent className="w-[340px] h-[260px] p-8 border-none rounded-[1.5rem] lg:rounded-[1.5rem]">
+                            <AlertDialogContent className="w-[340px] h-[210px] p-8 border-none rounded-[1.5rem] lg:rounded-[1.5rem]">
                                 <AlertDialogHeader>
-                                    <Check className="bg-[#F1E2D3] text-[#542A12] rounded-full p-2 w-[50px] h-[50px] mx-auto" />
-                                    <AlertDialogTitle className="mx-auto">Hotel Added Successfully!</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Impedit consectetur.
-                                    </AlertDialogDescription>
+                                    <Check className="bg-lightPrimary text-[#542A12] mb-4 rounded-full p-2 w-[50px] h-[50px] mx-auto" />
+                                    <AlertDialogTitle className="mx-auto ">Hotel Added Successfully!</AlertDialogTitle>
                                 </AlertDialogHeader>
-                                <AlertDialogFooter className="mt-4">
+                                <AlertDialogFooter className="mt-2">
                                     <ButtonLink variant="primary" className="w-full p-[16px] text-[16px]" onClick={() => { setIsSuccess(false); navigate("/hotels") }}>
                                         Done
                                     </ButtonLink>

@@ -14,6 +14,8 @@ const buttonVariants = cva(
                     "bg-red-500 text-neutral-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/90",
                 //ATSL primary
                 primary: "bg-primary text-white",
+                //ATSL error
+                error: "bg-[#DF362B] text-white",
                 outline:
                     "border border-neutral-200 bg-white hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:hover:text-neutral-50",
                 secondary:

@@ -14,6 +14,8 @@ const buttonVariants = cva(
         primary: "bg-primary text-white",
         //ATSL accent color
         secondary: "bg-secondary text-white",
+        //ATSL error
+        error: "bg-[#DF362B] text-white",
         //ATSLgrey
         grey: "bg-grey text-[#BBBAC5]",
         destructive:

@@ -87,14 +87,18 @@ export async function get(urlPath) {
 }
 
 // reueable function for user login
-export async function post(urlPath, data = {}) {
+export async function post(urlPath, data = {}, method = 'POST') {
   const token = getDataObject(AUTH_DATA_KEY).accessToken;
   return fetch(urlPath, {
-    method: "POST",
+    method,
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
   });
+}
+
+export async function apiDelete(urlPath){
+  return post(urlPath, {}, 'DELETE')
 }

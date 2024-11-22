@@ -23,6 +23,9 @@
   .bg-grey {
     background-color: #F2F2F5;
   }
+  .bg-lightPrimary{
+    background-color: #F1E2D3;
+  }
 
   .login label,
   .reset {
@@ -41,5 +44,10 @@
     background-color: #F1E2D3;
     border-radius: 50px;
     color: #8D561E;
+  }
+
+  .hotelForm div div p{
+    color: red;
+    font-size: 14px;
   }
 }
