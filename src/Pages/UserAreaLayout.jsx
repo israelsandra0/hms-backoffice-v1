@@ -7,6 +7,7 @@ import ReportIcon from "@/components/icons/Report";
 import CommunicationIcon from "@/components/icons/communication";
 import SupportIcon from "@/components/icons/Support";
 import SettingsIcon from "@/components/icons/Setting";
+import { Toaster } from "@/components/ui/toaster";
 
 
 
@@ -16,6 +17,7 @@ export default function UserAreaLayout() {
 
     return (
         <RequireAuth>
+             <Toaster />
             <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
 
                 {/* containing the sidebar */}
@@ -65,6 +67,7 @@ export default function UserAreaLayout() {
                     <Outlet />
                 </div>
             </div>
+            
         </RequireAuth>
     )
 }

@@ -1,5 +1,5 @@
 import { BACKEND_URL } from "@/constants";
-import { apiDelete, get } from "@/functions";
+import { apiDelete, get, post } from "@/functions";
 import { useQuery } from "@tanstack/react-query";
 import {
     Table,
@@ -12,18 +12,6 @@ import {
 import { Card } from "@/components/ui/card";
 import { ButtonLink } from "@/components/ui/button_link";
 import UserAreaHeader from "@/components/UserAreaHeader";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
 import { MoreVertical, } from "lucide-react"
 import {
     DropdownMenu,
@@ -34,16 +22,20 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useState } from "react";
 import AlertBox from "@/components/ui/alert-box";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 
 
 export default function HotelsPage() {
-
 
     const [deletingHotelId, setDeletingHotelId] = useState(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // Fetching hotels data
-    const { data: clients, error, isPending, refetch:fetchAllHotels} = useQuery({
+    
+    
+    // handle hotel list
+    const { data: clients, error, isPending, refetch: fetchAllHotels } = useQuery({
         queryKey: ['clientsData'],
         queryFn: async () => {
             const res = await get(`${BACKEND_URL}/hotels`);
@@ -55,9 +47,9 @@ export default function HotelsPage() {
         },
     });
 
-
+    const {toast} = useToast()
     // handle hotel deletion
-    const { refetch:sendDeleteRequest } = useQuery({
+    const { refetch: sendDeleteRequest } = useQuery({
         enabled: false,
         queryKey: ['delete'],
         queryFn: async () => {
@@ -65,15 +57,24 @@ export default function HotelsPage() {
             const res = await apiDelete(`${BACKEND_URL}/hotels/destroy/${deletingHotelId}`)
 
             if (res.ok) {
-                alert('Hotel deleted successfully');
+                toast({
+                    success: true,
+                    duration: 5000,
+                    title: 'Hotel deleted successfully!'
+                });
             } else {
-                alert('Failed to delete the hotel. Please try again.');
+                toast({
+                    error: true,
+                    duration: 5000,
+                    title: 'Failed to delete the hotel. Please try again.'
+                });
             }
 
-            // res()
 
         },
     });
+
+  
 
     // Loading state
     if (isPending) {
@@ -82,9 +83,17 @@ export default function HotelsPage() {
 
     if (!clients?.length) {
         return (
-            <Card className="p-4">
-                <p>No hotels found!</p>
-            </Card>
+            <>
+                <UserAreaHeader pageName="Hotel Management" />
+                <div className="text-right mr-4 mb-8">
+                    <ButtonLink to="/hotels/add" variant="primary">
+                        Add Hotels
+                    </ButtonLink>
+                </div>
+                <Card className="p-4">
+                    <p>No hotels found!</p>
+                </Card>
+            </>
         );
     }
 
@@ -99,6 +108,7 @@ export default function HotelsPage() {
         setIsDialogOpen(false);
         setDeletingHotelId(null);
     };
+
 
     return (
         <>
@@ -127,7 +137,7 @@ export default function HotelsPage() {
                             <TableCell>{client?.website}</TableCell>
                             <TableCell>{client?.number}</TableCell>
                             <TableCell>{client?.subscription}</TableCell>
-                            <TableCell>{client?.isActive ? `Active` : 'Inactive'}</TableCell>
+                            <TableCell><Badge variant={client?.isActive ? `success` : 'error'}>{client?.isActive ? `Active` : 'Inactive'}</Badge></TableCell>
                             <TableCell>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -142,8 +152,8 @@ export default function HotelsPage() {
                                             <span>Edit</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem>
-                                            <span>Activate</span>
+                                        <DropdownMenuItem >
+                                            <span>{client.isActive ? 'Deactivate' : 'Activate'}</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem
@@ -162,17 +172,16 @@ export default function HotelsPage() {
             </Table>
 
             {isDialogOpen && (
-                <AlertBox title="Are you sure?" 
+                <AlertBox title="Are you sure?"
                     message="This will permanently delete the hotel and remove its data from our servers. This action cannot be undone."
-                    confirm={async() => { 
-                        setIsDialogOpen(false); 
+                    confirm={async () => {
+                        setIsDialogOpen(false);
                         await sendDeleteRequest();
-                        fetchAllHotels();
+                        fetchAllHotels();                        
                     }}
                     cancel={handleDialogClose}
                 />
             )}
-
 
         </>
     );

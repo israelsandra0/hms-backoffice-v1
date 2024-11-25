@@ -149,13 +149,6 @@ export default function LoginPage() {
 											<Link className="text-[#8D561E]">Reset it</Link>
 										</p>
 									</div>
-									{/* <Input
-                    type="password"
-                    {...register("password")}
-                    placeholder="Password"
-                    id="password"
-                  /> */}
-
 									<Controller 
 										name="password"
 										control={control}

@@ -19,7 +19,10 @@
   .bg-input {
     background-color: [#F2F2F5];
   } */
-
+  .bg-success{
+    background-color: #E7F8F0;
+    color: #27AE60;
+  }
   .bg-grey {
     background-color: #F2F2F5;
   }
