@@ -15,7 +15,6 @@ import Communication from './Pages/Communication';
 import Support from './Pages/Support';
 import Settings from './Pages/Settings';
 import Users from './Pages/Users';
-import AlertDialog from './components/ui/alert-box';
 
 
 
