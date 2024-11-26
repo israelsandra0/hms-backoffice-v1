@@ -1,4 +1,4 @@
-import { AUTH_DATA_KEY } from "./constants";
+import { AUTH_DATA_KEY, BACKEND_URL } from "./constants";
 
 function bytesToBase64(bytes) {
   const binString = Array.from(bytes, (byte) =>
@@ -74,11 +74,15 @@ export function setData(key, value) {
   );
 }
 
+
+
 // reueable function for accessToken
 export async function get(urlPath) {
   const token = getDataObject(AUTH_DATA_KEY).accessToken;
+  
+  const fullUrl = `${BACKEND_URL}${urlPath}`;
 
-  return fetch(urlPath, {
+  return fetch(fullUrl, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -88,8 +92,11 @@ export async function get(urlPath) {
 
 // reueable function for user login
 export async function post(urlPath, data = {}, method = 'POST') {
+
   const token = getDataObject(AUTH_DATA_KEY).accessToken;
-  return fetch(urlPath, {
+  const fullUrl = `${BACKEND_URL}${urlPath}`;
+
+  return fetch(fullUrl, {
     method,
     headers: {
       Authorization: `Bearer ${token}`,
