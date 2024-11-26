@@ -42,7 +42,7 @@ export default function LoginPage() {
 
 	async function getAuthUser() {
 		try {
-			const response = await get(`${BACKEND_URL}/auth/me`);
+			const response = await get('/auth/me');
 			console.log(response);
 
 			const { data } = await response.json();
@@ -82,7 +82,7 @@ export default function LoginPage() {
 					},
 				};
 
-				const res = await post(`${BACKEND_URL}/auth/login`, loginData);
+				const res = await post('/auth/login', loginData);
 
 				if (res.status.toString().startsWith(4)) {
 					setDisabledButton(false);

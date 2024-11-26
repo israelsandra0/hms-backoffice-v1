@@ -68,7 +68,7 @@ export default function Add() {
                     city: hotelInput.city,    // Fixed: city should be hotelInput.city
                 };
 
-                const res = await post(`${BACKEND_URL}/hotels/store`, hotelData);
+                const res = await post('/hotels/store', hotelData);
                 console.log(res);
 
                 if (res.status.toString().startsWith(4)) {

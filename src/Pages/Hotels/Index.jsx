@@ -29,16 +29,18 @@ import { useToast } from "@/hooks/use-toast";
 export default function HotelsPage() {
 
     const [deletingHotelId, setDeletingHotelId] = useState(null);
+    const [activeHotelId, setActiveHotelId] = useState(null);
+    const [hotelAction, setHotelAction] = useState(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // Fetching hotels data
-    
-    
+
+
     // handle hotel list
     const { data: clients, error, isPending, refetch: fetchAllHotels } = useQuery({
         queryKey: ['clientsData'],
         queryFn: async () => {
-            const res = await get(`${BACKEND_URL}/hotels`);
+            const res = await get('/hotels');
             if (!res.ok) {
                 throw new Error(error.message);
             }
@@ -47,14 +49,14 @@ export default function HotelsPage() {
         },
     });
 
-    const {toast} = useToast()
+    const { toast } = useToast()
     // handle hotel deletion
     const { refetch: sendDeleteRequest } = useQuery({
         enabled: false,
         queryKey: ['delete'],
         queryFn: async () => {
 
-            const res = await apiDelete(`${BACKEND_URL}/hotels/destroy/${deletingHotelId}`)
+            const res = await apiDelete(`/hotels/destroy/${deletingHotelId}`)
 
             if (res.ok) {
                 toast({
@@ -74,7 +76,37 @@ export default function HotelsPage() {
         },
     });
 
-  
+    // handle hotel activation / deactivation
+    const { refetch: updateHotelStatus } = useQuery({
+        enabled: false,
+        queryKey: ['hotelStatus'],
+        queryFn: async () => {
+
+            const hotelStatus = hotelAction === 'Activate';
+            const res = await post(`/hotels/update-active-status/${activeHotelId}`, { isActive: hotelStatus })
+            console.log(res)
+
+            if (res.ok) {
+                console.log('hello')
+                toast({
+                    success: true,
+                    duration: 5000,
+                    title: hotelStatus ? 'Hotel activated successfully!' : 'Hotel deactivated successfully!'
+                });
+            } else {
+                console.log('yesssssss')
+                toast({
+                    error: true,
+                    duration: 5000,
+                    title: 'Failed to update hotel staus. Please try again.'
+                });
+            }
+
+
+        },
+    });
+
+
 
     // Loading state
     if (isPending) {
@@ -97,16 +129,34 @@ export default function HotelsPage() {
         );
     }
 
-    // Handle delete button click
-    const handleDeleteClick = (hotelId) => {
+    // Handle button click for delete/activation/deactivation
+    const handleActionClick = (hotelId, actionType) => {
+        setHotelAction(actionType);
         setDeletingHotelId(hotelId);
+        setActiveHotelId(hotelId)
         setIsDialogOpen(true);
     };
+
+    const handleConfirmation = async () => {
+        setIsDialogOpen(false)
+
+        if (hotelAction === 'delete') {
+            await sendDeleteRequest();
+        } else if (hotelAction === 'Activate' || hotelAction === 'Deactivate') {
+            await updateHotelStatus();
+        }
+
+        fetchAllHotels();
+    }
+
+    //
 
     // Handle dialog cancel
     const handleDialogClose = () => {
         setIsDialogOpen(false);
         setDeletingHotelId(null);
+        setActiveHotelId(null)
+        setHotelAction(null)
     };
 
 
@@ -152,15 +202,12 @@ export default function HotelsPage() {
                                             <span>Edit</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem >
+                                        <DropdownMenuItem onClick={() => handleActionClick(client.id, client.isActive ? 'Deactivate' : 'Activate')}>
                                             <span>{client.isActive ? 'Deactivate' : 'Activate'}</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem
-                                            onClick={() => {
-                                                setDeletingHotelId(client.id)
-                                                setIsDialogOpen(true)
-                                            }}>
+                                            onClick={() => handleActionClick(client.id, 'delete')}>
                                             <span>Delete</span>
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
@@ -172,14 +219,32 @@ export default function HotelsPage() {
             </Table>
 
             {isDialogOpen && (
-                <AlertBox title="Are you sure?"
-                    message="This will permanently delete the hotel and remove its data from our servers. This action cannot be undone."
-                    confirm={async () => {
-                        setIsDialogOpen(false);
-                        await sendDeleteRequest();
-                        fetchAllHotels();                        
-                    }}
-                    cancel={handleDialogClose}
+                <AlertBox title={
+                    hotelAction === 'delete' ? "Are you sure?" :
+                    hotelAction === 'Activate' ? "Activate Hotel?" : "Deactivate Hotel?"
+                }
+                    message={
+                        hotelAction === 'delete' ? "you're about to delete this hotel, This action cannot be undone." :
+                        hotelAction === 'Activate' ? "This action will activate the hotel and allow it to be visible to users."
+                        : "This action will deactivate the hotel and allow it to be invisible to users."
+                    }
+                    buttonVariant={
+                        hotelAction === 'delete' ? "error" :
+                        hotelAction === 'Activate' ? "primary" : "primary"
+                    }
+                    confirmButtonText={
+                        hotelAction === 'delete' ? "Delete" :
+                        hotelAction === 'Activate' ? "Activate" : "Deactivate"
+                    }
+                    cancelButtonText={
+                        hotelAction === 'delete' ? "Cancel" :
+                        hotelAction === 'Activate' ? "Cancel" : "Cancel"
+                    }
+                    boxIcon={
+                        hotelAction === 'Active'
+                    }
+                    confirmFn={handleConfirmation}
+                    cancelFn={handleDialogClose}
                 />
             )}
 

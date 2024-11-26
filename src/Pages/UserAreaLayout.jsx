@@ -13,8 +13,6 @@ import { Toaster } from "@/components/ui/toaster";
 
 export default function UserAreaLayout() {
 
-
-
     return (
         <RequireAuth>
              <Toaster />
