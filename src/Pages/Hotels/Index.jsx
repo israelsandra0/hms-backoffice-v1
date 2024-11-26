@@ -24,11 +24,13 @@ import { useState } from "react";
 import AlertBox from "@/components/ui/alert-box";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import EditHotelModal from "./Edit";
 
 
 export default function HotelsPage() {
 
     const [deletingHotelId, setDeletingHotelId] = useState(null);
+    const [editBox, setEditBox] = useState(false)
     const [activeHotelId, setActiveHotelId] = useState(null);
     const [hotelAction, setHotelAction] = useState(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -77,7 +79,7 @@ export default function HotelsPage() {
     });
 
     // handle hotel activation / deactivation
-    const { refetch: updateHotelStatus } = useQuery({
+    const { refetch: updateHotelStatus, isFetching } = useQuery({
         enabled: false,
         queryKey: ['hotelStatus'],
         queryFn: async () => {
@@ -106,10 +108,45 @@ export default function HotelsPage() {
         },
     });
 
+    // handle hotel editing
+    const { refetch: editHotel} = useQuery({
+        enabled: false,
+        queryKey: ['editing'],
+        queryFn: async () => {
+
+            const res = await fetch(`${BACKEND_URL}/hotels/update/${hotelId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(),
+            });
+
+            if (res.ok) {
+                toast({
+                    success: true,
+                    duration: 5000,
+                    title:  'Hotel edited successfully!'
+                });
+            } else {
+                toast({
+                    error: true,
+                    duration: 5000,
+                    title: 'Failed to edit hotel. Please try again.'
+                });
+            }
+            return res;
+        },
+    });
+
 
 
     // Loading state
     if (isPending) {
+        return <div>Loading ...</div>;
+    }
+
+    if (isFetching) {
         return <div>Loading ...</div>;
     }
 
@@ -159,6 +196,14 @@ export default function HotelsPage() {
         setHotelAction(null)
     };
 
+    const handleEditClick = (hotelId) => {
+        setEditBox(true);
+        setActiveHotelId(hotelId);
+    };
+    const handleEditClose = () => {
+        setEditBox(false)
+    }
+
 
     return (
         <>
@@ -197,8 +242,8 @@ export default function HotelsPage() {
                                         <DropdownMenuItem>
                                             <span>View</span>
                                         </DropdownMenuItem>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem>
+                                        <DropdownMenuSeparator/>
+                                        <DropdownMenuItem onClick={() => handleEditClick(client.id)}>
                                             <span>Edit</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
@@ -245,8 +290,11 @@ export default function HotelsPage() {
                     }
                     confirmFn={handleConfirmation}
                     cancelFn={handleDialogClose}
+
                 />
             )}
+
+            {editBox && <EditHotelModal closeFn={handleEditClose} />}
 
         </>
     );

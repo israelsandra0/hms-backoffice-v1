@@ -1,6 +1,5 @@
 import { Check, Eraser, Info, Power } from "lucide-react";
 import { Button } from "./button";
-import { ButtonLink } from "./button_link";
 
 export default function AlertBox({
     title,
@@ -32,13 +31,13 @@ export default function AlertBox({
                     <Button className="w-full" variant="outline" onClick={cancelFn}>
                         {cancelButtonText ?? "Cancel"}
                     </Button>
-                    <ButtonLink
+                    <Button
                         className="w-full"
                         variant={buttonVariant}
                         onClick={confirmFn}
                     >
                         {confirmButtonText ?? "Confirm"}
-                    </ButtonLink>
+                    </Button>
                 </div>
             </div>
         </div>
