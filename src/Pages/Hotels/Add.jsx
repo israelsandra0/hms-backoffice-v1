@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { CardContent, } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
-import { post } from "@/functions";
+import { get, post } from "@/functions";
 import { BACKEND_URL } from "@/constants";
 import { Label } from "@/components/ui/label";
 import StateField from "@/components/ui/state-field";
@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { ButtonLink } from "@/components/ui/button_link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import Spinner from "@/components/ui/spinner";
 
 
 export default function Add() {
@@ -43,13 +44,17 @@ export default function Add() {
         resolver: yupResolver(yupBuild),
     });
 
+    const [states, setStates] = useState([]);
     const [isSuccess, setIsSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [disabledButton, setDisabledButton] = useState(false);
     const navigate = useNavigate();
-    
 
-    const { refetch } = useQuery({
+
+
+
+
+    const { refetch: sendHotelDataRequest } = useQuery({
         enabled: false,
         queryKey: ["hotels"],
         queryFn: async () => {
@@ -74,8 +79,8 @@ export default function Add() {
                 if (res.status.toString().startsWith(4)) {
                     setDisabledButton(false);
                     setErrorMessage("Hotel details not saved, correct all indicated fields and try again!");
-                    
-                    
+
+
                     const responseErrors = await res.json()
 
                     if (responseErrors.errors) {
@@ -86,7 +91,7 @@ export default function Add() {
                             });
                         });
                     }
-                    return null;`  `
+                    return null; `  `
                 }
 
                 if (res.status === 500) {
@@ -105,20 +110,45 @@ export default function Add() {
         },
     });
 
-    
+    const { refetch: fetchStates, isLoading: isLoadingStates } = useQuery({
+        enabled: false,
+        queryKey: ["states"],
+        queryFn: async () => {
+            setErrorMessage("");
+
+            try {
+
+                const res = await get('/hotels/create');
+                return await res.json();
+
+
+            } catch (error) {
+                setErrorMessage('Failed to load states data');
+                setDisabledButton(false);
+                console.log(error);
+            }
+        },
+    });
+
+
+    useEffect(() => {
+        fetchStates().then(response => {
+            setStates(response.data.data);
+        })
+    }, [])
+
 
     return (
         <>
-            <div>
-                <div className="absolute mt-5 ml-4">
-                    <Link to="/hotels">
-                        <ChevronLeft className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" />
-                    </Link>
-                </div>
-                <UserAreaHeader pageName="Add Hotels" />
-            </div>
+            <UserAreaHeader pageName="Add Hotels" />
 
-            <div className="w-2/5 text-center mx-auto border-none bg-transparent ring-0">
+            {isLoadingStates && 
+                <div className="text-center flex items-center justify-center mx-auto my-5">
+                    <Spinner className="me-3 text-gray-300 h-16 w-16" />
+                </div>
+            }
+
+            <div className={`${isLoadingStates ? 'hidden' : ' w-2/5 text-center mx-auto border-none bg-transparent ring-0'}`}>
                 <CardContent className='mt-4'>
                     {!!errorMessage?.length && (
                         <Alert className="alert text-red-900 border-0 h-full  bg-[#fee]">
@@ -126,15 +156,15 @@ export default function Add() {
                         </Alert>
                     )}
 
-                    <form onSubmit={handleSubmit(refetch)} className="hotelForm text-left">
+                    <form onSubmit={handleSubmit(sendHotelDataRequest)} className="hotelForm text-left">
                         <div className="mt-4">
                             <div className="mb-2">
                                 <Label htmlFor="name">Name of hotel</Label>
                                 <br />
                                 <Input {...register("name")} id="name" />
-                                <p>{errors.name?.message}</p> 
-                                
-                            
+                                <p>{errors.name?.message}</p>
+
+
                             </div>
 
                             <div className="mb-2">
@@ -142,7 +172,7 @@ export default function Add() {
                                 <br />
                                 <Input {...register("email")} type="email" id="email" />
                                 <p>{errors.email?.message}</p>
-                            
+
                             </div>
 
                             <div className="mb-2">
@@ -150,7 +180,7 @@ export default function Add() {
                                 <br />
                                 <Input {...register("website")} id="website" />
                                 <p>{errors.website?.message}</p>
-                                
+
                             </div>
 
                             <div className="mb-2">
@@ -162,7 +192,7 @@ export default function Add() {
                                     render={({ field }) => <IntlPhoneField {...field} id="phone" />}
                                 />
                                 <p>{errors.phone?.message}</p>
-                            
+
                             </div>
 
                             <div className="mb-2">
@@ -170,7 +200,7 @@ export default function Add() {
                                 <br />
                                 <Input {...register("address")} id="address" />
                                 <p>{errors.address?.message}</p>
-                            
+
                             </div>
 
                             <div className="flex gap-2">
@@ -180,10 +210,10 @@ export default function Add() {
                                     <Controller
                                         name="state"
                                         control={control}
-                                        render={({ field }) => <StateField {...field} />}
+                                        render={({ field }) => <StateField {...field} options={states} />}
                                     />
                                     <p>{errors.state?.message}</p>
-                                
+
                                 </div>
 
                                 <div className="mb-2 w-full">
@@ -191,7 +221,7 @@ export default function Add() {
                                     <br />
                                     <Input {...register("city")} id="city" />
                                     <p>{errors.city?.message}</p>
-                                 </div>
+                                </div>
                             </div>
                         </div>
 

@@ -29,6 +29,9 @@
   .bg-lightPrimary{
     background-color: #F1E2D3;
   }
+  .text-light-primary{
+    color: #F1E2D3;
+  }
 
   .login label,
   .reset {
