@@ -25,6 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import EditHotelModal from "./Edit";
 import { useConfirm } from "@/hooks/use-confirm";
+import { Button } from "@/components/ui/button";
 
 
 export default function HotelsPage() {
@@ -201,7 +202,10 @@ export default function HotelsPage() {
                                         <MoreVertical className="cursor-pointer hover:bg-gray-100" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56">
-                                        <DropdownMenuItem>
+                                        <ButtonLink variant='outline' to="/hotels/view/overview">
+                                            <span>View</span>
+                                        </ButtonLink>
+                                        <DropdownMenuItem to="/hotels/view/overview">
                                             <span>View</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />

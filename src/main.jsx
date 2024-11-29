@@ -15,6 +15,7 @@ import Communication from './Pages/Communication';
 import Support from './Pages/Support';
 import Settings from './Pages/Settings';
 import Users from './Pages/Users';
+import HotelsOverview from './pages/hotels/viewHotels/Overview';
 
 
 
@@ -26,6 +27,7 @@ const router = createBrowserRouter(
       <Route path='' element={<UserAreaLayout/>}>
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/hotels' element={<HotelsPage />} />
+        <Route path='/hotels/view/overview' element={<HotelsOverview />} />
         <Route path='/hotels/add' element={<Add />} />
         <Route path='/users' element={<Users />} />
         <Route path='/accounts' element={<Account />} />
