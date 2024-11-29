@@ -21,7 +21,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useState } from "react";
-import AlertBox from "@/components/ui/alert-box";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import EditHotelModal from "./Edit";
@@ -30,14 +29,13 @@ import { useConfirm } from "@/hooks/use-confirm";
 
 export default function HotelsPage() {
 
-    const [deletingHotelId, setDeletingHotelId] = useState(null);
+
     const [editBox, setEditBox] = useState(false)
     const [activeHotelId, setActiveHotelId] = useState(null);
-    const [hotelAction, setHotelAction] = useState(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-
-    // Fetching hotels data
+    const [hotelDetails, setHotelDetails] = useState()
+    const [hotelToEdit, setHotelToEdit] = useState({})
+    const { toast } = useToast()
+    const { confirmAction } = useConfirm()
 
 
     // handle hotel list
@@ -53,105 +51,11 @@ export default function HotelsPage() {
         },
     });
 
-    const { toast } = useToast()
-    const { confirmAction } = useConfirm()
-    // handle hotel deletion
-    const { refetch: sendDeleteRequest } = useQuery({
-        enabled: false,
-        queryKey: ['delete'],
-        queryFn: async () => {
-
-            const res = await apiDelete(`/hotels/destroy/${deletingHotelId}`)
-
-            if (res.ok) {
-                toast({
-                    success: true,
-                    duration: 5000,
-                    title: 'Hotel deleted successfully!'
-                });
-            } else {
-                toast({
-                    error: true,
-                    duration: 5000,
-                    title: 'Failed to delete the hotel. Please try again.'
-                });
-            }
-
-
-        },
-    });
-
-    // handle hotel activation / deactivation
-    const { refetch: updateHotelStatus, isFetching } = useQuery({
-        enabled: false,
-        queryKey: ['hotelStatus'],
-        queryFn: async () => {
-
-            const hotelStatus = hotelAction === 'Activate';
-            const res = await post(`/hotels/update-active-status/${activeHotelId}`, { isActive: hotelStatus })
-            console.log(res)
-
-            if (res.ok) {
-                console.log('hello')
-                toast({
-                    success: true,
-                    duration: 5000,
-                    title: hotelStatus ? 'Hotel activated successfully!' : 'Hotel deactivated successfully!'
-                });
-            } else {
-                console.log('yesssssss')
-                toast({
-                    error: true,
-                    duration: 5000,
-                    title: 'Failed to update hotel staus. Please try again.'
-                });
-            }
-
-
-        },
-    });
-
-    // handle hotel editing
-    const { refetch: editHotel } = useQuery({
-        enabled: false,
-        queryKey: ['editing'],
-        queryFn: async () => {
-
-            const res = await fetch(`${BACKEND_URL}/hotels/update/${hotelId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(),
-            });
-
-            if (res.ok) {
-                toast({
-                    success: true,
-                    duration: 5000,
-                    title: 'Hotel edited successfully!'
-                });
-            } else {
-                toast({
-                    error: true,
-                    duration: 5000,
-                    title: 'Failed to edit hotel. Please try again.'
-                });
-            }
-            return res;
-        },
-    });
-
-
-
     // Loading state
     if (isPending) {
         return <div>Loading ...</div>;
     }
 
-    if (isFetching) {
-        return <div>Loading ...</div>;
-    }
 
     if (!clients?.length) {
         return (
@@ -244,16 +148,9 @@ export default function HotelsPage() {
             }
 
         })
-
-        // setHotelAction(actionType);
-        // setDeletingHotelId(hotelId);
-        // setActiveHotelId(hotelId)
-        // setIsDialogOpen(true);
     };
-
     
-    
-
+    //handle delete, activation / deactivation fetching
     const handleConfirmation = async (hotelId, hotelAction) => {
 
         if (hotelAction === 'Activate' || hotelAction === 'Deactivate') {
@@ -264,22 +161,9 @@ export default function HotelsPage() {
         }
     }
 
-    //
-
-    // Handle dialog cancel
-    const handleDialogClose = () => {
-        setIsDialogOpen(false);
-        setDeletingHotelId(null);
-        setActiveHotelId(null)
-        setHotelAction(null)
-    };
-
-    const handleEditClick = (hotelId) => {
-        setEditBox(true);
-        setActiveHotelId(hotelId);
-    };
     const handleEditClose = () => {
-        setEditBox(false)
+        setHotelToEdit({})
+        fetchAllHotels()
     }
 
 
@@ -321,7 +205,7 @@ export default function HotelsPage() {
                                             <span>View</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem onClick={() => handleEditClick(client.id)}>
+                                        <DropdownMenuItem onClick={() => setHotelToEdit(client)}>
                                             <span>Edit</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
@@ -341,38 +225,7 @@ export default function HotelsPage() {
                 </TableBody>
             </Table>
 
-            {isDialogOpen && (
-                <AlertBox title={
-                    hotelAction === 'delete' ? "Are you sure?" :
-                    hotelAction === 'Activate' ? "Activate Hotel?" : "Deactivate Hotel?"
-                    }
-                    message={
-                        hotelAction === 'delete' ? "you're about to delete this hotel, This action cannot be undone." :
-                            hotelAction === 'Activate' ? "This action will activate the hotel and allow it to be visible to users."
-                                : "This action will deactivate the hotel and allow it to be invisible to users."
-                    }
-                    buttonVariant={
-                        hotelAction === 'delete' ? "error" :
-                            hotelAction === 'Activate' ? "primary" : "primary"
-                    }
-                    confirmButtonText={
-                        hotelAction === 'delete' ? "Delete" :
-                            hotelAction === 'Activate' ? "Activate" : "Deactivate"
-                    }
-                    cancelButtonText={
-                        hotelAction === 'delete' ? "Cancel" :
-                            hotelAction === 'Activate' ? "Cancel" : "Cancel"
-                    }
-                    boxIcon={
-                        hotelAction === 'Active'
-                    }
-                    confirmFn={handleConfirmation}
-                    cancelFn={handleDialogClose}
-
-                />
-            )}
-
-            {editBox && <EditHotelModal closeFn={handleEditClose} />}
+            {!!hotelToEdit?.id && <EditHotelModal closeFn={handleEditClose} hotelToEdit={hotelToEdit} />}
 
         </>
     );

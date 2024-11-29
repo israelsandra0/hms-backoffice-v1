@@ -109,3 +109,7 @@ export async function post(urlPath, data = {}, method = 'POST') {
 export async function apiDelete(urlPath){
   return post(urlPath, {}, 'DELETE')
 }
+
+export async function put(urlPath, data){
+  return post(urlPath, data, 'PUT')
+}
