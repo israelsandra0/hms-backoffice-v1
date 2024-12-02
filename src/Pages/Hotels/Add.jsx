@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import StateField from "@/components/ui/state-field";
 import { Link, useNavigate } from "react-router-dom";
 import UserAreaHeader from "@/components/UserAreaHeader";
-import { Check, ChevronLeft } from "lucide-react";
+import { Check, Upload } from "lucide-react";
 import IntlPhoneField from "@/components/ui/intlphone-field";
 import {
     AlertDialog,
@@ -158,6 +158,18 @@ export default function Add() {
 
                     <form onSubmit={handleSubmit(sendHotelDataRequest)} className="hotelForm text-left">
                         <div className="mt-4">
+                            <div>
+                                <Label>Logo</Label>
+                                <div className="h-[100px] p-3 mb-4 mt-1 grid justify-center items-center text-gray-600 border border-gray-200 rounded">
+                                    <div>
+                                        <Upload className="p-1 mx-auto" />
+                                        <Label for="file-upload">Drag & Drop or <span className="text-red-600"> Choose a file</span>to upload</Label>
+                                    </div>
+                                    <Input type='file' id="file-upload" className='hidden' />
+                                    <h1 className="text-sm mx-auto">PNG or JPG</h1>
+                                </div>
+                            </div>
+
                             <div className="mb-2">
                                 <Label htmlFor="name">Name of hotel</Label>
                                 <br />
