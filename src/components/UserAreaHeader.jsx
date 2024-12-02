@@ -116,9 +116,9 @@ export default function UserAreaHeader({ pageName }) {
 
             <DropdownMenu className="">
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" className="w-[90px] flex items-center  rounded-[2rem]">
-                        <h1 className="bg-lightPrimary w-[30px] h-[30px] text-[1.5rem] pt-1 rounded-[50%]">{username ? username.charAt(0) : 'U'}</h1>
-                        <ChevronDown className="p-1"/>
+                    <Button variant="outline" size="icon" className="w-[85px] flex lg:justify-start lg:pl-1 lg:gap-2 items-center rounded-[2rem]">
+                        <h1 className="bg-lightPrimary w-[30px] h-[30px] text-[1.5rem] pt-1 rounded-[50%] lg:ml-0">{username?.charAt(0) }</h1>
+                        <ChevronDown className="p-[0.3rem]"/>
                     </Button>
                 </DropdownMenuTrigger>
 
