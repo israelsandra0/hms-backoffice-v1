@@ -41,7 +41,7 @@ export default function HotelsPage() {
 
 
     // handle hotel list
-    const { data: clients, error, isLoading: isLoadingHotels, refetch: fetchAllHotels } = useQuery({
+    const { data: clients, error, isPending: isLoadingHotels, refetch: fetchAllHotels } = useQuery({
         queryKey: ['clientsData'],
         queryFn: async () => {
             const res = await get('/hotels');
@@ -200,7 +200,7 @@ export default function HotelsPage() {
                         <TableRow key={client?.id}>
                             <TableCell>{client?.name}</TableCell>
                             <TableCell>{client?.website}</TableCell>
-                            <TableCell>{client?.number}</TableCell>
+                            <TableCell>{client?.locations_count}</TableCell>
                             <TableCell>{client?.subscription}</TableCell>
                             <TableCell><Badge variant={client?.isActive ? `success` : 'error'}>{client?.isActive ? `Active` : 'Inactive'}</Badge></TableCell>
                             <TableCell>
