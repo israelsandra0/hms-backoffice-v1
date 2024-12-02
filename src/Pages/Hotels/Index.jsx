@@ -26,6 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import EditHotelModal from "./Edit";
 import { useConfirm } from "@/hooks/use-confirm";
 import { Button } from "@/components/ui/button";
+import Spinner from "@/components/ui/spinner";
 
 
 export default function HotelsPage() {
@@ -40,7 +41,7 @@ export default function HotelsPage() {
 
 
     // handle hotel list
-    const { data: clients, error, isPending, refetch: fetchAllHotels } = useQuery({
+    const { data: clients, error, isLoading: isLoadingHotels, refetch: fetchAllHotels } = useQuery({
         queryKey: ['clientsData'],
         queryFn: async () => {
             const res = await get('/hotels');
@@ -52,11 +53,16 @@ export default function HotelsPage() {
         },
     });
 
-    // Loading state
-    if (isPending) {
-        return <div>Loading ...</div>;
+    if (isLoadingHotels) {
+        return (
+            <>
+                <UserAreaHeader pageName="Hotel Management" />
+                <div className="text-center flex items-center justify-center mx-auto my-5">
+                    <Spinner className="me-3 text-gray-300 h-16 w-16" />
+                </div>
+            </>
+        );
     }
-
 
     if (!clients?.length) {
         return (
@@ -177,12 +183,13 @@ export default function HotelsPage() {
                 </ButtonLink>
             </div>
 
+
             <Table className="content w-full">
                 <TableHeader>
                     <TableRow className="bg-lightPrimary w-full hover:bg-lightPrimary p-8 mx-6">
                         <TableHead>Name</TableHead>
                         <TableHead>Website</TableHead>
-                        <TableHead>Number of Locations</TableHead>
+                        <TableHead>Locations</TableHead>
                         <TableHead>Subscription Plan</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead></TableHead>
@@ -199,7 +206,7 @@ export default function HotelsPage() {
                             <TableCell>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <MoreVertical className="cursor-pointer hover:bg-gray-100" />
+                                        <MoreVertical className="cursor-pointer" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56">
                                         <ButtonLink variant='outline' to="/hotels/view/overview">
