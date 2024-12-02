@@ -165,6 +165,7 @@ export default function Add() {
                                         <Upload className="p-1 mx-auto" />
                                         <Label for="file-upload">Drag & Drop or <span className="text-red-600"> Choose a file</span>to upload</Label>
                                     </div>
+                                    
                                     <Input type='file' id="file-upload" className='hidden' />
                                     <h1 className="text-sm mx-auto">PNG or JPG</h1>
                                 </div>
