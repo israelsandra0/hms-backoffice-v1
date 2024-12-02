@@ -16,14 +16,14 @@ export default function AlertBox({
     return (
         
         <div className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
-            <div className="w-[300px] grid grid-rows-[1fr,auto] h-[230px] bg-white p-4 border-none rounded-[1.5rem]">
+            <div className="w-[350px] grid grid-rows-[1fr,auto] h-[230px] bg-white p-4 border-none rounded-[1.5rem]">
                 {isProcessing && isProcessing === true && (
                     <div className="text-center flex items-center justify-center mx-auto my-5">
                         <Spinner className="me-3 text-gray-300 h-16 w-16" />
                     </div>
                 )}
                 <div className={`${isProcessing && isProcessing === true && 'hidden'}`}>
-                    <div className="text-center">
+                    <div className="text-center mb-8">
                         <Info
                             className={` ${boxIcon
                                     ? "hidden"
