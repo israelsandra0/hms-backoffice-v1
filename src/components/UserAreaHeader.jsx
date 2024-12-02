@@ -1,4 +1,4 @@
-import { CircleUser, LayoutDashboard, Menu, Users } from "lucide-react";
+import { ArrowDown, ChevronDown, ChevronRight, CircleUser, LayoutDashboard, Menu, Users } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Link, Navigate, NavLink } from "react-router-dom";
@@ -9,8 +9,8 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useState } from "react";
-import { AUTH_DATA_KEY, BACKEND_URL } from "@/constants";
+import { useEffect, useState } from "react";
+import { AUTH_DATA_KEY, BACKEND_URL, USER_DATA_KEY } from "@/constants";
 import { getDataObject, post } from "@/functions";
 import HotelIcon from "./icons/hotel";
 import AccountIcon from "./icons/account";
@@ -18,9 +18,21 @@ import ReportIcon from "./icons/Report";
 import CommunicationIcon from "./icons/communication";
 import SupportIcon from "./icons/Support";
 import SettingsIcon from "./icons/Setting";
+import { RiArrowDownFill } from "@remixicon/react";
 
 export default function UserAreaHeader({ pageName }) {
     const [openSidebar, setOpenSidebar] = useState(false);
+    const [username, setUsername] = useState('');
+
+
+    useEffect(() => {
+        // Get user data from localStorage
+        const userData = getDataObject(USER_DATA_KEY);
+        if (userData) {
+            setUsername(userData.firstName || 'U'); 
+        }
+    }, []);
+
 
     const handleToggle = () => {
         setOpenSidebar(!openSidebar);
@@ -104,9 +116,9 @@ export default function UserAreaHeader({ pageName }) {
 
             <DropdownMenu className="">
                 <DropdownMenuTrigger asChild>
-                    <Button variant="secondary" size="icon" className="rounded-full">
-                        <CircleUser className="h-5 w-5" />
-                        <span className="sr-only">Toggle user menu</span>
+                    <Button variant="outline" size="icon" className="w-[90px] flex items-center  rounded-[2rem]">
+                        <h1 className="bg-lightPrimary w-[30px] h-[30px] text-[1.5rem] pt-1 rounded-[50%]">{username ? username.charAt(0) : 'U'}</h1>
+                        <ChevronDown className="p-1"/>
                     </Button>
                 </DropdownMenuTrigger>
 
