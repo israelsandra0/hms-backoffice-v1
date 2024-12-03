@@ -18,9 +18,8 @@ import ReportIcon from "./icons/Report";
 import CommunicationIcon from "./icons/communication";
 import SupportIcon from "./icons/Support";
 import SettingsIcon from "./icons/Setting";
-import { RiArrowDownFill } from "@remixicon/react";
 
-export default function UserAreaHeader({ pageName }) {
+export default function UserAreaHeader({pages}) {
     const [openSidebar, setOpenSidebar] = useState(false);
     const [username, setUsername] = useState('');
 
@@ -111,7 +110,7 @@ export default function UserAreaHeader({ pageName }) {
             </Sheet>
 
             <div className="w-full ml-8">
-                <h1>{pageName}</h1>
+                <h1>{pages}</h1>
             </div>
 
             <DropdownMenu className="">

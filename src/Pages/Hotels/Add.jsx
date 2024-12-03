@@ -24,6 +24,21 @@ import {
 import { ButtonLink } from "@/components/ui/button_link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Spinner from "@/components/ui/spinner";
+import {
+    Breadcrumb,
+    BreadcrumbEllipsis,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 
 export default function Add() {
@@ -91,7 +106,7 @@ export default function Add() {
                             });
                         });
                     }
-                    return null; 
+                    return null;
                 }
 
                 if (res.status === 500) {
@@ -138,11 +153,27 @@ export default function Add() {
     }, [])
 
 
+    const breadcrumb = (
+        <Breadcrumb>
+            <BreadcrumbList>
+                <BreadcrumbItem>
+                    <BreadcrumbLink href="/hotels">Hotels</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                    <BreadcrumbPage>Add Hotels</BreadcrumbPage>
+                </BreadcrumbItem>
+            </BreadcrumbList>
+        </Breadcrumb>
+    );
+    
+
+
     return (
         <>
-            <UserAreaHeader pageName="Add Hotels" />
+            <UserAreaHeader pages={breadcrumb} />
 
-            {isLoadingStates && 
+            {isLoadingStates &&
                 <div className="text-center flex items-center justify-center mx-auto my-5">
                     <Spinner className="me-3 text-gray-300 h-16 w-16" />
                 </div>
@@ -165,7 +196,7 @@ export default function Add() {
                                         <Upload className="p-1 mx-auto" />
                                         <Label for="file-upload">Drag & Drop or <span className="text-red-600"> Choose a file</span>to upload</Label>
                                     </div>
-                                    
+
                                     <Input type='file' id="file-upload" className='hidden' />
                                     <h1 className="text-sm mx-auto">PNG or JPG</h1>
                                 </div>

@@ -27,6 +27,7 @@ import EditHotelModal from "./Edit";
 import { useConfirm } from "@/hooks/use-confirm";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
+import { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 
 export default function HotelsPage() {
@@ -174,9 +175,21 @@ export default function HotelsPage() {
     }
 
 
+    const breadcrumb = (
+        <Breadcrumb>
+            <BreadcrumbList>
+                <BreadcrumbItem>
+                    <BreadcrumbPage>Hotels</BreadcrumbPage>
+                </BreadcrumbItem>
+            </BreadcrumbList>
+        </Breadcrumb>
+    );
+    
+
+
     return (
         <>
-            <UserAreaHeader pageName="Hotel Management" />
+            <UserAreaHeader pages={breadcrumb} />
             <div className="text-right mr-4 mb-8">
                 <ButtonLink to="/hotels/add" variant="primary">
                     Add Hotels
