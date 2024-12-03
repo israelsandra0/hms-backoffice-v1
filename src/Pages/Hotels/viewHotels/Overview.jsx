@@ -1,5 +1,6 @@
 import UserAreaHeader from "@/components/UserAreaHeader";
 import HotelsHeader from "./Header";
+import ViewAreaHeader from "./ViewAreaHeader";
 
 export default function HotelsOverview() {
 
@@ -41,7 +42,8 @@ export default function HotelsOverview() {
     return (
         <div>
             <UserAreaHeader pageName="View Hotels "/>
-            <HotelsHeader title='ATSL Hotel' />
+            <ViewAreaHeader />
+            {/* <HotelsHeader title='ATSL Hotel' /> */}
             <h1>welcome !!</h1>
             {/* <Table className="content w-full">
                 <TableHeader>
