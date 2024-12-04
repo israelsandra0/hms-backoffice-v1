@@ -45,9 +45,8 @@ export default function Add() {
         address: yup.string().required("Address is required"),
         state: yup.string().required("State is required"),
         city: yup.string().required("City is required"),
-        logo: yup.mixed().required("Logo is required").test("fileSize", "File too large", (value) => {
-            console.log(value)
-            return value && value[0].size <= 5000000}),
+        // logo: yup.mixed().required("Logo is required").test("fileSize", "File too large", (value) => {
+        //     return value && value.size <= 1000000}),
     });
 
     // UseForm hook
@@ -100,11 +99,10 @@ export default function Add() {
                     address: hotelInput.address,
                     state: hotelInput.state, 
                     city: hotelInput.city, 
-                    logo: hotelInput.logo, 
+                    logo: hotelInput.logo[0], 
                 };
 
                 const res = await post("/hotels/store", hotelData);
-                console.log(res);
 
                 if (res.status.toString().startsWith(4)) {
                     setDisabledButton(false);
@@ -276,7 +274,7 @@ export default function Add() {
                                                     type="file"
                                                     id="file-upload"
                                                     className="hidden"
-                                                    // onChange={handleFileChange}
+                                                    onChange={handleFileChange}
                                                 />
                                                 <h1 className="text-sm mx-auto mb-2">PNG or JPG</h1>
                                             </div>
