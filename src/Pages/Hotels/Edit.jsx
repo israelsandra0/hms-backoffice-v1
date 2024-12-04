@@ -22,12 +22,10 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
         name: yup.string().required("Name is required"),
         email: yup.string().required("Email is required").email(),
         website: yup.string().required("Website is required").url().nullable(),
-        logo: yup.array().required("Logo is required").test(
-            "fileType", "The logo must be a file", (value) => value && value[0]?.type?.startsWith("image/")
-        ),
+        logo: yup.mixed().required("Logo is required")
     });
 
-    const { register, handleSubmit, setError, formState: { errors } } = useForm({
+    const { register, handleSubmit, setError, setValue, formState: { errors } } = useForm({
         defaultValues: {
             name: hotelToEdit.name,
             email: hotelToEdit.email,
@@ -93,6 +91,8 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                 });
             };
 
+            setValue('logo', file)
+
             reader.readAsDataURL(file); // Read the file as a data URL (image preview)
         }
     };
@@ -157,7 +157,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                                     <img src={fileDetails.preview} alt="File preview" className="w-16 h-16 object-cover" />
                                 )}
 
-                                {!!hotelToEdit.logo && !fileDetails?.preview && (
+                                {!!hotelToEdit.logo && (
                                     <img src={hotelToEdit.logo} alt="Hotel Logo" className="w-16 h-16 object-cover" />
                                 )}
 
@@ -179,7 +179,9 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                                     type="file"
                                     id="file-upload"
                                     className="hidden"
-                                    onChange={handleFileChange}
+                                    onChange={(e) => {
+                                        handleFileChange(e)
+                                    }}
                                 />
                                 <h1 className="text-[0.8rem] mx-auto mb-2">PNG or JPG</h1>
                             </div>

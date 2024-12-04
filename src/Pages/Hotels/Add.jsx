@@ -191,10 +191,8 @@ export default function Add() {
                     preview: reader.result, // Base64 string for the image preview
                 });
             };
-
-            
+           
             setValue('logo', file)
-            console.log(file)
 
             reader.readAsDataURL(file); // Read the file as a data URL (image preview)
         }
@@ -237,8 +235,6 @@ export default function Add() {
                         className="hotelForm text-left"
                     >
                         <div className="mt-4">
-
-                            {/* {JSON.stringify(errors)} */}
 
                             <div>
                                 <Label>Logo</Label>
