@@ -265,8 +265,8 @@ export default function Add() {
                                         <>
 
                                             <div className="grid justify-center gap-2">
-                                                <Upload htmlFor="file-upload" className="p-1 mx-auto" />
                                                 <Label htmlFor="file-upload">
+                                                    <Upload htmlFor="file-upload" className="p-1 mx-auto mb-1 cursor-pointer" />
                                                     Drag & Drop or 
                                                     <span className="text-red-600"> Choose a file</span> to
                                                     upload
