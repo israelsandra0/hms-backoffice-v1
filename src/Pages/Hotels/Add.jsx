@@ -33,12 +33,6 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { RiDeleteBin2Line } from "@remixicon/react";
 
 export default function Add() {
@@ -51,6 +45,9 @@ export default function Add() {
         address: yup.string().required("Address is required"),
         state: yup.string().required("State is required"),
         city: yup.string().required("City is required"),
+        logo: yup.mixed().required("Logo is required").test("fileSize", "File too large", (value) => {
+            console.log(value)
+            return value && value[0].size <= 5000000}),
     });
 
     // UseForm hook
@@ -70,6 +67,7 @@ export default function Add() {
             address: "",
             state: "",
             city: "",
+            logo: "",
         },
         resolver: yupResolver(yupBuild),
     });
@@ -100,8 +98,9 @@ export default function Add() {
                     website: hotelInput.website,
                     phone: hotelInput.phone,
                     address: hotelInput.address,
-                    state: hotelInput.state, // Fixed: state should be hotelInput.state
-                    city: hotelInput.city, // Fixed: city should be hotelInput.city
+                    state: hotelInput.state, 
+                    city: hotelInput.city, 
+                    logo: hotelInput.logo, 
                 };
 
                 const res = await post("/hotels/store", hotelData);
@@ -235,10 +234,12 @@ export default function Add() {
                     >
                         <div className="mt-4">
 
+                            {/* {JSON.stringify(errors)} */}
+
                             <div>
                                 <Label>Logo</Label>
-                                <div className="h-[100px] p-3 mb-4 mt-1 grid items-center text-gray-600 border border-gray-200 rounded">
-                                    {fileDetails.preview ? (
+                                <div className="h-[100px] p-3 mt-1 grid items-center text-gray-600 border border-gray-200 rounded">
+                                    {!!fileDetails?.preview && (
                                         <div className="flex gap-2 items-center justify-between">
                                             <div className="flex gap-2 items-center">
                                                 <img src={fileDetails.preview} alt="File preview" className="w-16 h-16 object-cover" />
@@ -258,25 +259,32 @@ export default function Add() {
                                             />
                                         </div>
 
-                                    ) : (
-                                        <div className="grid justify-center gap-2">
-                                            <Upload for="file-upload" className="p-1 mx-auto" />
-                                            <Label for="file-upload">
-                                                Drag & Drop or 
-                                                <span className="text-red-600"> Choose a file</span> to
-                                                upload
-                                            </Label>
-                                            <Input
-                                                type="file"
-                                                id="file-upload"
-                                                className="hidden"
-                                                onChange={handleFileChange}
-                                            />
-                                            <h1 className="text-sm mx-auto">PNG or JPG</h1>
-                                        </div>
+                                    )}
+
+                                    {!fileDetails?.preview && ( 
+                                        <>
+
+                                            <div className="grid justify-center gap-2">
+                                                <Upload htmlFor="file-upload" className="p-1 mx-auto" />
+                                                <Label htmlFor="file-upload">
+                                                    Drag & Drop or 
+                                                    <span className="text-red-600"> Choose a file</span> to
+                                                    upload
+                                                </Label>
+                                                <Input
+                                                    {...register("logo")}
+                                                    type="file"
+                                                    id="file-upload"
+                                                    className="hidden"
+                                                    // onChange={handleFileChange}
+                                                />
+                                                <h1 className="text-sm mx-auto mb-2">PNG or JPG</h1>
+                                            </div>
+                                            <p>{errors.logo?.message}</p>
+                                        </>
                                     )}
                                 </div>
-                            </div>
+                            </div> <br />
 
                             <div className="mb-2">
                                 <Label htmlFor="name">Name of hotel</Label>

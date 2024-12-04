@@ -28,6 +28,7 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Link } from "react-router-dom";
 
 
 export default function HotelsPage() {
@@ -221,13 +222,12 @@ export default function HotelsPage() {
                                     <DropdownMenuTrigger asChild>
                                         <MoreVertical className="cursor-pointer" />
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56">
-                                        <ButtonLink variant='outline' to="/hotels/view/overview">
-                                            <span>View</span>
-                                        </ButtonLink>
-                                        <DropdownMenuItem to="/hotels/view/overview">
-                                            <span>View</span>
-                                        </DropdownMenuItem>
+                                    <DropdownMenuContent className="w-56 cursor-pointer">
+                                        <Link variant='outline' to={`/hotels/view/overview?hotelId=${client.id}&logoUrl=${client.logo}`}>
+                                            <DropdownMenuItem to="/hotels/view/overview">
+                                                <span>View</span>
+                                            </DropdownMenuItem>
+                                        </Link>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem onClick={() => setHotelToEdit(client)}>
                                             <span>Edit</span>

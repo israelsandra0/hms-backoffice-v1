@@ -61,7 +61,7 @@
     padding: 0 0.5rem;
     background-color: white;
     height: 2rem;
-    border-radius: 3rem;
+    border-radius: 50%;
     justify-items: center;
   }
 }
