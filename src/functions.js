@@ -96,13 +96,17 @@ export async function post(urlPath, data = {}, method = 'POST') {
   const token = getDataObject(AUTH_DATA_KEY).accessToken;
   const fullUrl = `${BACKEND_URL}${urlPath}`;
 
+  const formData = new FormData()
+  for (let key in data) {
+    formData.append(key, data[key])
+  }
+
   return fetch(fullUrl, {
     method,
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: formData,
   });
 }
 
