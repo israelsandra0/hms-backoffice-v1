@@ -45,7 +45,7 @@ export default function Add() {
         address: yup.string().required("Address is required"),
         state: yup.string().required("State is required"),
         city: yup.string().required("City is required"),
-        // logo: yup.mixed().required("Logo is required").test("fileSize", "File too large", (value) => {
+        logo: yup.mixed().required("Logo is required")
         //     return value && value.size <= 1000000}),
     });
 
@@ -57,6 +57,7 @@ export default function Add() {
         formState: { errors },
         control,
         getValues,
+        setValue
     } = useForm({
         defaultValues: {
             name: "",
@@ -99,8 +100,9 @@ export default function Add() {
                     address: hotelInput.address,
                     state: hotelInput.state, 
                     city: hotelInput.city, 
-                    logo: hotelInput.logo[0], 
+                    logo: hotelInput.logo, 
                 };
+
 
                 const res = await post("/hotels/store", hotelData);
 
@@ -190,6 +192,10 @@ export default function Add() {
                 });
             };
 
+            
+            setValue('logo', file)
+            console.log(file)
+
             reader.readAsDataURL(file); // Read the file as a data URL (image preview)
         }
     };
@@ -274,7 +280,9 @@ export default function Add() {
                                                     type="file"
                                                     id="file-upload"
                                                     className="hidden"
-                                                    onChange={handleFileChange}
+                                                    onChange={(e) => {
+                                                        handleFileChange(e)
+                                                    }}
                                                 />
                                                 <h1 className="text-sm mx-auto mb-2">PNG or JPG</h1>
                                             </div>

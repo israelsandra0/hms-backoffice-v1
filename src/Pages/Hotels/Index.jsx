@@ -212,7 +212,6 @@ export default function HotelsPage() {
                 <TableBody>
                     {clients.map((client) => (
                         <TableRow key={client?.id}>
-                            <TableCell><img src={client?.logo} alt="" className="h-[50px] w-[50px]" /></TableCell>
                             <TableCell>{client?.name}</TableCell>
                             <TableCell>{client?.website}</TableCell>
                             <TableCell>{client?.locations_count}</TableCell>

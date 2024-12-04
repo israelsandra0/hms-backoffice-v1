@@ -6,35 +6,41 @@ import { put } from "@/functions";
 import { useToast } from "@/hooks/use-toast";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Label } from "@radix-ui/react-label";
+import { RiDeleteBin2Line } from "@remixicon/react";
 import { useMutation } from "@tanstack/react-query";
-import { X } from "lucide-react";
+import { Upload, X } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import * as yup from "yup";
 
 
 
-export default function EditHotelModal({closeFn, hotelToEdit}) {
+export default function EditHotelModal({ closeFn, hotelToEdit }) {
 
     const yupBuild = yup.object({
         name: yup.string().required("Name is required"),
         email: yup.string().required("Email is required").email(),
         website: yup.string().required("Website is required").url().nullable(),
+        logo: yup.array().required("Logo is required").test(
+            "fileType", "The logo must be a file", (value) => value && value[0]?.type?.startsWith("image/")
+        ),
     });
 
-    const { register, handleSubmit, setError, formState: {errors} } = useForm({
-        defaultValues: { 
-            name: hotelToEdit.name, 
-            email: hotelToEdit.email, 
-            website: hotelToEdit.website 
+    const { register, handleSubmit, setError, formState: { errors } } = useForm({
+        defaultValues: {
+            name: hotelToEdit.name,
+            email: hotelToEdit.email,
+            website: hotelToEdit.website,
+            logo: hotelToEdit.logo,
         },
         resolver: yupResolver(yupBuild),
     });
 
-    const {toast} = useToast()
+    const { toast } = useToast()
 
-    const {mutate, isPending} = useMutation({
-        mutationFn: async(data) => {
+    const { mutate, isPending } = useMutation({
+        mutationFn: async (data) => {
             const res = await put(`/hotels/update/${hotelToEdit.id}`, data)
             if (res.ok) {
                 toast({
@@ -43,11 +49,11 @@ export default function EditHotelModal({closeFn, hotelToEdit}) {
                     title: 'Hotel updated successfully!'
                 });
                 closeFn()
-                
-            }else if (res.status.toString().startsWith(4)) {
+
+            } else if (res.status.toString().startsWith(4)) {
 
                 const responseErrors = await res.json()
-    
+
                 if (responseErrors.errors) {
                     responseErrors.errors.forEach((error) => {
                         setError(error.field, {
@@ -56,8 +62,8 @@ export default function EditHotelModal({closeFn, hotelToEdit}) {
                         });
                     });
                 }
-                return null; 
-            }else {
+                return null;
+            } else {
                 toast({
                     error: true,
                     duration: 5000,
@@ -65,19 +71,123 @@ export default function EditHotelModal({closeFn, hotelToEdit}) {
                 });
             }
         }
-    }) 
+    })
+
+    const [fileDetails, setFileDetails] = useState({
+        name: "",
+        size: 0,
+        preview: "",
+    });
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+
+            // When the file is read, update the state with the file details
+            reader.onloadend = () => {
+                setFileDetails({
+                    name: file.name,
+                    size: file.size,
+                    preview: reader.result, // Base64 string for the image preview
+                });
+            };
+
+            reader.readAsDataURL(file); // Read the file as a data URL (image preview)
+        }
+    };
 
     return (
         <div className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
             <CardContent className='w-[30%] rounded-[24px] text-center mx-auto border-none bg-white py-8'>
 
                 <form onSubmit={handleSubmit(mutate)} className="hotelForm text-left">
+
+                    {/* {JSON.stringify(errors)} */}
+
                     <div className="flex gap-20">
                         <Link>
-                            <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={closeFn}/>
+                            <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={closeFn} />
                         </Link>
-                        <h1  className="text-[1.3rem] font-bold mb-2">Edit Hotel Details</h1>   
+                        <h1 className="text-[1.3rem] font-bold mb-2">Edit Hotel Details</h1>
                     </div>
+
+                    {/* <div>
+                        <Label>Logo</Label>
+                        <div className="h-[100px] p-3 mt-1 flex gap-4 items-center bg-grey text-gray-600 rounded">
+                            <div className="w-16 h-16 object-cover border border-gray-300">
+                                {!!fileDetails?.preview && (
+                                    <div className="flex gap-2 items-center justify-between">
+                                        <div className="flex gap-2 items-center">
+                                            <img src={fileDetails.preview} alt="File preview" className="w-16 h-16 object-cover" />
+                                        </div>
+                                    </div>
+
+                                )}
+                            </div>
+
+
+                            <div className="grid justify-center gap-2">
+                                <Label htmlFor="file-upload"  className=" text-[0.8rem] font-bold">
+                                    <Upload htmlFor="file-upload" className="p-1 mx-auto mb-1 cursor-pointer" />
+                                    Drag & Drop or
+                                    <span className="text-red-600"> Choose a file</span> to
+                                    upload
+                                </Label>
+                                <Input
+                                    {...register("logo")}
+                                    type="file"
+                                    id="file-upload"
+                                    className="hidden"
+                                    onChange={handleFileChange}
+                                />
+                                <h1 className="text-[0.8rem] mx-auto mb-2">PNG or JPG</h1>
+                            </div>
+                            <p>{errors.logo?.message}</p>
+                        </div>
+                    </div> */}
+
+
+                    <div>
+                        <Label>Logo</Label>
+                        <div className="h-[100px] p-3 mt-1 flex gap-4 items-center bg-grey text-gray-600 rounded">
+                            <div className="w-16 h-16 object-cover border border-gray-300">
+
+                                {!!fileDetails?.preview && (
+                                    <img src={fileDetails.preview} alt="File preview" className="w-16 h-16 object-cover" />
+                                )}
+
+                                {!!hotelToEdit.logo && !fileDetails?.preview && (
+                                    <img src={hotelToEdit.logo} alt="Hotel Logo" className="w-16 h-16 object-cover" />
+                                )}
+
+                                {!fileDetails?.preview && !hotelToEdit.logo && (
+                                    <div className="w-16 h-16 border-gray-300 flex items-center justify-center text-gray-700 pr-1">No Logo</div>
+                                )}
+
+                            </div>
+
+                            <div className="grid justify-center gap-2">
+                                <Label htmlFor="file-upload" className="text-[0.8rem] font-bold">
+                                    <Upload htmlFor="file-upload" className="p-1 mx-auto mb-1 cursor-pointer" />
+                                    Drag & Drop or
+                                    <span className="text-red-600"> Choose a file</span> to
+                                    upload
+                                </Label>
+                                <Input
+                                    {...register("logo")}
+                                    type="file"
+                                    id="file-upload"
+                                    className="hidden"
+                                    onChange={handleFileChange}
+                                />
+                                <h1 className="text-[0.8rem] mx-auto mb-2">PNG or JPG</h1>
+                            </div>
+                        </div>
+                        <p className="text-[0.8rem] text-red-600">{errors.logo?.message}</p>
+                    </div>
+
+
                     <div className="mt-4">
                         <div className="mb-2">
                             <Label htmlFor="name">Name</Label>
@@ -103,7 +213,7 @@ export default function EditHotelModal({closeFn, hotelToEdit}) {
 
                     <br />
                     <Button variant="primary" type="submit" className="w-full p-[16px] text-[16px]" disabled={isPending}>
-                        {isPending ?  <Spinner /> : 'continue'}                       
+                        {isPending ? <Spinner /> : 'continue'}
                     </Button>
 
                 </form>
