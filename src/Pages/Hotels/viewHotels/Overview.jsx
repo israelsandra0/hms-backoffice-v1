@@ -4,41 +4,6 @@ import ViewAreaHeader from "./ViewAreaHeader";
 
 export default function HotelsOverview() {
 
-    // handle hotel list
-    // const { data: clients, error, isPending, refetch: fetchAllHotels } = useQuery({
-    //     queryKey: ['clientsData'],
-    //     queryFn: async () => {
-    //         const res = await get('/hotels');
-    //         if (!res.ok) {
-    //             throw new Error(error.message);
-    //         }
-    //         const response = await res.json();
-    //         return response.data;
-    //     },
-    // });
-
-    // Loading state
-    // if (isPending) {
-    //     return <div>Loading ...</div>;
-    // }
-
-
-    // if (!clients?.length) {
-    //     return (
-    //         <>
-    //             <UserAreaHeader pageName="Hotel Management" />
-    //             <div className="text-right mr-4 mb-8">
-    //                 <ButtonLink to="/hotels/add" variant="primary">
-    //                     Add Hotels
-    //                 </ButtonLink>
-    //             </div>
-    //             <Card className="p-4">
-    //                 <p>No hotels found!</p>
-    //             </Card>
-    //         </>
-    //     );
-    // }
-
     return (
         <div>
             <UserAreaHeader pageName="View Hotels "/>
