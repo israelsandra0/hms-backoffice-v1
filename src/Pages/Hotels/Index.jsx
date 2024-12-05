@@ -28,18 +28,16 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export default function HotelsPage() {
 
-
-    const [editBox, setEditBox] = useState(false)
-    const [activeHotelId, setActiveHotelId] = useState(null);
-    const [hotelDetails, setHotelDetails] = useState()
     const [hotelToEdit, setHotelToEdit] = useState({})
+    const [hotelToView, setHotelToView] = useState({})
     const { toast } = useToast()
     const { confirmAction } = useConfirm()
+    const navigate = useNavigate()
 
 
     // handle hotel list
@@ -148,7 +146,7 @@ export default function HotelsPage() {
             isDestructive: actionType.toLowerCase() === 'delete',
             confirmFn: () => handleConfirmation(hotelId, actionType),
             completeFn: (res) => {
-                if (actionType.toLowerCase() === 'delete'){
+                if (actionType.toLowerCase() === 'delete') {
                     handleDeleteResponse(res)
                 }
                 else {
@@ -158,12 +156,12 @@ export default function HotelsPage() {
 
         })
     };
-    
+
     //handle delete, activation / deactivation fetching
     const handleConfirmation = async (hotelId, hotelAction) => {
 
         if (hotelAction === 'Activate' || hotelAction === 'Deactivate') {
-            return await post(`/hotels/update-active-status/${hotelId}`, { isActive:  hotelAction === 'Activate' })
+            return await post(`/hotels/update-active-status/${hotelId}`, { isActive: hotelAction === 'Activate' })
         } else {
             return await apiDelete(`/hotels/destroy/${hotelId}`)
 
@@ -185,7 +183,7 @@ export default function HotelsPage() {
             </BreadcrumbList>
         </Breadcrumb>
     );
-    
+
 
 
     return (
@@ -223,11 +221,9 @@ export default function HotelsPage() {
                                         <MoreVertical className="cursor-pointer" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56 cursor-pointer">
-                                        <Link variant='outline' to={`/hotels/view/overview?hotelId=${client.id}&logoUrl=${client.logo}`}>
-                                            <DropdownMenuItem to="/hotels/view/overview">
-                                                <span>View</span>
-                                            </DropdownMenuItem>
-                                        </Link>
+                                        <DropdownMenuItem onClick={() => navigate(`/hotels/view/${client.id}`)}>
+                                            <span>View</span>
+                                        </DropdownMenuItem>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem onClick={() => setHotelToEdit(client)}>
                                             <span>Edit</span>
