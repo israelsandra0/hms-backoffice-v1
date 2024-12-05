@@ -97,6 +97,16 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
         }
     };
 
+    const handleFileDelete = () => {
+        setFileDetails({
+            name: "",
+            size: 0,
+            preview: "",
+        });
+    };
+
+
+
     return (
         <div className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
             <CardContent className='w-[30%] rounded-[24px] text-center mx-auto border-none bg-white py-8'>
@@ -148,7 +158,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                     </div> */}
 
 
-                    <div>
+                    {/* <div>
                         <Label>Logo</Label>
                         <div className="h-[100px] p-3 mt-1 flex gap-4 items-center bg-grey text-gray-600 rounded">
                             <div className="w-16 h-16 object-cover border border-gray-300">
@@ -187,6 +197,70 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                             </div>
                         </div>
                         <p className="text-[0.8rem] text-red-600">{errors.logo?.message}</p>
+                    </div> */}
+
+                    <div>
+                        <Label>Logo</Label>
+                        <div className="h-[100px] p-3 mt-1 flex gap-4 items-center bg-grey text-gray-600 rounded">
+                            {!!fileDetails?.preview && (
+                                <div className="flex gap-20 items-center">
+                                    <div className="flex gap-2 items-center">
+                                        <img src={fileDetails.preview} alt="File preview" className="w-16 h-16 object-cover" />
+
+                                        <div>
+                                            {fileDetails.name && (
+                                                <div>
+                                                    <strong>{fileDetails.name}</strong><br />
+                                                    <h3>{(fileDetails.size / 1024).toFixed(2)} KB</h3>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <RiDeleteBin2Line 
+                                        className="text-red-500 cursor-pointer"
+                                        onClick={handleFileDelete}
+                                    />
+                                </div>
+
+                            )}
+
+                            {!fileDetails?.preview && (
+                                <>
+                                    <div className="h-[100px] p-3 mt-1 flex gap-2 items-center bg-grey text-gray-600 rounded">
+                                        <div className="w-16 h-16 object-cover border border-gray-300">
+                                            {!!hotelToEdit.logo && (
+                                                <img src={hotelToEdit.logo} alt="Hotel Logo" className="w-16 h-16 object-cover" />
+                                            )}
+
+                                            {!fileDetails?.preview && !hotelToEdit.logo && (
+                                                <div className="w-16 h-16 border-gray-300 flex items-center justify-center text-gray-700 pr-1">No Logo</div>
+                                            )}
+
+                                        </div>
+
+                                        <div className="grid justify-center gap-2">
+                                            <Label htmlFor="file-upload" className="text-[12px] font-bold">
+                                                <Upload htmlFor="file-upload" className="p-1 mx-auto mb-1 cursor-pointer" />
+                                                Drag & Drop or
+                                                <span className="text-[#8D561E]"> Choose a file</span> to
+                                                upload
+                                            </Label>
+                                            <Input
+                                                {...register("logo")}
+                                                type="file"
+                                                id="file-upload"
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    handleFileChange(e)
+                                                }}
+                                            />
+                                            <h1 className="text-[12px] mx-auto mb-2">PNG or JPG</h1>
+                                        </div>
+                                    </div>
+                                    <p>{errors.logo?.message}</p>
+                                </>
+                            )}
+                        </div>
                     </div>
 
 
