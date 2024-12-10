@@ -42,7 +42,6 @@ export default function LoginPage() {
 	async function getAuthUser() {
 		try {
 			const response = await get('/auth/me');
-			console.log(response);
 
 			const { data } = await response.json();
 

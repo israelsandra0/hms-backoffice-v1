@@ -125,7 +125,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
 
 
                     <div className="mt-4">
-                        <div>
+                        <div className="mb-2">
                             <Label>Logo</Label>
                             <div className="h-[100px] p-3 mt-1 flex gap-4 items-center bg-grey text-gray-600 rounded">
                                 {!!fileDetails?.preview && (
@@ -186,6 +186,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                             </div>
                             <p>{errors.logo?.message}</p>
                         </div>
+                        
                         <div className="mb-2">
                             <Label htmlFor="name">Name</Label>
                             <br />

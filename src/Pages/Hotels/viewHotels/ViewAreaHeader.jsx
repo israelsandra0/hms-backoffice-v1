@@ -29,7 +29,7 @@ import {
     Users,
 } from "lucide-react";
 import { useState } from "react";
-import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -55,14 +55,12 @@ import EditHotelModal from "../Edit";
 
 export default function ViewAreaHeader() {
     const navigate = useNavigate();
-    const [isActive, setIsActive] = useState("overview")
     const [hotelToEdit, setHotelToEdit] = useState({});
 
     const { id } = useParams();
 
     const {
         data: hotel,
-        isLoading,
         refetch: viewHotelRequest,
     } = useQuery({
         queryKey: ["hotelData", id],
@@ -77,17 +75,6 @@ export default function ViewAreaHeader() {
         enabled: !!id,
     });
 
-    if (isLoading) {
-        return (
-            <>
-                <UserAreaHeader pageName="Hotel Management" />
-                <div className="text-center flex items-center justify-center mx-auto my-5">
-                    <Spinner className="me-3 text-gray-300 h-16 w-16" />
-                </div>
-            </>
-        );
-    }
-
     const handleEditClose = () => {
         setHotelToEdit({});
         viewHotelRequest();
@@ -97,7 +84,7 @@ export default function ViewAreaHeader() {
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem>
-                    <BreadcrumbLink href="/hotels">Hotels</BreadcrumbLink>
+                    <Link onClick={() => navigate('/hotels')}>Hotels</Link>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
@@ -263,12 +250,12 @@ export default function ViewAreaHeader() {
                     </TabsContent>
                     <TabsContent value="users">
                         <Card>
-                            <HotelPageUsers />
+                            <HotelPageUsers hotelId={hotel}/>
                         </Card>
                     </TabsContent>
                     <TabsContent value="locations">
                         <Card>
-                            <Locations Locations={hotel?.locations} hotelId={hotel?.id}/>
+                            <Locations locations={hotel?.locations} hotelId={hotel?.id}/>
                         </Card>
                     </TabsContent>
                     <TabsContent value="rooms">
