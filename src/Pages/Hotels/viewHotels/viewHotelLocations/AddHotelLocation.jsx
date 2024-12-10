@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { get, post } from "@/functions";
 import { BACKEND_URL } from "@/constants";
 import { Label } from "@/components/ui/label";
@@ -55,10 +55,68 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
     const [disabledButton, setDisabledButton] = useState(false);
     const [states, setStates] = useState([]);
 
-    const { refetch: sendLocationRequest } = useQuery({
-        enabled: false,
-        queryKey: ["locations"],
-        queryFn: async () => {
+    // const { refetch: sendLocationRequest } = useQuery({
+    //     enabled: false,
+    //     queryKey: ["locations"],
+    //     queryFn: async () => {
+    //         const hotelInput = getValues();
+    //         setErrorMessage("");
+    //         setDisabledButton(true);
+
+    //         try {
+    //             const hotelData = {
+    //                 address: hotelInput.address,
+    //                 state: hotelInput.state,
+    //                 city: hotelInput.city
+    //             };
+
+
+    //             const res = await post(`hotels/${hotelId}/locations/store`, hotelData);
+
+    //             if (res.status.toString().startsWith(4)) {
+    //                 setDisabledButton(false);
+    //                 setErrorMessage(
+    //                     "Hotel details not saved, correct all indicated fields and try again!"
+    //                 );
+
+    //                 const responseErrors = await res.json();
+
+    //                 if (responseErrors.errors) {
+    //                     responseErrors.errors.forEach((error) => {
+    //                         setError(error.field, {
+    //                             type: "custom",
+    //                             message: error.message,
+    //                         });
+    //                     });
+    //                 }
+    //                 return null;
+    //             }
+
+    //             if (res.status === 500) {
+    //                 setDisabledButton(false);
+    //                 setErrorMessage("An error occurred, please try again");
+    //                 return null;
+    //             }
+
+    //             const responseData = await res.json();
+    //             setIsSuccess(true);
+    //             setDisabledButton(true);
+
+    //             // Trigger the callback to update the location list
+    //             if (onLocationAdded) {
+    //                 onLocationAdded(responseData);
+    //             }
+
+    //             return responseData;
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     },
+    // });
+
+    const { mutate } = useMutation({
+        mutationFn: async () => {
+
             const hotelInput = getValues();
             setErrorMessage("");
             setDisabledButton(true);
@@ -112,7 +170,7 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
                 console.log(error);
             }
         },
-    });
+    })
 
 
     const { refetch: fetchStates } = useQuery({
@@ -132,10 +190,23 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
         },
     });
 
+    // useEffect(() => {
+    //     fetchStates().then((response) => {
+    //         setStates(response.data.data);
+    //     });
+    // }, []);
     useEffect(() => {
-        fetchStates().then((response) => {
-            setStates(response.data.data);
-        });
+        const loadStates = async () => {
+            try {
+                const response = await fetchStates();
+                setStates(response.data.data);
+            } catch (error) {
+                console.log(error);
+                setErrorMessage("Failed to load states data");
+                setDisabledButton(false);
+            }
+        };
+        loadStates();
     }, []);
 
 
@@ -156,10 +227,10 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
                 </div>
 
                 <form
-                    onSubmit={handleSubmit(sendLocationRequest)}
+                    onSubmit={handleSubmit(mutate)}
                     className="hotelForm text-left"
                 >
-                    {JSON.stringify(errors)}
+                    {/* {JSON.stringify(errors)} */}
                     <div className="mt-4">
 
                         <div className="mb-2">

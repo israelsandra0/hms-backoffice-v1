@@ -70,12 +70,14 @@ export default function Locations({ Locations, hotelId }) {
                 </DialogContent>
             </Dialog> */}
 
-            <Table className="content w-4/5 my-6 ml-6 rounded-[2rem] border border-gray-200">
+            <Table className="content w-[95%] my-6 ml-6 rounded-[2rem] border border-gray-200">
                 <TableHeader>
                     <TableRow className="bg-lightPrimary w-full hover:bg-lightPrimary p-8 mx-6">
                         <TableHead>Address</TableHead>
                         <TableHead>State</TableHead>
                         <TableHead>City</TableHead>
+                        <TableHead>Number of Users</TableHead>
+                        <TableHead>Rooms</TableHead>
                         <TableHead></TableHead>
                     </TableRow>
                 </TableHeader>
@@ -84,6 +86,8 @@ export default function Locations({ Locations, hotelId }) {
                         <TableRow key={location?.id}>
                             <TableCell>{location?.address}</TableCell>
                             <TableCell>{location?.state}</TableCell>
+                            <TableCell>{location?.city}</TableCell>
+                            <TableCell>{location?.city}</TableCell>
                             <TableCell>{location?.city}</TableCell>
                             <TableCell>
                                 <DropdownMenu>

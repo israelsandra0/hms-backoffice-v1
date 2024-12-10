@@ -7,10 +7,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
 import { AUTH_DATA_KEY, USER_DATA_KEY } from "@/constants";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, } from "@tanstack/react-query";
 import { UAParser } from "ua-parser-js";
-import { BACKEND_URL } from "@/constants";
-import { encode, get, post, setData } from "@/functions";
+import { get, post, setData } from "@/functions";
 import { Link, Navigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import PasswordField from "@/components/ui/password-field";
@@ -55,10 +54,8 @@ export default function LoginPage() {
 		}
 	}
 
-	const { refetch } = useQuery({
-		enabled: false, //disables it from executing immediately
-		queryKey: ["login"],
-		queryFn: async () => {
+	const { mutate } = useMutation({
+        mutationFn: async () => {
 			const userInput = getValues();
 
 			//getting user device details
@@ -127,7 +124,7 @@ export default function LoginPage() {
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<form onSubmit={handleSubmit(refetch)}>
+						<form onSubmit={handleSubmit(mutate)}>
 							<div className="grid w-full items-center gap-4 login">
 								<div className="flex flex-col space-y-1.5">
 									{/* registers the username as a data */}
