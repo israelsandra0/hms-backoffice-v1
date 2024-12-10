@@ -34,7 +34,6 @@ import { Link, useNavigate } from "react-router-dom";
 export default function HotelsPage() {
 
     const [hotelToEdit, setHotelToEdit] = useState({})
-    const [hotelToView, setHotelToView] = useState({})
     const { toast } = useToast()
     const { confirmAction } = useConfirm()
     const navigate = useNavigate()

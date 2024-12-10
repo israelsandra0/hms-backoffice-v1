@@ -1,4 +1,3 @@
-import ViewAreaHeader from "./ViewAreaHeader";
 import { Database, File, Hotel, Locate, Users } from "lucide-react";
 import { Table, TableCell, TableHead, TableRow } from "@/components/ui/table";
 
@@ -6,10 +5,8 @@ export default function HotelsOverview() {
 
 
     return (
-        <div>
-            <ViewAreaHeader/>
-
-            {/* <div className="flex gap-6 ml-6 text-gray-500">
+        <div className="mt-4">
+            <div className="flex gap-6 ml-6 text-gray-500">
                 <div className="flex w-[150px] px-2 py-4 rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
                     <Database className="text-[#8D561E]  w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]"/>
                     <div>
@@ -70,7 +67,7 @@ export default function HotelsOverview() {
                     <TableHead>Module 4</TableHead>
                     <TableCell>20 Clicks</TableCell>
                 </TableRow>
-            </Table> */}
+            </Table>
 
         </div>
     );

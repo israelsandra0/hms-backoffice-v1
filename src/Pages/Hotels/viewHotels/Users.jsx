@@ -1,12 +1,11 @@
-import ViewAreaHeader from "./ViewAreaHeader";
+
 
 export default function HotelPageUsers() {
     
     return (
         <>
-            <ViewAreaHeader />
             <div>
-                <h1>hello</h1>
+                <h1>user component</h1>
             </div>
         </>
     )
