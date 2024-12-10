@@ -168,7 +168,7 @@ export default function Add() {
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem>
-                    <BreadcrumbLink href="/hotels">Hotels</BreadcrumbLink>
+                <Link onClick={() => navigate('/hotels')}>Hotels</Link>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>

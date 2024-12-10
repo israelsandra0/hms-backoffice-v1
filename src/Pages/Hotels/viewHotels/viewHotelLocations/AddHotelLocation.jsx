@@ -22,9 +22,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ButtonLink } from "@/components/ui/button_link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Dialog } from "@/components/ui/dialog";
+import IntlPhoneField from "@/components/ui/intlphone-field";
 
-export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  }) {
+export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) {
     // Yup schema
     const yupBuild = yup.object({
         address: yup.string().required("Address is required"),
@@ -40,12 +40,12 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
         formState: { errors },
         control,
         getValues,
-        setValue
     } = useForm({
         defaultValues: {
             address: "",
             state: "",
             city: "",
+            phone: "",
         },
         resolver: yupResolver(yupBuild),
     });
@@ -125,11 +125,12 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
                 const hotelData = {
                     address: hotelInput.address,
                     state: hotelInput.state,
-                    city: hotelInput.city
+                    city: hotelInput.city,
+                    phone: hotelInput.phone
                 };
 
 
-                const res = await post(`hotels/${hotelId}/locations/store`, hotelData);
+                const res = await post(`/hotels/${hotelId}/locations/store`, hotelData);
 
                 if (res.status.toString().startsWith(4)) {
                     setDisabledButton(false);
@@ -165,6 +166,14 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
                     onLocationAdded(responseData);
                 }
 
+                // Close the modal after success
+                // if (closeFn) {
+                //     closeFn(); 
+                //     setIsSuccess(open)
+                // }
+
+                // closeFn();
+
                 return responseData;
             } catch (error) {
                 console.log(error);
@@ -190,11 +199,6 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
         },
     });
 
-    // useEffect(() => {
-    //     fetchStates().then((response) => {
-    //         setStates(response.data.data);
-    //     });
-    // }, []);
     useEffect(() => {
         const loadStates = async () => {
             try {
@@ -214,7 +218,7 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
         <div className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
             <CardContent className='w-[30%] rounded-[24px] text-center mx-auto border-none bg-white py-8'>
                 {!!errorMessage?.length && (
-                    <Alert className="alert text-red-900 border-0 h-full  bg-[#fee]">
+                    <Alert className="alert text-red-900 border-0 h-full  bg-[#fee] mb-4">
                         <AlertDescription>{errorMessage}</AlertDescription>
                     </Alert>
                 )}
@@ -240,6 +244,19 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
                             <p>{errors.address?.message}</p>
                         </div>
 
+                        <div className="mb-2">
+                            <Label htmlFor="phone">Phone</Label>
+                            <br />
+                            <Controller
+                                name="phone"
+                                control={control}
+                                render={({ field }) => (
+                                    <IntlPhoneField {...field} id="phone" />
+                                )}
+                            />
+                            <p>{errors.phone?.message}</p>
+                        </div>
+
                         <div className="flex gap-2">
                             <div className="mb-2 w-full">
                                 <Label htmlFor="state">State</Label>
@@ -248,7 +265,7 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
                                     name="state"
                                     control={control}
                                     render={({ field }) => (
-                                        <StateField {...field}  options={states}/>
+                                        <StateField {...field} options={states} />
                                     )}
                                 />
                                 <p>{errors.state?.message}</p>
@@ -290,7 +307,7 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId  })
                                     className="w-full p-[16px] text-[16px]"
                                     onClick={() => {
                                         setIsSuccess(false);
-                                        navigate("/hotels/view/locations");
+                                        // navigate(`/hotels/view/${hotelId}`);
                                     }}
                                 >
                                     Done
