@@ -1,10 +1,25 @@
 import { ButtonLink } from "@/components/ui/button_link";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { MoreVertical } from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuLabel,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
 import AddHotelLocation from "./AddHotelLocation";
 import { useState } from "react";
-import * as React from "react"
+import * as React from "react";
 import {
     flexRender,
     getCoreRowModel,
@@ -12,16 +27,14 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-
-
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import ResponsivePaginationComponent from "react-responsive-pagination";
 
 export default function Locations({ locations, hotelId }) {
-
     const columns = [
         {
             accessorKey: "address",
@@ -78,7 +91,7 @@ export default function Locations({ locations, hotelId }) {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
-                const payment = row.original
+                const payment = row.original;
 
                 return (
                     <DropdownMenu>
@@ -86,7 +99,7 @@ export default function Locations({ locations, hotelId }) {
                             <MoreVertical className="cursor-pointer" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56 cursor-pointer">
-                            <DropdownMenuItem >
+                            <DropdownMenuItem>
                                 <span>Edit</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
@@ -95,15 +108,25 @@ export default function Locations({ locations, hotelId }) {
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                )
+                );
             },
         },
-    ]
+    ];
 
-    const [sorting, setSorting] = useState([])
-    const [columnFilters, setColumnFilters] = useState([])
-    const [columnVisibility, setColumnVisibility] = useState({})
-    const [rowSelection, setRowSelection] = useState({})
+    const [sorting, setSorting] = useState([]);
+    const [columnFilters, setColumnFilters] = useState([]);
+    const [columnVisibility, setColumnVisibility] = useState({});
+    const [rowSelection, setRowSelection] = useState({});
+
+    // Pagination state
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const pageSize = 5;
+
+    const [pagination, setPagination] = useState({
+        pageIndex: 0, //initial page index
+        pageSize: 5, //default page size
+    });
+
 
     const table = useReactTable({
         data: locations, // Use the locations prop here
@@ -121,10 +144,18 @@ export default function Locations({ locations, hotelId }) {
             columnFilters,
             columnVisibility,
             rowSelection,
+            pagination,
         },
-    })
+        // Handling page changes manually
+        onPaginationChange: (page) => {
+            setPagination({
+                ...pagination,
+                pageIndex: page,
+            });
+        },
+    });
 
-    const [addLocationBox, setAddLocationBox] = useState(false)
+    const [addLocationBox, setAddLocationBox] = useState(false);
     const [locationsList, setLocationsList] = useState(locations);
 
     // Function to refresh or update locations after adding
@@ -132,15 +163,14 @@ export default function Locations({ locations, hotelId }) {
         setLocationsList((prevLocations) => [...prevLocations, newLocation]);
     };
 
-    const closeAddLocationBox = () => setAddLocationBox(false)
-
+    const closeAddLocationBox = () => setAddLocationBox(false);
 
     return (
         <div>
             <div className="flex items-center justify-between px-6 py-4">
                 <Input
                     placeholder="Filter states..."
-                    value={(table.getColumn("state")?.getFilterValue()) ?? ""}
+                    value={table.getColumn("state")?.getFilterValue() ?? ""}
                     onChange={(event) =>
                         table.getColumn("state")?.setFilterValue(event.target.value)
                     }
@@ -194,7 +224,7 @@ export default function Locations({ locations, hotelId }) {
                                                     header.getContext()
                                                 )}
                                         </TableHead>
-                                    )
+                                    );
                                 })}
                             </TableRow>
                         ))}
@@ -230,7 +260,7 @@ export default function Locations({ locations, hotelId }) {
                 </Table>
             </div>
 
-            <div className="flex items-center justify-end space-x-2 py-4 mx-6">
+            {/* <div className="flex items-center justify-end space-x-2 py-4 mx-6">
                 <div className="flex-1 text-sm text-muted-foreground">
                     {table.getFilteredSelectedRowModel().rows.length} of{" "}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -253,12 +283,46 @@ export default function Locations({ locations, hotelId }) {
                         Next
                     </Button>
                 </div>
+            </div> */}
+
+            {!!addLocationBox && (
+                <AddHotelLocation
+                    closeFn={closeAddLocationBox}
+                    onLocationAdded={refreshLocations}
+                    hotelId={hotelId}
+                />
+            )}
+
+             {/* Pagination */}
+            <div className="flex items-center justify-between mx-6 my-6">
+                <Button
+                    variant="outline"
+                    className="rounded-[8px]"
+                    onClick={() => table.previousPage()}
+                    // disabled={!table.getCanPreviousPage()}
+                >
+                    <ChevronLeft className="h-4" /> Previous
+                </Button>
+
+                {/* Pagination component */}
+                <ResponsivePaginationComponent
+                    renderNav={false}
+                    total={table.getPageCount()}  // Number of total pages
+                    current={table.getState().pagination.pageIndex + 1}  // Current page index (1-based)
+                    onPageChange={(page) => table.setPageIndex(page - 1)}  // Adjust page change
+                />
+
+                <Button
+                    variant="outline"
+                    className="rounded-[8px]"
+                    onClick={() => table.nextPage()}
+                    // disabled={!table.getCanNextPage()}
+                >
+                    Next <ChevronRight className="h-4" />
+                </Button>
             </div>
-
-            {!!addLocationBox && <AddHotelLocation closeFn={closeAddLocationBox} onLocationAdded={refreshLocations} hotelId={hotelId}/> }
         </div>
-    )
-
+    );
 
     //         {/* <Table className="content w-[95%] my-6 ml-6 rounded-[2rem] border border-gray-200">
     //             <TableHeader>

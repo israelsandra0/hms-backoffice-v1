@@ -4,33 +4,36 @@
 
 @layer components {
   body {
-    @apply font-serif
-    
+    @apply font-serif;
   }
 
   .bg-primary {
-    background-color: #8D561E;
+    background-color: #8d561e;
   }
 
   .bg-secondary {
-    background-color: #E2A354;
+    background-color: #e2a354;
   }
-/* 
+  /* 
   .bg-input {
     background-color: [#F2F2F5];
   } */
-  .bg-success{
-    background-color: #E7F8F0;
-    color: #27AE60;
+  .bg-success {
+    background-color: #e7f8f0;
+    color: #27ae60;
   }
   .bg-grey {
-    background-color: #F2F2F5;
+    background-color: #f2f2f5;
   }
-  .bg-lightPrimary{
-    background-color: #F1E2D3;
+  .bg-lightPrimary {
+    background-color: #f1e2d3;
   }
-  .text-light-primary{
-    color: #F1E2D3;
+  .text-light-primary {
+    color: #f1e2d3;
+  }
+
+  .text-primary {
+    color: #8d561e;
   }
 
   .login label,
@@ -41,27 +44,40 @@
     font-style: normal;
   }
 
-  .loginText, button {
+  .loginText,
+  button {
     font-weight: 600;
     font-style: normal;
     font-size: 40px;
   }
-  .sidebar nav .active{
-    background-color: #F1E2D3;
+  .sidebar nav .active {
+    background-color: #f1e2d3;
     border-radius: 50px;
-    color: #8D561E;
+    color: #8d561e;
   }
 
-  .hotelForm div div p{
+  .hotelForm div div p {
     color: red;
     font-size: 14px;
   }
- 
-  .activeView{
+
+  .activeView {
     padding: 0 0.5rem;
     background-color: white;
     height: 2rem;
     border-radius: 50%;
     justify-items: center;
   }
+
+    .pagination {
+        @apply flex gap-2 items-center        
+    }
+    
+    .pagination .active {
+        @apply bg-lightPrimary text-primary
+    }
+    .pagination .page-item {
+        @apply hover:bg-gray-200 px-[14px] py-[8px] rounded-[8px]
+    }
+  
 }
