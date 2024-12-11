@@ -14,6 +14,7 @@ import {
 } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import AddHotelUsers from "./AddHotelUsers";
 
 
 
@@ -107,6 +108,9 @@ export default function HotelPageUsers({hotelId}) {
     const [columnFilters, setColumnFilters] = useState([])
     const [columnVisibility, setColumnVisibility] = useState({})
     const [rowSelection, setRowSelection] = useState({})
+    const [addUsersBox, setAddUsersBox] = useState(false)
+
+    const closeAddUsersBox = () => setAddUsersBox(false)
 
     const table = useReactTable({
         data,
@@ -140,7 +144,7 @@ export default function HotelPageUsers({hotelId}) {
                     className="max-w-sm bg-transparent"
                 />
                 <div className="text-right mr-4 mt-4">
-                    <Button variant="primary" onClick={() => setAddLocationBox(true)}>
+                    <Button variant="primary" onClick={() => setAddUsersBox(true)}>
                         + Add
                     </Button>
                 </div>
@@ -221,6 +225,11 @@ export default function HotelPageUsers({hotelId}) {
                     </Button>
                 </div>
             </div>
+
+            
+            {!!addUsersBox && <AddHotelUsers /> }
+            
+            {/* {!!addUsersBox && <AddHotelUsers closeFn={closeAddUsersBox}  hotelId={hotelId}/> } */}
         </div>
     )
 

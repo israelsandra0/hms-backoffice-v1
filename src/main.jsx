@@ -21,7 +21,7 @@ import Support from "./Pages/Support";
 import Settings from "./Pages/Settings";
 import Users from "./Pages/Users";
 import HotelsOverview from "./pages/hotels/viewHotels/Overview";
-import HotelPageUsers from "./pages/hotels/viewHotels/Users";
+import HotelPageUsers from "./pages/hotels/viewHotels/viewHotelUsers/Users";
 import Locations from "./pages/hotels/viewHotels/viewHotelLocations/Locations";
 import Rooms from "./pages/hotels/viewHotels/RoomType";
 import SubscriptionHistory from "./pages/hotels/viewHotels/Subscription";
