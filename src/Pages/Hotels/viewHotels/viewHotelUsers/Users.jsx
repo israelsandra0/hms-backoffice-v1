@@ -16,10 +16,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import AddHotelUsers from "./AddHotelUsers";
 import { Badge } from "@/components/ui/badge";
+import ResponsivePaginationComponent from "react-responsive-pagination";
 
 
 
-export default function HotelPageUsers({hotelId}) {
+export default function HotelPageUsers({ hotelId }) {
 
     const data = [
         {
@@ -126,7 +127,18 @@ export default function HotelPageUsers({hotelId}) {
     const [rowSelection, setRowSelection] = useState({})
     const [addUsersBox, setAddUsersBox] = useState(false)
 
-    const closeAddUsersBox = () => setAddUsersBox(false)
+
+
+    // const closeAddUsersBox = () => setAddUsersBox(false)
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 10; // Define the page size (how many items per page)
+    const totalPages = Math.ceil(data.length / pageSize); // Calculate total pages
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
     const table = useReactTable({
         data,
@@ -145,7 +157,16 @@ export default function HotelPageUsers({hotelId}) {
             columnVisibility,
             rowSelection,
         },
-    })
+        // Pagination settings
+        // manualPagination: true,
+        // pageCount: totalPages,
+        // state: {
+        //     pagination: {
+        //         pageIndex: currentPage - 1, // React Table uses zero-based indexing
+        //         pageSize: pageSize,
+        //     },
+        // },
+    });
 
 
     return (
@@ -199,9 +220,9 @@ export default function HotelPageUsers({hotelId}) {
                                                 cell.column.columnDef.cell,
                                                 cell.getContext()
                                             )}
-                                        </TableCell>                                        
+                                        </TableCell>
                                     ))}
-                                    
+
                                 </TableRow>
                             ))
                         ) : (
@@ -243,10 +264,19 @@ export default function HotelPageUsers({hotelId}) {
                 </div>
             </div>
 
-            
-            {!!addUsersBox && <AddHotelUsers /> }
-            
-            {/* {!!addUsersBox && <AddHotelUsers closeFn={closeAddUsersBox}  hotelId={hotelId}/> } */}
+
+            {!!addUsersBox && ( <AddHotelUsers /> )}
+
+            {/* Responsive Pagination Component */}
+            <div className="pagination">
+                <ResponsivePaginationComponent
+                    previousClassName="previous-justified"
+                    nextClassName="next-justified"
+                    total={totalPages}
+                    current={currentPage}
+                    onPageChange={handlePageChange}
+                />
+            </div>
         </div>
     )
 
