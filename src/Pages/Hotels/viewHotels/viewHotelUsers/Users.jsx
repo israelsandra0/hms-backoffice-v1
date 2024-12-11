@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import AddHotelUsers from "./AddHotelUsers";
+import { Badge } from "@/components/ui/badge";
 
 
 
@@ -26,6 +27,7 @@ export default function HotelPageUsers({hotelId}) {
             name: "success",
             role: "manager",
             location: "lagos",
+            staus: hotelId?.isActive ? "Active" : "Inactive"
         },
         {
             id: "m5gr84i9",
@@ -71,34 +73,48 @@ export default function HotelPageUsers({hotelId}) {
             ),
         },
         {
+            accessorKey: "status",
+            header: "Status",
+            cell: ({ row }) => {
+                const status = row.getValue("status");
+                return (
+                    <div className="capitalize">
+                        <Badge variant={hotelId?.isActive ? `success` : 'error'}>{hotelId?.isActive ? `Active` : 'Inactive'}</Badge>
+                    </div>
+                );
+            },
+        },
+        {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
                 const payment = row.original
 
                 return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <MoreVertical className="cursor-pointer" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56 cursor-pointer">
-                            <DropdownMenuItem >
-                                <span>Edit</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                <span>Resend Password</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem >
-                                <span>{hotelId.isActive ? 'Deactivate' : 'Activate'}</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                <span>Delete</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <MoreVertical className="cursor-pointer" />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-56 cursor-pointer">
+                                <DropdownMenuItem >
+                                    <span>Edit</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    <span>Resend Password</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem >
+                                    <span>{hotelId.isActive ? 'Deactivate' : 'Activate'}</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    <span>Delete</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 )
             },
         },
@@ -137,9 +153,9 @@ export default function HotelPageUsers({hotelId}) {
             <div className="flex items-center justify-between px-6 py-4">
                 <Input
                     placeholder="Search..."
-                    value={(table.getColumn("state")?.getFilterValue()) ?? ""}
+                    value={(table.getColumn("location")?.getFilterValue()) ?? ""}
                     onChange={(event) =>
-                        table.getColumn("state")?.setFilterValue(event.target.value)
+                        table.getColumn("location")?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm bg-transparent"
                 />
@@ -183,8 +199,9 @@ export default function HotelPageUsers({hotelId}) {
                                                 cell.column.columnDef.cell,
                                                 cell.getContext()
                                             )}
-                                        </TableCell>
+                                        </TableCell>                                        
                                     ))}
+                                    
                                 </TableRow>
                             ))
                         ) : (
