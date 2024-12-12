@@ -26,7 +26,7 @@ import Locations from "./pages/hotels/viewHotels/viewHotelLocations/Locations";
 import Rooms from "./pages/hotels/viewHotels/RoomType";
 import SubscriptionHistory from "./pages/hotels/viewHotels/Subscription";
 import PageSettings from "./pages/hotels/viewHotels/Settings";
-import ViewAreaHeader from "./pages/hotels/viewHotels/ViewAreaHeader";
+import ViewHotelsPage from "./pages/hotels/viewHotels/ViewHotelsPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,7 +35,7 @@ const router = createBrowserRouter(
       <Route path="" element={<UserAreaLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/hotels" element={<HotelsPage />} />
-        <Route path="/hotels/view/:id" element={<ViewAreaHeader />} />
+        <Route path="/hotels/view/:id" element={<ViewHotelsPage />} />
         <Route path="/hotels/view/overview" element={<HotelsOverview />} />
         <Route path="/hotels/view/users" element={<HotelPageUsers />} />
         <Route path="/hotels/view/locations" element={<Locations />} />
