@@ -97,6 +97,8 @@ export default function ViewHotelsPage() {
         </Breadcrumb>
     );
 
+    const locationId = hotel?.locations
+
     return (
         <div>
             <UserAreaHeader pages={breadcrumb} />
@@ -184,7 +186,7 @@ export default function ViewHotelsPage() {
                     </TabsContent>
                     <TabsContent value="locations">
                         <Card>
-                            <Locations locations={hotel?.locations} hotelId={hotel?.id} />
+                            <Locations locations={hotel?.locations}  hotelId={hotel?.id} />
                         </Card>
                     </TabsContent>
                     <TabsContent value="rooms">

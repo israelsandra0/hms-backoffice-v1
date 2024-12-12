@@ -1,4 +1,3 @@
-import { ButtonLink } from "@/components/ui/button_link";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -25,17 +24,75 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import ResponsivePaginationComponent from "react-responsive-pagination";
 import Pagination from "@/components/Pagination";
+import { useConfirm } from "@/hooks/use-confirm";
+import { apiDelete } from "@/functions";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Locations({ locations, hotelId }) {
     const [addLocationBox, setAddLocationBox] = useState(false);
     const closeAddLocationBox = () => setAddLocationBox(false);
+    const { confirmAction } = useConfirm()
+    const { toast } = useToast()
 
     // Pagination state
     const [pageIndex, setPageIndex] = useState(0); // Current page
     const pageSize = 5 // Number of items per page
+
+
+
+    const handleDeleteResponse = (res) => {
+        if (res.ok) {
+            console.log(res)
+            toast({
+                success: true,
+                duration: 5000,
+                title: 'Hotel deleted successfully!'
+            });
+        } else {
+            toast({
+                error: true,
+                duration: 5000,
+                title: 'Failed to delete the hotel. Please try again.'
+            });
+        }
+    }
+
+    const confirmModalSetup = {
+        delete: {
+            title: 'Are you sure?',
+            message: "you're about to delete this hotel, This action cannot be undone.",
+            confirmButtonText: 'Delete',
+            buttonVariant: 'error',
+            cancelButtonText: 'Cancel'
+        }
+    }
+
+    const handleConfirmation = async (locationId, hotelAction) => {
+
+        if (hotelAction === 'delete' ) {
+            return await apiDelete(`/hotels/${hotelId}/locations/destroy/${locationId}`)
+        }
+    }
+
+    // Handle button click for delete/activation/deactivation
+    const handleActionClick = (locationId, actionType) => {
+        confirmAction({
+            ...confirmModalSetup[actionType.toLowerCase()],
+            isDestructive: actionType.toLowerCase() === 'delete',
+            confirmFn: () => handleConfirmation(locationId, actionType),
+            completeFn: (res) => {
+                if (actionType.toLowerCase() === 'delete') {
+                    handleDeleteResponse(res, locationId)
+                }
+                else {
+                    handleStatusUpdateResponse(res, actionType == 'Activate')
+                }
+            }
+
+        })
+    };
+
 
     // Define columns (no change needed to the columns)
     const columns = useMemo(() => [
@@ -63,7 +120,7 @@ export default function Locations({ locations, hotelId }) {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
-                const payment = row.original;
+                const location  = row.original;
 
                 return (
                     <DropdownMenu>
@@ -75,7 +132,7 @@ export default function Locations({ locations, hotelId }) {
                                 <span>Edit</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleActionClick(location.id, 'delete')}>
                                 <span>Delete</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -101,28 +158,6 @@ export default function Locations({ locations, hotelId }) {
         getPaginationRowModel: getPaginationRowModel(),
         getCoreRowModel: getCoreRowModel(),
     });
-
-    // const pageCount = table.getPageCount(); // Total number of pages
-
-    // // Pagination controls functions
-    // const goToPreviousPage = () => {
-    //     if (pageIndex > 0) {
-    //         setPageIndex(pageIndex - 1);
-    //     }
-    // };
-
-    // const goToNextPage = () => {
-    //     if (pageIndex < pageCount - 1) {
-    //         setPageIndex(pageIndex + 1);
-    //     }
-    // };
-
-    // // const totalPages = 5;
-
-    // function handlePageChange(page) {
-    //     setPageIndex(page - 1);
-    //     // ... do something with `page`
-    // }
 
     return (
         <div>

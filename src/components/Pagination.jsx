@@ -1,7 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ResponsivePaginationComponent from "react-responsive-pagination";
 import { Button } from "./ui/button";
-import { useState } from "react";
 
 export default function Pagination({table, pageIndex, setPageIndex}){
 
