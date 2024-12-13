@@ -4,7 +4,7 @@ export default function PageSettings() {
     return (
         <>
             <div>
-                <h1>hello</h1>
+                <h1 className=" mt-8 font-bold text-[1.5rem] text-center">No Available Content !</h1>
             </div>
         </>
     )

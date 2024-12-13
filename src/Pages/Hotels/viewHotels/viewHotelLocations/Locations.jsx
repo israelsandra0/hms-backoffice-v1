@@ -37,7 +37,7 @@ export default function Locations({ locations, hotelId }) {
 
     // Pagination state
     const [pageIndex, setPageIndex] = useState(0); // Current page
-    const pageSize = 5 // Number of items per page
+    const pageSize = 2 // Number of items per page
 
 
 
