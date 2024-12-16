@@ -1,30 +1,28 @@
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button_link";
 import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import React, { useEffect, useState } from "react";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { Controller, useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { get, post } from "@/functions";
-import { BACKEND_URL } from "@/constants";
-import { Label } from "@/components/ui/label";
-import StateField from "@/components/ui/state-field";
-import { Link, useNavigate } from "react-router-dom";
-import UserAreaHeader from "@/components/UserAreaHeader";
-import { Check, Delete, DeleteIcon, Upload, X } from "lucide-react";
-import {
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { ButtonLink } from "@/components/ui/button_link";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import IntlPhoneField from "@/components/ui/intlphone-field";
+import Spinner from "@/components/ui/spinner";
+import StateField from "@/components/ui/state-field";
+import { get, put } from "@/functions";
+import { useToast } from "@/hooks/use-toast";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Label } from "@radix-ui/react-label";
+import { RiDeleteBin2Line } from "@remixicon/react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Check, Upload, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import * as yup from "yup";
 
-export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) {
+
+
+export default function EditHotelLocation({ closeFn, locationId, hotelId }) {
+
     // Yup schema
     const yupBuild = yup.object({
         address: yup.string().required("Address is required"),
@@ -42,10 +40,10 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
         getValues,
     } = useForm({
         defaultValues: {
-            address: "",
-            state: "",
-            city: "",
-            phone: "",
+            address: locationId.address,
+            state: locationId.state,
+            city: locationId.city,
+            phone: locationId.phone,
         },
         resolver: yupResolver(yupBuild),
     });
@@ -56,130 +54,41 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
     const [disabledButton, setDisabledButton] = useState(false);
     const [states, setStates] = useState([]);
 
-    // const { refetch: sendLocationRequest } = useQuery({
-    //     enabled: false,
-    //     queryKey: ["locations"],
-    //     queryFn: async () => {
-    //         const hotelInput = getValues();
-    //         setErrorMessage("");
-    //         setDisabledButton(true);
 
-    //         try {
-    //             const hotelData = {
-    //                 address: hotelInput.address,
-    //                 state: hotelInput.state,
-    //                 city: hotelInput.city
-    //             };
+    const { toast } = useToast()
 
+    const { mutate, isPending } = useMutation({
+        mutationFn: async (data) => {
+            const res = await put(`/hotels/${hotelId}/locations/update/${locationId.id}`, data)
+            if (res.ok) {
+                toast({
+                    success: true,
+                    duration: 5000,
+                    title: 'Hotel location updated successfully!'
+                });
+                closeFn()
 
-    //             const res = await post(`hotels/${hotelId}/locations/store`, hotelData);
+            } else if (res.status.toString().startsWith(4)) {
 
-    //             if (res.status.toString().startsWith(4)) {
-    //                 setDisabledButton(false);
-    //                 setErrorMessage(
-    //                     "Hotel details not saved, correct all indicated fields and try again!"
-    //                 );
+                const responseErrors = await res.json()
 
-    //                 const responseErrors = await res.json();
-
-    //                 if (responseErrors.errors) {
-    //                     responseErrors.errors.forEach((error) => {
-    //                         setError(error.field, {
-    //                             type: "custom",
-    //                             message: error.message,
-    //                         });
-    //                     });
-    //                 }
-    //                 return null;
-    //             }
-
-    //             if (res.status === 500) {
-    //                 setDisabledButton(false);
-    //                 setErrorMessage("An error occurred, please try again");
-    //                 return null;
-    //             }
-
-    //             const responseData = await res.json();
-    //             setIsSuccess(true);
-    //             setDisabledButton(true);
-
-    //             // Trigger the callback to update the location list
-    //             if (onLocationAdded) {
-    //                 onLocationAdded(responseData);
-    //             }
-
-    //             return responseData;
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     },
-    // });
-
-    const { mutate } = useMutation({
-        mutationFn: async () => {
-
-            const hotelInput = getValues();
-            setErrorMessage("");
-            setDisabledButton(true);
-
-            try {
-                const hotelData = {
-                    address: hotelInput.address,
-                    state: hotelInput.state,
-                    city: hotelInput.city,
-                    phone: hotelInput.phone
-                };
-
-
-                const res = await post(`/hotels/${hotelId}/locations/store`, hotelData);
-
-                if (res.status.toString().startsWith(4)) {
-                    setDisabledButton(false);
-                    setErrorMessage(
-                        "Location details not saved, correct all indicated fields and try again!"
-                    );
-
-                    const responseErrors = await res.json();
-
-                    if (responseErrors.errors) {
-                        responseErrors.errors.forEach((error) => {
-                            setError(error.field, {
-                                type: "custom",
-                                message: error.message,
-                            });
+                if (responseErrors.errors) {
+                    responseErrors.errors.forEach((error) => {
+                        setError(error.field, {
+                            type: "custom",
+                            message: error.message,
                         });
-                    }
-                    return null;
+                    });
                 }
-
-                if (res.status === 500) {
-                    setDisabledButton(false);
-                    setErrorMessage("An error occurred, please try again");
-                    return null;
-                }
-
-                const responseData = await res.json();
-                setIsSuccess(true);
-                setDisabledButton(true);
-
-                // Trigger the callback to update the location list
-                if (onLocationAdded) {
-                    onLocationAdded(responseData);
-                }
-
-                // Close the modal after success
-                // if (closeFn) {
-                //     closeFn(); 
-                //     setIsSuccess(open)
-                // }
-
-                // closeFn();
-
-                return responseData;
-            } catch (error) {
-                console.log(error);
+                return null;
+            } else {
+                toast({
+                    error: true,
+                    duration: 5000,
+                    title: 'Failed to edit hotel location. Please try again.'
+                });
             }
-        },
+        }
     })
 
 
@@ -215,6 +124,8 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
     }, []);
 
 
+
+
     return (
         <div className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
             <CardContent className='w-[30%] rounded-[24px] text-center mx-auto border-none bg-white py-8'>
@@ -224,18 +135,18 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
                     </Alert>
                 )}
 
-                <div className="flex gap-20">
+                <div className="flex">
                     <Link>
                         <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={() => closeFn()} />
                     </Link>
-                    <h1 className="text-[1.3rem] font-bold mb-2">Add New Location</h1>
+                    <h1 className="text-[1.3rem] font-bold mb-2 mx-auto">Edit Location</h1>
                 </div>
 
                 <form
                     onSubmit={handleSubmit(mutate)}
                     className="hotelForm text-left"
                 >
-                    {/* {JSON.stringify(errors)} */}
+                    {JSON.stringify(errors)}
                     <div className="mt-4">
 
                         <div className="mb-2">

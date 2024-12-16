@@ -115,11 +115,11 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
 
                     {/* {JSON.stringify(errors)} */}
 
-                    <div className="flex gap-20">
+                    <div className="flex">
                         <Link>
                             <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={closeFn} />
                         </Link>
-                        <h1 className="text-[1.3rem] font-bold mb-2">Edit Hotel Details</h1>
+                        <h1 className="text-[1.3rem] font-bold mb-2 mx-auto">Edit Hotel Details</h1>
                     </div>
 
 

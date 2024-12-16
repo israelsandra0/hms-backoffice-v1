@@ -15,8 +15,7 @@ import {
 } from "@/components/ui/table";
 import { ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
 import AddHotelLocation from "./AddHotelLocation";
-import { useState, useMemo } from "react";
-import * as React from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
     flexRender,
     getCoreRowModel,
@@ -26,42 +25,64 @@ import {
 import { Button } from "@/components/ui/button";
 import Pagination from "@/components/Pagination";
 import { useConfirm } from "@/hooks/use-confirm";
-import { apiDelete } from "@/functions";
+import { apiDelete, get } from "@/functions";
 import { useToast } from "@/hooks/use-toast";
+import EditHotelLocation from "./EditHotelLocation";
+import { useQuery } from "@tanstack/react-query";
+import Spinner from "@/components/ui/spinner";
+import UserAreaHeader from "@/components/UserAreaHeader";
 
-export default function Locations({ locations, hotelId }) {
+export default function Locations({ hotelId }) {
+
+    const { data: locations, isLoading, refetch: fetchHotelsLocations } = useQuery({
+        queryKey: ["hotelLocations"],
+        queryFn: async () => {
+            const res = await get(`/hotels/${hotelId}/locations`);
+            if (!res.ok) {
+                throw new Error("Failed to fetch hotel data");
+            }
+            const response = await res.json();
+            return response.data;
+        }
+    });
+
+    if (isLoading) {
+        return (
+            <>
+                <div className="text-center flex items-center justify-center mx-auto my-5">
+                    <Spinner className="me-3 text-gray-300 h-16 w-16" />
+                </div>
+            </>
+        )
+    }
+
+
     const [addLocationBox, setAddLocationBox] = useState(false);
-    const closeAddLocationBox = () => setAddLocationBox(false);
     const { confirmAction } = useConfirm()
     const { toast } = useToast()
+    
+    const handleEditClose = () => {
+        setEditLocation({});
+        fetchHotelsLocations();
+    };
+    
+    const [editLocation, setEditLocation] = useState({});
 
-    // Pagination state
+
+    // // Pagination state
     const [pageIndex, setPageIndex] = useState(0); // Current page
-    const pageSize = 2 // Number of items per page
+    const pageSize = 5 // Number of items per page
 
+    const closeAddLocationBox = () => {
+        setAddLocationBox(false)
+        fetchHotelsLocations()
+    };
 
-
-    const handleDeleteResponse = (res) => {
-        if (res.ok) {
-            console.log(res)
-            toast({
-                success: true,
-                duration: 5000,
-                title: 'Hotel deleted successfully!'
-            });
-        } else {
-            toast({
-                error: true,
-                duration: 5000,
-                title: 'Failed to delete the hotel. Please try again.'
-            });
-        }
-    }
 
     const confirmModalSetup = {
         delete: {
             title: 'Are you sure?',
-            message: "you're about to delete this hotel, This action cannot be undone.",
+            message: "you're about to delete this location, This action cannot be undone.",
             confirmButtonText: 'Delete',
             buttonVariant: 'error',
             cancelButtonText: 'Cancel'
@@ -69,8 +90,7 @@ export default function Locations({ locations, hotelId }) {
     }
 
     const handleConfirmation = async (locationId, hotelAction) => {
-
-        if (hotelAction === 'delete' ) {
+        if (hotelAction === 'delete') {
             return await apiDelete(`/hotels/${hotelId}/locations/destroy/${locationId}`)
         }
     }
@@ -85,16 +105,13 @@ export default function Locations({ locations, hotelId }) {
                 if (actionType.toLowerCase() === 'delete') {
                     handleDeleteResponse(res, locationId)
                 }
-                else {
-                    handleStatusUpdateResponse(res, actionType == 'Activate')
-                }
             }
 
         })
     };
 
 
-    // Define columns (no change needed to the columns)
+    // // Define columns (no change needed to the columns)
     const columns = useMemo(() => [
         {
             header: "Address",
@@ -120,7 +137,7 @@ export default function Locations({ locations, hotelId }) {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
-                const location  = row.original;
+                const location = row.original;
 
                 return (
                     <DropdownMenu>
@@ -128,7 +145,7 @@ export default function Locations({ locations, hotelId }) {
                             <MoreVertical className="cursor-pointer" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56 cursor-pointer">
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setEditLocation(location)}>
                                 <span>Edit</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
@@ -159,14 +176,31 @@ export default function Locations({ locations, hotelId }) {
         getCoreRowModel: getCoreRowModel(),
     });
 
+    const handleDeleteResponse = (res) => {
+        console.log(res)
+        if (res.ok) {
+            setPageIndex(0)
+
+            toast({
+                success: true,
+                duration: 5000,
+                title: 'Hotel Location deleted successfully!'
+            });
+        } else {
+            toast({
+                error: true,
+                duration: 5000,
+                title: 'Failed to delete the hotel location. Please try again.'
+            });
+        }
+    }
+
     return (
         <div>
-            <div className="flex items-center justify-between px-6 py-4">
-                <div className="text-right mr-4 mt-4">
-                    <Button variant="primary" onClick={() => setAddLocationBox(true)}>
-                        + Add
-                    </Button>
-                </div>
+            <div className="text-right mr-4 my-8 ">
+                <Button variant="primary" onClick={() => setAddLocationBox(true)}>
+                    + Add
+                </Button>
             </div>
 
             <div className="content w-[95%] my-6 ml-6 rounded-[8px] border border-gray-200 overflow-hidden">
@@ -195,11 +229,15 @@ export default function Locations({ locations, hotelId }) {
                 </Table>
             </div>
 
-           <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex}/>
+            <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
 
             {/* Add Location Modal */}
             {!!addLocationBox && (
                 <AddHotelLocation closeFn={closeAddLocationBox} hotelId={hotelId} />
+            )}
+
+            {!!editLocation?.id && (
+                <EditHotelLocation closeFn={handleEditClose} locationId={editLocation} hotelId={hotelId} />
             )}
         </div>
     );

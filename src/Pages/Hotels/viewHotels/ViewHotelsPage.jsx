@@ -65,7 +65,7 @@ export default function ViewHotelsPage() {
 
     const { id } = useParams();
 
-    const { data: hotel, refetch: viewHotelRequest } = useQuery({
+    const { data: hotel, isLoading, refetch: viewHotelRequest } = useQuery({
         queryKey: ["hotelData", id],
         queryFn: async () => {
             const res = await get(`/hotels/show/${id}`);
@@ -77,6 +77,8 @@ export default function ViewHotelsPage() {
         },
         enabled: !!id,
     });
+
+
 
     const handleEditClose = () => {
         setHotelToEdit({});
@@ -96,6 +98,18 @@ export default function ViewHotelsPage() {
             </BreadcrumbList>
         </Breadcrumb>
     );
+
+    
+    if (isLoading) {
+        return (
+            <>
+                <UserAreaHeader pages={breadcrumb} />
+                <div className="text-center flex items-center justify-center mx-auto my-5">
+                    <Spinner className="me-3 text-gray-300 h-16 w-16" />
+                </div>
+            </>
+        )
+    }
 
     const locationId = hotel?.locations
 
@@ -186,7 +200,7 @@ export default function ViewHotelsPage() {
                     </TabsContent>
                     <TabsContent value="locations">
                         <Card>
-                            <Locations locations={hotel?.locations}  hotelId={hotel?.id} />
+                            <Locations hotelId={hotel.id} />
                         </Card>
                     </TabsContent>
                     <TabsContent value="rooms">
@@ -208,7 +222,7 @@ export default function ViewHotelsPage() {
             </Tabs>
 
             {!!hotelToEdit?.id && (
-                <EditHotelModal closeFn={handleEditClose} hotelToEdit={hotelToEdit} />
+                <EditHotelModal closeFn={handleEditClose} hotelToEdit={hotelToEdit}/>
             )}
         </div>
     );
