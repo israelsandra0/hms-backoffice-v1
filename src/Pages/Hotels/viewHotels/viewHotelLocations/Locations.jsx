@@ -1,82 +1,45 @@
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
-import AddHotelLocation from "./AddHotelLocation";
-import { useState, useMemo, useEffect } from "react";
-import {
-    flexRender,
-    getCoreRowModel,
-    getPaginationRowModel,
-    useReactTable,
-} from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
 import Pagination from "@/components/Pagination";
-import { useConfirm } from "@/hooks/use-confirm";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { apiDelete, get } from "@/functions";
-import { useToast } from "@/hooks/use-toast";
-import EditHotelLocation from "./EditHotelLocation";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
+import { MoreVertical } from "lucide-react";
+import { useMemo, useState } from "react";
 import Spinner from "@/components/ui/spinner";
-import UserAreaHeader from "@/components/UserAreaHeader";
+import { useConfirm } from "@/hooks/use-confirm";
+import { useToast } from "@/hooks/use-toast";
+import AddHotelLocation from "./AddHotelLocation";
+import EditHotelLocation from "./EditHotelLocation";
+import LocationsTable from "./LocationsTable";
+
 
 export default function Locations({ hotelId }) {
 
-    const { data: locations, isLoading, refetch: fetchHotelsLocations } = useQuery({
+    const [pageIndex, setPageIndex] = useState(0);
+    const pageSize = 4
+     // Number of items per page
+    const { confirmAction } = useConfirm()
+    const { toast } = useToast()
+    const [addLocationBox, setAddLocationBox] = useState(false);
+    const [editLocation, setEditLocation] = useState({});
+    //const [locations, setLocations] = useState([]);
+
+    const { data: locations, isLoading, isFetching, refetch: fetchHotelsLocations } = useQuery({
         queryKey: ["hotelLocations"],
         queryFn: async () => {
+            // setLocations([])
             const res = await get(`/hotels/${hotelId}/locations`);
+            console.log('welcome')
             if (!res.ok) {
                 throw new Error("Failed to fetch hotel data");
             }
             const response = await res.json();
+            //setLocations(response.data)
             return response.data;
         }
     });
-
-    if (isLoading) {
-        return (
-            <>
-                <div className="text-center flex items-center justify-center mx-auto my-5">
-                    <Spinner className="me-3 text-gray-300 h-16 w-16" />
-                </div>
-            </>
-        )
-    }
-
-
-    const [addLocationBox, setAddLocationBox] = useState(false);
-    const { confirmAction } = useConfirm()
-    const { toast } = useToast()
-    
-    const handleEditClose = () => {
-        setEditLocation({});
-        fetchHotelsLocations();
-    };
-    
-    const [editLocation, setEditLocation] = useState({});
-
-
-    // // Pagination state
-    const [pageIndex, setPageIndex] = useState(0); // Current page
-    const pageSize = 5 // Number of items per page
-
-    const closeAddLocationBox = () => {
-        setAddLocationBox(false)
-        fetchHotelsLocations()
-    };
 
 
     const confirmModalSetup = {
@@ -95,6 +58,24 @@ export default function Locations({ hotelId }) {
         }
     }
 
+    const handleDeleteResponse = (res) => {
+        if (res.ok) {
+            setPageIndex(0)
+
+            toast({
+                success: true,
+                duration: 5000,
+                title: 'Hotel Location deleted successfully!'
+            });
+        } else {
+            toast({
+                error: true,
+                duration: 5000,
+                title: 'Failed to delete the hotel location. Please try again.'
+            });
+        }
+    }
+
     // Handle button click for delete/activation/deactivation
     const handleActionClick = (locationId, actionType) => {
         confirmAction({
@@ -108,6 +89,27 @@ export default function Locations({ hotelId }) {
             }
 
         })
+    };
+
+    const queryClient = useQueryClient()
+
+    const closeAddLocationBox = () => {
+        setAddLocationBox(false);
+        queryClient.invalidateQueries(
+            {
+                queryKey: ['hotelLocations'],
+                refetchType: 'all'
+            },
+            {
+                cancelRefetch: true
+            }
+        )
+        fetchHotelsLocations()
+    };
+
+    const handleEditClose = () => {
+        setEditLocation({});
+        fetchHotelsLocations();
     };
 
 
@@ -176,23 +178,10 @@ export default function Locations({ hotelId }) {
         getCoreRowModel: getCoreRowModel(),
     });
 
-    const handleDeleteResponse = (res) => {
-        console.log(res)
-        if (res.ok) {
-            setPageIndex(0)
-
-            toast({
-                success: true,
-                duration: 5000,
-                title: 'Hotel Location deleted successfully!'
-            });
-        } else {
-            toast({
-                error: true,
-                duration: 5000,
-                title: 'Failed to delete the hotel location. Please try again.'
-            });
-        }
+    if (isLoading) {
+        return <div className="text-center flex items-center justify-center mx-auto my-5">
+            <Spinner className="me-3 text-gray-300 h-16 w-16" />
+        </div>
     }
 
     return (
@@ -203,35 +192,40 @@ export default function Locations({ hotelId }) {
                 </Button>
             </div>
 
-            <div className="content w-[95%] my-6 ml-6 rounded-[8px] border border-gray-200 overflow-hidden">
-                <Table>
-                    <TableHeader className="bg-lightPrimary">
-                        <TableRow>
-                            <TableHead>Address</TableHead>
-                            <TableHead>State</TableHead>
-                            <TableHead>City</TableHead>
-                            <TableHead>Number of Users</TableHead>
-                            <TableHead>Rooms</TableHead>
-                            <TableHead></TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
+            {/* <div className="content w-[95%] my-6 ml-6 rounded-[8px] border border-gray-200 overflow-hidden">
+                {locations?.length && (
+                    <Table>
+                        <TableHeader className="bg-lightPrimary">
+                            <TableRow>
+                                <TableHead>Address</TableHead>
+                                <TableHead>State</TableHead>
+                                <TableHead>City</TableHead>
+                                <TableHead>Number of Users</TableHead>
+                                <TableHead>Rooms</TableHead>
+                                <TableHead></TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </div>
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                )}
+            </div> */}
+
+            {!isFetching && (
+                <LocationsTable table={table} />
+            )}
 
             <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
 
-            {/* Add Location Modal */}
             {!!addLocationBox && (
                 <AddHotelLocation closeFn={closeAddLocationBox} hotelId={hotelId} />
             )}
@@ -239,6 +233,7 @@ export default function Locations({ hotelId }) {
             {!!editLocation?.id && (
                 <EditHotelLocation closeFn={handleEditClose} locationId={editLocation} hotelId={hotelId} />
             )}
+
         </div>
-    );
+    )
 }

@@ -146,7 +146,7 @@ export default function EditHotelLocation({ closeFn, locationId, hotelId }) {
                     onSubmit={handleSubmit(mutate)}
                     className="hotelForm text-left"
                 >
-                    {JSON.stringify(errors)}
+                    {/* {JSON.stringify(errors)} */}
                     <div className="mt-4">
 
                         <div className="mb-2">
