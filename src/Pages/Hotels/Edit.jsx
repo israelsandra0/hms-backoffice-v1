@@ -22,7 +22,12 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
         name: yup.string().required("Name is required"),
         email: yup.string().required("Email is required").email(),
         website: yup.string().required("Website is required").url().nullable(),
-        logo: yup.mixed().required("Logo is required")
+        // logo: yup.mixed().test("file", "Logo is required", (value) => {
+        //     if (!value) {
+        //         return hotelToEdit.logo || true; // If the old logo exists, it's valid or allow an empty value
+        //     }
+        //     return true; // If a new file is provided, it's valid
+        // }),
     });
 
     const { register, handleSubmit, setError, setValue, formState: { errors } } = useForm({
@@ -30,7 +35,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
             name: hotelToEdit.name,
             email: hotelToEdit.email,
             website: hotelToEdit.website,
-            logo: hotelToEdit.logo,
+            logo: hotelToEdit.logo  || "",
         },
         resolver: yupResolver(yupBuild),
     });
@@ -94,6 +99,13 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
             setValue('logo', file)
 
             reader.readAsDataURL(file); // Read the file as a data URL (image preview)
+        }else {
+            setFileDetails({
+                name: "",
+                size: 0,
+                preview: "",
+            });
+            setValue('logo', hotelToEdit.logo || null); // Set to null if no new file is selected
         }
     };
 
@@ -103,6 +115,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
             size: 0,
             preview: "",
         });
+        setValue('logo', null); 
     };
 
 
