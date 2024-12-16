@@ -50,7 +50,7 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
         resolver: yupResolver(yupBuild),
     });
 
-    const [isSuccess, setIsSuccess] = useState(false);
+    // const [isSuccess, setIsSuccess] = useState(false);
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState("");
     const [disabledButton, setDisabledButton] = useState(false);
@@ -159,7 +159,8 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
                 }
 
                 const responseData = await res.json();
-                setIsSuccess(true);
+                closeFn()
+                // setIsSuccess(true);
                 setDisabledButton(true);
 
                 // Trigger the callback to update the location list
@@ -224,11 +225,11 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
                     </Alert>
                 )}
 
-                <div className="flex gap-20">
+                <div className="flex">
                     <Link>
                         <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={() => closeFn()} />
                     </Link>
-                    <h1 className="text-[1.3rem] font-bold mb-2">Add New Location</h1>
+                    <h1 className="text-[1.3rem] font-bold mb-2 mx-auto">Add New Location</h1>
                 </div>
 
                 <form
@@ -291,7 +292,7 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
                         {disabledButton ? "Submitting..." : "Submit"}
                     </Button>
 
-                    <AlertDialog
+                    {/* <AlertDialog
                         open={isSuccess}
                         onOpenChange={(open) => setIsSuccess(open)}
                     >
@@ -316,7 +317,7 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
                                 </ButtonLink>
                             </AlertDialogFooter>
                         </AlertDialogContent>
-                    </AlertDialog>
+                    </AlertDialog> */}
                 </form>
             </CardContent>
         </div>
