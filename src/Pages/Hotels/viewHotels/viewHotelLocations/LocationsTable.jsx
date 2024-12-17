@@ -8,8 +8,9 @@ import { MoreVertical } from "lucide-react";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useToast } from "@/hooks/use-toast";
 import EditHotelLocation from "./EditHotelLocation";
+import { apiDelete } from "@/functions";
 
-export default function LocationsTable({locations, hotelId}) {
+export default function LocationsTable({locations, hotelId, setLocations}) {
 
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10
@@ -98,8 +99,10 @@ export default function LocationsTable({locations, hotelId}) {
         }
     }
 
-    const handleDeleteResponse = (res) => {
+    const handleDeleteResponse = (res, locationId) => {
         if (res.ok) {
+            // Filter out the deleted location from the locations array
+            setLocations(prevLocations => prevLocations.filter(location => location.id !== locationId));
             toast({
                 success: true,
                 duration: 5000,
@@ -128,6 +131,7 @@ export default function LocationsTable({locations, hotelId}) {
 
         })
     };
+
 
     const handleEditClose = () => {
         setEditLocation({});
