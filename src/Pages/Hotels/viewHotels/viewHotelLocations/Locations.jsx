@@ -16,7 +16,7 @@ import { useEffect } from "react";
 
 export default function Locations({ hotelId }) {
 
-     // Number of items per page
+    const [locationsData, setLocationsData] = useState([]);
     const [addLocationBox, setAddLocationBox] = useState(false);
 
     const { data: locations, isLoading, isPending, refetch: fetchHotelsLocations } = useQuery({
@@ -37,6 +37,13 @@ export default function Locations({ hotelId }) {
     useEffect(() => {
         fetchHotelsLocations()
     }, [])
+
+    // Fetch the locations when the component mounts
+    useEffect(() => {
+        if (locations) {
+            setLocationsData(locations);
+        }
+    }, [locations]);
 
 
     const queryClient = useQueryClient()
@@ -71,36 +78,8 @@ export default function Locations({ hotelId }) {
                 </Button>
             </div>
 
-            {/* <div className="content w-[95%] my-6 ml-6 rounded-[8px] border border-gray-200 overflow-hidden">
-                {locations?.length && (
-                    <Table>
-                        <TableHeader className="bg-lightPrimary">
-                            <TableRow>
-                                <TableHead>Address</TableHead>
-                                <TableHead>State</TableHead>
-                                <TableHead>City</TableHead>
-                                <TableHead>Number of Users</TableHead>
-                                <TableHead>Rooms</TableHead>
-                                <TableHead></TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                )}
-            </div> */}
-
             {!isPending && locations?.length && (
-                <LocationsTable locations={locations} hotelId={hotelId}/>
+                <LocationsTable locations={locations} hotelId={hotelId} setLocations={setLocationsData}/>
             )}
 
             {!!addLocationBox && (

@@ -131,8 +131,8 @@ export default function LocationsTable({locations, hotelId, setLocations}) {
 
         })
     };
-
-
+    
+    
     const handleEditClose = () => {
         setEditLocation({});
     };
@@ -152,33 +152,6 @@ export default function LocationsTable({locations, hotelId, setLocations}) {
                             <TableHead></TableHead>
                         </TableRow>
                     </TableHeader>
-                    {/* <TableBody>
-                            {locations.map((location) => (
-                                <TableRow key={location.id}>
-                                    <TableCell>{location.address}</TableCell>
-                                    <TableCell>{location.state}</TableCell>
-                                    <TableCell>{location.city}</TableCell>
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
-                                    <TableCell>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <MoreVertical className="cursor-pointer" />
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent className="w-56 cursor-pointer">
-                                                <DropdownMenuItem>
-                                                    <span>Edit</span>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem onClick={() => handleActionClick(location.id, 'delete')}>
-                                                    <span>Delete</span>
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody> */}
                     <TableBody>
                         {table.getRowModel().rows.map((row) => (
                             <TableRow key={row.id}>

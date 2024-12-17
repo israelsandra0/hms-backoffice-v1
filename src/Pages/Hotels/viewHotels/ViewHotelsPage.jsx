@@ -65,9 +65,9 @@ export default function ViewHotelsPage() {
 
     const { id } = useParams();
 
-    const [activeTab, setActiveTab] = useState("overview"); // Default active tab
+    const [activeTab, setActiveTab] = useState("overview"); 
 
-    // On component mount, check if a tab is saved in localStorage
+    // check if a tab is saved in localStorage
     useEffect(() => {
         const savedTab = localStorage.getItem("activeTab");
         if (savedTab) {
