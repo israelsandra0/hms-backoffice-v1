@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import EditHotelLocation from "./EditHotelLocation";
 import { apiDelete } from "@/functions";
 
-export default function LocationsTable({locations, hotelId, setLocations}) {
+export default function LocationsTable({locations, hotelId, refreshHotelLocations }) {
 
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10
@@ -101,13 +101,12 @@ export default function LocationsTable({locations, hotelId, setLocations}) {
 
     const handleDeleteResponse = (res, locationId) => {
         if (res.ok) {
-            // Filter out the deleted location from the locations array
-            setLocations(prevLocations => prevLocations.filter(location => location.id !== locationId));
             toast({
                 success: true,
                 duration: 5000,
                 title: 'Hotel Location deleted successfully!'
             });
+            
         } else {
             toast({
                 error: true,
@@ -115,6 +114,7 @@ export default function LocationsTable({locations, hotelId, setLocations}) {
                 title: 'Failed to delete the hotel location. Please try again.'
             });
         }
+        refreshHotelLocations()
     }
 
     // Handle button click for delete/activation/deactivation
@@ -140,7 +140,7 @@ export default function LocationsTable({locations, hotelId, setLocations}) {
 
     return (
         <div className="content w-[95%] my-6 ml-6 rounded-[8px] border border-gray-200 overflow-hidden">
-            {table.getPageCount() > 1 && (
+            {table.getPageCount() > 0 && (
                 <Table>
                     <TableHeader className="bg-lightPrimary">
                         <TableRow>
