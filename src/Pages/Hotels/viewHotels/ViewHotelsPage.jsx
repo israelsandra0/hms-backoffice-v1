@@ -28,7 +28,7 @@ import {
     Locate,
     Users,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Link,
     NavLink,
@@ -64,6 +64,22 @@ export default function ViewHotelsPage() {
     const [hotelToEdit, setHotelToEdit] = useState({});
 
     const { id } = useParams();
+
+    const [activeTab, setActiveTab] = useState("overview"); // Default active tab
+
+    // On component mount, check if a tab is saved in localStorage
+    useEffect(() => {
+        const savedTab = localStorage.getItem("activeTab");
+        if (savedTab) {
+            setActiveTab(savedTab); // If there's a saved tab, set it as active
+        }
+    }, []);
+
+    // Save the active tab in localStorage whenever it changes
+    const handleTabChange = (value) => {
+        setActiveTab(value);
+        localStorage.setItem("activeTab", value); // Save the active tab
+    };
 
     const { data: hotel, isLoading, refetch: viewHotelRequest } = useQuery({
         queryKey: ["hotelData", id],
@@ -147,7 +163,7 @@ export default function ViewHotelsPage() {
 
 
 
-            <Tabs defaultValue="overview" className="w-full">
+            <Tabs className="w-full"  value={activeTab} onValueChange={handleTabChange}>
                 <TabsList className="w-[80%] ml-6 rounded-[3rem]">
                     <TabsTrigger
                         className="w-[50%] rounded-[3rem] px-4 my-6"
