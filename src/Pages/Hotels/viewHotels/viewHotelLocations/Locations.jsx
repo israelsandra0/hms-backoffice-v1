@@ -1,10 +1,8 @@
 import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { apiDelete, get } from "@/functions";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
 import { MoreVertical } from "lucide-react";
 import { useMemo, useState } from "react";
 import Spinner from "@/components/ui/spinner";
@@ -13,34 +11,35 @@ import { useToast } from "@/hooks/use-toast";
 import AddHotelLocation from "./AddHotelLocation";
 import EditHotelLocation from "./EditHotelLocation";
 import LocationsTable from "./LocationsTable";
+import { useEffect } from "react";
 
 
 export default function Locations({ hotelId }) {
 
-    const [pageIndex, setPageIndex] = useState(0);
-    const pageSize = 4
      // Number of items per page
     const { confirmAction } = useConfirm()
     const { toast } = useToast()
     const [addLocationBox, setAddLocationBox] = useState(false);
     const [editLocation, setEditLocation] = useState({});
-    //const [locations, setLocations] = useState([]);
 
-    const { data: locations, isLoading, isFetching, refetch: fetchHotelsLocations } = useQuery({
+    const { data: locations, isLoading, isPending, refetch: fetchHotelsLocations } = useQuery({
         queryKey: ["hotelLocations"],
         queryFn: async () => {
             // setLocations([])
             const res = await get(`/hotels/${hotelId}/locations`);
-            console.log('welcome')
             if (!res.ok) {
                 throw new Error("Failed to fetch hotel data");
             }
             const response = await res.json();
             //setLocations(response.data)
             return response.data;
-        }
+        },
+        enabled: false
     });
 
+    useEffect(() => {
+        fetchHotelsLocations()
+    }, [])
 
     const confirmModalSetup = {
         delete: {
@@ -60,8 +59,6 @@ export default function Locations({ hotelId }) {
 
     const handleDeleteResponse = (res) => {
         if (res.ok) {
-            setPageIndex(0)
-
             toast({
                 success: true,
                 duration: 5000,
@@ -113,71 +110,6 @@ export default function Locations({ hotelId }) {
     };
 
 
-    // // Define columns (no change needed to the columns)
-    const columns = useMemo(() => [
-        {
-            header: "Address",
-            accessorKey: "address",
-        },
-        {
-            header: "State",
-            accessorKey: "state",
-        },
-        {
-            header: "City",
-            accessorKey: "location_counts",
-        },
-        {
-            header: "Number of Users",
-            accessorKey: "location_counts",
-        },
-        {
-            header: "Rooms",
-            accessorKey: "rooms",
-        },
-        {
-            id: "actions",
-            enableHiding: false,
-            cell: ({ row }) => {
-                const location = row.original;
-
-                return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <MoreVertical className="cursor-pointer" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56 cursor-pointer">
-                            <DropdownMenuItem onClick={() => setEditLocation(location)}>
-                                <span>Edit</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => handleActionClick(location.id, 'delete')}>
-                                <span>Delete</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                );
-            },
-        },
-    ], []);
-
-    // Set up the table with pagination
-    const table = useReactTable({
-        data: locations,
-        columns,
-        state: {
-            pagination: {
-                pageIndex,
-                pageSize,
-            },
-        },
-        onPaginationChange: ({ pageIndex }) => {
-            setPageIndex(pageIndex);
-        },
-        getPaginationRowModel: getPaginationRowModel(),
-        getCoreRowModel: getCoreRowModel(),
-    });
-
     if (isLoading) {
         return <div className="text-center flex items-center justify-center mx-auto my-5">
             <Spinner className="me-3 text-gray-300 h-16 w-16" />
@@ -220,11 +152,9 @@ export default function Locations({ hotelId }) {
                 )}
             </div> */}
 
-            {!isFetching && (
-                <LocationsTable table={table} />
+            {!isPending && locations?.length && (
+                <LocationsTable locations={locations} handleActionClick={handleActionClick} setEditLocation={setEditLocation}/>
             )}
-
-            <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
 
             {!!addLocationBox && (
                 <AddHotelLocation closeFn={closeAddLocationBox} hotelId={hotelId} />
