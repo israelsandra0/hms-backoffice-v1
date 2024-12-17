@@ -17,10 +17,7 @@ import { useEffect } from "react";
 export default function Locations({ hotelId }) {
 
      // Number of items per page
-    const { confirmAction } = useConfirm()
-    const { toast } = useToast()
     const [addLocationBox, setAddLocationBox] = useState(false);
-    const [editLocation, setEditLocation] = useState({});
 
     const { data: locations, isLoading, isPending, refetch: fetchHotelsLocations } = useQuery({
         queryKey: ["hotelLocations"],
@@ -41,52 +38,6 @@ export default function Locations({ hotelId }) {
         fetchHotelsLocations()
     }, [])
 
-    const confirmModalSetup = {
-        delete: {
-            title: 'Are you sure?',
-            message: "you're about to delete this location, This action cannot be undone.",
-            confirmButtonText: 'Delete',
-            buttonVariant: 'error',
-            cancelButtonText: 'Cancel'
-        }
-    }
-
-    const handleConfirmation = async (locationId, hotelAction) => {
-        if (hotelAction === 'delete') {
-            return await apiDelete(`/hotels/${hotelId}/locations/destroy/${locationId}`)
-        }
-    }
-
-    const handleDeleteResponse = (res) => {
-        if (res.ok) {
-            toast({
-                success: true,
-                duration: 5000,
-                title: 'Hotel Location deleted successfully!'
-            });
-        } else {
-            toast({
-                error: true,
-                duration: 5000,
-                title: 'Failed to delete the hotel location. Please try again.'
-            });
-        }
-    }
-
-    // Handle button click for delete/activation/deactivation
-    const handleActionClick = (locationId, actionType) => {
-        confirmAction({
-            ...confirmModalSetup[actionType.toLowerCase()],
-            isDestructive: actionType.toLowerCase() === 'delete',
-            confirmFn: () => handleConfirmation(locationId, actionType),
-            completeFn: (res) => {
-                if (actionType.toLowerCase() === 'delete') {
-                    handleDeleteResponse(res, locationId)
-                }
-            }
-
-        })
-    };
 
     const queryClient = useQueryClient()
 
@@ -104,10 +55,6 @@ export default function Locations({ hotelId }) {
         fetchHotelsLocations()
     };
 
-    const handleEditClose = () => {
-        setEditLocation({});
-        fetchHotelsLocations();
-    };
 
 
     if (isLoading) {
@@ -153,17 +100,12 @@ export default function Locations({ hotelId }) {
             </div> */}
 
             {!isPending && locations?.length && (
-                <LocationsTable locations={locations} handleActionClick={handleActionClick} setEditLocation={setEditLocation}/>
+                <LocationsTable locations={locations} hotelId={hotelId}/>
             )}
 
             {!!addLocationBox && (
                 <AddHotelLocation closeFn={closeAddLocationBox} hotelId={hotelId} />
             )}
-
-            {!!editLocation?.id && (
-                <EditHotelLocation closeFn={handleEditClose} locationId={editLocation} hotelId={hotelId} />
-            )}
-
         </div>
     )
 }

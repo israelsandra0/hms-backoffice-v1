@@ -5,11 +5,17 @@ import { useEffect, useMemo, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getCoreRowModel, getPaginationRowModel } from "@tanstack/react-table";
 import { MoreVertical } from "lucide-react";
+import { useConfirm } from "@/hooks/use-confirm";
+import { useToast } from "@/hooks/use-toast";
+import EditHotelLocation from "./EditHotelLocation";
 
-export default function LocationsTable({locations, setEditLocation, handleActionClick}) {
+export default function LocationsTable({locations, hotelId}) {
 
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10
+    const { confirmAction } = useConfirm()
+    const { toast } = useToast()
+    const [editLocation, setEditLocation] = useState({});
 
     // // Define columns (no change needed to the columns)
     const columns = useMemo(() => [
@@ -76,6 +82,57 @@ export default function LocationsTable({locations, setEditLocation, handleAction
         getCoreRowModel: getCoreRowModel(),
     });
 
+    const confirmModalSetup = {
+        delete: {
+            title: 'Are you sure?',
+            message: "you're about to delete this location, This action cannot be undone.",
+            confirmButtonText: 'Delete',
+            buttonVariant: 'error',
+            cancelButtonText: 'Cancel'
+        }
+    }
+
+    const handleConfirmation = async (locationId, hotelAction) => {
+        if (hotelAction === 'delete') {
+            return await apiDelete(`/hotels/${hotelId}/locations/destroy/${locationId}`)
+        }
+    }
+
+    const handleDeleteResponse = (res) => {
+        if (res.ok) {
+            toast({
+                success: true,
+                duration: 5000,
+                title: 'Hotel Location deleted successfully!'
+            });
+        } else {
+            toast({
+                error: true,
+                duration: 5000,
+                title: 'Failed to delete the hotel location. Please try again.'
+            });
+        }
+    }
+
+    // Handle button click for delete/activation/deactivation
+    const handleActionClick = (locationId, actionType) => {
+        confirmAction({
+            ...confirmModalSetup[actionType.toLowerCase()],
+            isDestructive: actionType.toLowerCase() === 'delete',
+            confirmFn: () => handleConfirmation(locationId, actionType),
+            completeFn: (res) => {
+                if (actionType.toLowerCase() === 'delete') {
+                    handleDeleteResponse(res, locationId)
+                }
+            }
+
+        })
+    };
+
+    const handleEditClose = () => {
+        setEditLocation({});
+    };
+
 
     return (
         <div className="content w-[95%] my-6 ml-6 rounded-[8px] border border-gray-200 overflow-hidden">
@@ -133,6 +190,11 @@ export default function LocationsTable({locations, setEditLocation, handleAction
             )}
 
             <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
+
+            {!!editLocation?.id && (
+                <EditHotelLocation closeFn={handleEditClose} locationId={editLocation} hotelId={hotelId} />
+            )}
+
         </div>
     )
 }
