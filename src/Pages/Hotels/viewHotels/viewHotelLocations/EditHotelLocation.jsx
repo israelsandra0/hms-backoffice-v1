@@ -129,11 +129,6 @@ export default function EditHotelLocation({ closeFn, locationId, hotelId }) {
     return (
         <div className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
             <CardContent className='w-[30%] rounded-[24px] text-center mx-auto border-none bg-white py-8'>
-                {!!errorMessage?.length && (
-                    <Alert className="alert text-red-900 border-0 h-full  bg-[#fee] mb-4">
-                        <AlertDescription>{errorMessage}</AlertDescription>
-                    </Alert>
-                )}
 
                 <div className="flex">
                     <Link>
@@ -141,6 +136,12 @@ export default function EditHotelLocation({ closeFn, locationId, hotelId }) {
                     </Link>
                     <h1 className="text-[1.3rem] font-bold mb-2 mx-auto">Edit Location</h1>
                 </div>
+                
+                {!!errorMessage?.length && (
+                    <Alert className="alert text-red-900 border-0 h-full  bg-[#fee] mb-4">
+                        <AlertDescription>{errorMessage}</AlertDescription>
+                    </Alert>
+                )}
 
                 <form
                     onSubmit={handleSubmit(mutate)}
