@@ -14,7 +14,7 @@ const IntlPhoneField = forwardRef(({ ...props }, ref) => {
         inputRef,
     } = usePhoneInput({
         defaultCountry: "ng",
-        value: "",
+        value: props.value || "",
         disableDialCodePrefill: true,
         disableDialCodeAndPrefix: true,
         onChange: ({ phone, inputValue, country }) => {
