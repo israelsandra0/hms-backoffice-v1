@@ -135,6 +135,7 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
     
     const handleEditClose = () => {
         setEditLocation({});
+        refreshHotelLocations()
     };
 
 
