@@ -75,6 +75,10 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
     // // Define columns (no change needed to the columns)
     const columns = useMemo(() => [
         {
+            header: "Name",
+            accessorKey: "name",
+        },
+        {
             header: "Address",
             accessorKey: "address",
         },
@@ -129,6 +133,7 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
         const lowerCaseFilter = searchFilter.toLowerCase();
 
         return locations.filter(location => 
+            location.name.toLowerCase().includes(lowerCaseFilter) ||
             location.address.toLowerCase().includes(lowerCaseFilter) ||
             location.state.toLowerCase().includes(lowerCaseFilter) ||
             location.city.toLowerCase().includes(lowerCaseFilter) 
@@ -157,6 +162,7 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
                 <Table>
                     <TableHeader className="bg-lightPrimary">
                         <TableRow>
+                            <TableHead>Name</TableHead>
                             <TableHead>Address</TableHead>
                             <TableHead>State</TableHead>
                             <TableHead>City</TableHead>

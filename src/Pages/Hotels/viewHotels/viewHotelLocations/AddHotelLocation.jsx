@@ -27,6 +27,7 @@ import IntlPhoneField from "@/components/ui/intlphone-field";
 export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) {
     // Yup schema
     const yupBuild = yup.object({
+        name: yup.string().required("Name is required"),
         address: yup.string().required("Address is required"),
         state: yup.string().required("State is required"),
         city: yup.string().required("City is required")
@@ -42,6 +43,7 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
         getValues,
     } = useForm({
         defaultValues: {
+            name: "",
             address: "",
             state: "",
             city: "",
@@ -240,6 +242,13 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
                     {/* {JSON.stringify(errors)} */}
                     <div className="mt-4">
 
+                        <div className="mb-2">
+                            <Label htmlFor="name">Name</Label>
+                            <br />
+                            <Input {...register("name")} id="name" />
+                            <p>{errors.name?.message}</p>
+                        </div>
+                        
                         <div className="mb-2">
                             <Label htmlFor="address">Address</Label>
                             <br />

@@ -25,6 +25,7 @@ export default function EditHotelLocation({ closeFn, locationId, hotelId }) {
 
     // Yup schema
     const yupBuild = yup.object({
+        name: yup.string().required("Name is required"),
         address: yup.string().required("Address is required"),
         state: yup.string().required("State is required"),
         city: yup.string().required("City is required")
@@ -40,6 +41,7 @@ export default function EditHotelLocation({ closeFn, locationId, hotelId }) {
         getValues,
     } = useForm({
         defaultValues: {
+            name: locationId.name,
             address: locationId.address,
             state: locationId.state,
             city: locationId.city,
@@ -136,7 +138,7 @@ export default function EditHotelLocation({ closeFn, locationId, hotelId }) {
                     </Link>
                     <h1 className="text-[1.3rem] font-bold mb-2 mx-auto">Edit Location</h1>
                 </div>
-                
+
                 {!!errorMessage?.length && (
                     <Alert className="alert text-red-900 border-0 h-full  bg-[#fee] mb-4">
                         <AlertDescription>{errorMessage}</AlertDescription>
@@ -149,6 +151,13 @@ export default function EditHotelLocation({ closeFn, locationId, hotelId }) {
                 >
                     {/* {JSON.stringify(errors)} */}
                     <div className="mt-4">
+
+                        <div className="mb-2">
+                            <Label htmlFor="name">Name</Label>
+                            <br />
+                            <Input {...register("name")} id="name" />
+                            <p>{errors.name?.message}</p>
+                        </div>
 
                         <div className="mb-2">
                             <Label htmlFor="address">Address</Label>
