@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { apiDelete, get } from "@/functions";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import Spinner from "@/components/ui/spinner";
 import { useConfirm } from "@/hooks/use-confirm";
@@ -16,8 +16,9 @@ import { useEffect } from "react";
 
 export default function Locations({ hotelId }) {
 
-    
+
     const [addLocationBox, setAddLocationBox] = useState(false);
+    const [searchFilter, setSearchFilter] = useState("");
 
     const { data: locations, isLoading, isPending, refetch: fetchHotelsLocations } = useQuery({
         queryKey: ["hotelLocations"],
@@ -42,7 +43,7 @@ export default function Locations({ hotelId }) {
 
     const queryClient = useQueryClient()
 
-    const refreshHotelLocations  = () => {
+    const refreshHotelLocations = () => {
 
         queryClient.invalidateQueries(
             {
@@ -71,14 +72,25 @@ export default function Locations({ hotelId }) {
 
     return (
         <div>
-            <div className="text-right mr-4 my-8 ">
+            <div className="flex justify-between mx-4 my-8 ">
+                {/* Search input */}
+                <div className="mb-4">
+                    <Search className="text-gray-300 w-4 absolute mt-[10px] ml-4" />
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        value={searchFilter}
+                        onChange={(e) => setSearchFilter(e.target.value)}
+                        className="border border-b-gray-300 pl-9 rounded px-4 py-2 w-[300px] outline-none"
+                    />
+                </div>
                 <Button variant="primary" onClick={() => setAddLocationBox(true)}>
                     + Add
                 </Button>
             </div>
 
             {!isPending && locations?.length && (
-                <LocationsTable locations={locations} hotelId={hotelId} refreshHotelLocations={refreshHotelLocations}/>
+                <LocationsTable locations={locations} hotelId={hotelId} refreshHotelLocations={refreshHotelLocations}searchFilter={searchFilter}  />
             )}
 
             {!!addLocationBox && (
