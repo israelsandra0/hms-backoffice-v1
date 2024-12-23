@@ -131,7 +131,7 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
         return locations.filter(location => 
             location.address.toLowerCase().includes(lowerCaseFilter) ||
             location.state.toLowerCase().includes(lowerCaseFilter) ||
-            location.city.toLowerCase().includes(lowerCaseFilter)
+            location.city.toLowerCase().includes(lowerCaseFilter) 
         );
     }, [locations, searchFilter]);
 

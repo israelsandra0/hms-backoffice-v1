@@ -40,7 +40,14 @@ export default function Add() {
     const yupBuild = yup.object({
         name: yup.string().required("Name is required"),
         email: yup.string().required("Email is required").email(),
-        website: yup.string().required("Website is required").url().nullable(),
+        website: yup.string()
+        .required("Website is required")
+        .test('valid-url', 'Website must be a valid URL', (value) => {
+            if (!value) return false;
+            const urlPattern = /^(https?:\/\/|www\.)[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+            return urlPattern.test(value);
+        })
+        .nullable(),
         phone: yup.string().required("Phone number is required").min(10).max(15),
         address: yup.string().required("Address is required"),
         state: yup.string().required("State is required"),
