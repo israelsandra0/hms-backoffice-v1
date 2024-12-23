@@ -46,7 +46,7 @@ export default function HotelsOverview() {
 
 
             <h1 className=" mt-8 ml-6 font-bold text-[1.5rem]">Top Modules</h1>
-            <Table  className="content w-4/5 my-6 ml-6 rounded-[2rem] border border-gray-200">
+            <Table  className="content w-[95%] my-6 ml-6 rounded  overflow-hidden border border-gray-200">
                 <TableRow className="bg-lightPrimary w-full p-8 mx-6">
                     <TableHead>Modules</TableHead>
                     <TableHead>Number of Clicks</TableHead>
