@@ -7,6 +7,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useEffect, useState } from "react";
@@ -19,7 +20,7 @@ import CommunicationIcon from "./icons/communication";
 import SupportIcon from "./icons/Support";
 import SettingsIcon from "./icons/Setting";
 
-export default function UserAreaHeader({pages}) {
+export default function UserAreaHeader({ pages }) {
     const [openSidebar, setOpenSidebar] = useState(false);
     const [username, setUsername] = useState('');
 
@@ -28,7 +29,7 @@ export default function UserAreaHeader({pages}) {
         // Get user data from localStorage
         const userData = getDataObject(USER_DATA_KEY);
         if (userData) {
-            setUsername(userData.firstName || 'U'); 
+            setUsername(userData || 'U');
         }
     }, []);
 
@@ -115,14 +116,21 @@ export default function UserAreaHeader({pages}) {
 
             <DropdownMenu className="">
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" className="w-[85px] flex lg:justify-start lg:pl-1 lg:gap-2 items-center rounded-[2rem]">
-                        <h1 className="bg-lightPrimary w-[30px] h-[30px] text-[1.5rem] pt-1 rounded-[50%] lg:ml-0">{username?.charAt(0) }</h1>
-                        <ChevronDown className="p-[0.3rem]"/>
+                    <Button variant="outline" size="icon" className="w-[85px] flex lg:justify-start lg:pl-1 focus-visible:outline-none lg:gap-2 items-center rounded-[2rem]">
+                        <h1 className="bg-lightPrimary w-[30px] h-[30px] text-[1.5rem] pt-1 rounded-[50%] lg:ml-0">{username.firstName?.charAt(0)}</h1>
+                        <ChevronDown className="p-[0.3rem]" />
                     </Button>
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <div className="flex text-gray-600">
+                        <DropdownMenuLabel className=' mr-[-0.7rem]'>{username.firstName}</DropdownMenuLabel>
+                        <DropdownMenuLabel>{username.lastName}</DropdownMenuLabel>
+                    </div>
+                    <DropdownMenuItem className='text-gray-400  mt-[-0.5rem]'>{username.email}</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logOut}>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
