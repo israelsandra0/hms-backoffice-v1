@@ -79,19 +79,19 @@ export default function UserAreaHeader({ pages }) {
                         </NavLink>
                         <NavLink to="/hotels" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
                             <HotelIcon />
-                            Hotels Management
+                            Hotel Management
                         </NavLink>
                         <NavLink to="/users" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
                             <Users className="h-4 w-4" />
-                            Users
+                            User
                         </NavLink>
                         <NavLink to="/accounts" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
                             <AccountIcon size='w-4' />
-                            Accounts
+                            Account
                         </NavLink>
                         <NavLink to="/reports" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
                             <ReportIcon />
-                            Reports & Analytics
+                            Report & Analytics
                         </NavLink>
                         <NavLink to="/communication" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
                             <CommunicationIcon />
@@ -103,7 +103,7 @@ export default function UserAreaHeader({ pages }) {
                         </NavLink>
                         <NavLink to="/settings" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
                             <SettingsIcon />
-                            Settings
+                            Setting
                         </NavLink>
                     </nav>
 

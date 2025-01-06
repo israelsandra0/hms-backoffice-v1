@@ -32,19 +32,19 @@ export default function UserAreaLayout() {
                                 </NavLink>
                                 <NavLink to="/hotels" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     <HotelIcon />
-                                    Hotels Management
+                                    Hotel Management
                                 </NavLink>
                                 <NavLink to="/users" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     <Users className="h-4 w-4" />
-                                    Users
+                                    User
                                 </NavLink>
                                 <NavLink to="/accounts" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     <AccountIcon size='w-4' />
-                                    Accounts
+                                    Account
                                 </NavLink>
                                 <NavLink to="/reports" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     <ReportIcon />
-                                    Reports & Analytics
+                                    Report & Analytics
                                 </NavLink>
                                 <NavLink to="/communication" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     <CommunicationIcon />
@@ -56,7 +56,7 @@ export default function UserAreaLayout() {
                                 </NavLink>
                                 <NavLink to="/settings" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                 <   SettingsIcon />
-                                    Settings
+                                    Setting
                                 </NavLink>
                             </nav>
                         </div>
