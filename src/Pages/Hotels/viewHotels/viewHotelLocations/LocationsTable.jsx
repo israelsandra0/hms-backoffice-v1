@@ -133,10 +133,10 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
         const lowerCaseFilter = searchFilter.toLowerCase();
 
         return locations.filter(location => 
-            location.name.toLowerCase().includes(lowerCaseFilter) ||
+            // location.name.toLowerCase().includes(lowerCaseFilter) ||
             location.address.toLowerCase().includes(lowerCaseFilter) ||
-            location.state.toLowerCase().includes(lowerCaseFilter) ||
-            location.city.toLowerCase().includes(lowerCaseFilter) 
+            location.state.toLowerCase().includes(lowerCaseFilter)
+            // location.city.toLowerCase().includes(lowerCaseFilter) 
         );
     }, [locations, searchFilter]);
 
