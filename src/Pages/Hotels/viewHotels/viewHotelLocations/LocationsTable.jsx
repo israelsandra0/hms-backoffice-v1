@@ -124,9 +124,9 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
         },
     ], []);
 
-    // Set up the table with pagination
+ 
     
-    // Filter locations based on search query (address, city, state)
+    // Filter locations based on search query (name, address, city, state)
     const filteredLocations = useMemo(() => {
         if (!searchFilter) return locations;
 

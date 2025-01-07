@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { Input } from "./input";
 import { forwardRef, useState } from "react";
 import {  usePhoneInput, defaultCountries, FlagImage } from "react-international-phone";
@@ -24,10 +24,17 @@ const IntlPhoneField = forwardRef(({ ...props }, ref) => {
     });
 
     const [visible, setVisible] = useState(false)
+    const [searchFilter, setSearchFilter] = useState("");
 
     function toggle() {
         setVisible(!visible)
     }
+
+    // Filter countries based on the searchFilter
+    const filteredCountries = defaultCountries.filter(([fullName]) => {
+        return fullName.toLowerCase().includes(searchFilter.toLowerCase());
+    });
+
 
     return (
         <>
@@ -42,7 +49,17 @@ const IntlPhoneField = forwardRef(({ ...props }, ref) => {
                 </div>
 
                 <div className={`p-4 ${visible ? '' : 'hidden'} bg-white shadow-lg  h-[200px] overflow-y-scroll rounded-[5px] absolute w-full border border-neutral-200`}>
-                    {defaultCountries.map(([fullName, shortName, dialCode]) =>(
+                    <div className="mb-4">
+                        <Search className="text-gray-300 w-4 absolute mt-[10px] ml-4" />
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            value={searchFilter}
+                            onChange={(e) => setSearchFilter(e.target.value)}
+                            className="border border-b-gray-300 pl-9 rounded px-4 py-2 w-[300px] outline-none"
+                        />
+                    </div>
+                    {filteredCountries.map(([fullName, shortName, dialCode]) =>(
 
                         <div 
                             key={shortName} 
