@@ -7,7 +7,7 @@ export default function Reports() {
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem>
-                    <BreadcrumbPage>Reports</BreadcrumbPage>
+                    <BreadcrumbPage>Report</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
@@ -18,7 +18,7 @@ export default function Reports() {
         <>
             <UserAreaHeader pages={breadcrumb}/>
             <div>
-                <h1>Reports</h1>
+                <h1 className=" mt-8 font-bold text-[1.5rem] text-center">No Available Content !</h1>
             </div>
         </>
     )

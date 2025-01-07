@@ -7,7 +7,7 @@ export default function Account() {
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem>
-                    <BreadcrumbPage>Accounts</BreadcrumbPage>
+                    <BreadcrumbPage>Account</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
@@ -18,7 +18,7 @@ export default function Account() {
         <>
             <UserAreaHeader pages={breadcrumb}/>
             <div>
-                <h1>account</h1>
+                <h1 className=" mt-8 font-bold text-[1.5rem] text-center">No Available Content !</h1>
             </div>
         </>
     )

@@ -7,7 +7,7 @@ export default function Settings() {
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem>
-                    <BreadcrumbPage>Settings</BreadcrumbPage>
+                    <BreadcrumbPage>Setting</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
@@ -18,7 +18,7 @@ export default function Settings() {
         <>
             <UserAreaHeader pages={breadcrumb}/>
             <div>
-                <h1>Settings</h1>
+                <h1 className=" mt-8 font-bold text-[1.5rem] text-center">No Available Content !</h1>
             </div>
         </>
     )
