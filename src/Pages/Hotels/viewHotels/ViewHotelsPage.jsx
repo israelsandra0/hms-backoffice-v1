@@ -1,53 +1,23 @@
 import {
     Breadcrumb,
     BreadcrumbItem,
-    BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Spinner from "@/components/ui/spinner";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 import UserAreaHeader from "@/components/UserAreaHeader";
 import { get } from "@/functions";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-    Database,
-    Edit,
-    Edit2,
-    Edit3,
-    File,
-    Hotel,
-    Locate,
-    Users,
-} from "lucide-react";
 import { useEffect, useState } from "react";
 import {
     Link,
-    NavLink,
-    useLocation,
     useNavigate,
     useParams,
 } from "react-router-dom";
-
-import { Button } from "@/components/ui/button";
 import {
     Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HotelsOverview from "./Overview";
 import HotelPageUsers from "./viewHotelUsers/Users";
@@ -134,10 +104,13 @@ export default function ViewHotelsPage() {
             <UserAreaHeader pages={breadcrumb} />
             <div className="flex justify-between mx-6">
                 <div className="flex gap-4 my-6">
-                    <img
-                        src={hotel?.logo || "/path/to/default-image.jpg"}
-                        className="w-16 h-16"
-                    />
+                    {!!hotel?.logo && (
+                        <img
+                            src={hotel?.logo}
+                            className="w-16 h-16"
+                        />
+
+                    ) }
 
                     <div>
                         <h1 className="font-bold text-[22px]">{hotel?.name}</h1>
