@@ -1,4 +1,4 @@
-import { ArrowDown, ChevronDown, ChevronRight, CircleUser, LayoutDashboard, Menu, Users } from "lucide-react";
+import { ArrowDown, Bell, ChevronDown, ChevronRight, CircleUser, LayoutDashboard, Menu, Users } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Link, Navigate, NavLink } from "react-router-dom";
@@ -74,7 +74,7 @@ export default function UserAreaHeader({ pages }) {
                 <SheetContent side="left" className="flex flex-col sidebar">
                     <nav className="grid items-start px-2 mt-6 text-sm font-medium lg:px-4">
                         <NavLink to="/dashboard" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
-                            <LayoutDashboard className="h-4 w-4" />
+                            <LayoutDashboard className="text-gray-500 w-4" />
                             Dashboard
                         </NavLink>
                         <NavLink to="/hotels" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
@@ -82,12 +82,16 @@ export default function UserAreaHeader({ pages }) {
                             Hotel Management
                         </NavLink>
                         <NavLink to="/users" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
-                            <Users className="h-4 w-4" />
+                            <Users className="text-gray-500 w-4" />
                             User
                         </NavLink>
                         <NavLink to="/accounts" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
                             <AccountIcon size='w-4' />
                             Account
+                        </NavLink>
+                        <NavLink to="/subscriptions" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
+                            <Bell className="text-gray-500 w-4" />
+                            Subscription
                         </NavLink>
                         <NavLink to="/reports" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
                             <ReportIcon />
