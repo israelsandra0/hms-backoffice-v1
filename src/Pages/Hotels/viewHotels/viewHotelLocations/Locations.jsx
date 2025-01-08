@@ -72,7 +72,7 @@ export default function Locations({ hotelId }) {
 
     return (
         <div>
-            <div className="flex justify-between mx-4 my-8 ">
+            <div className="flex justify-between mx-6 my-8 ">
                 {/* Search input */}
                 <div className="mb-4">
                     <Search className="text-gray-300 w-4 absolute mt-[10px] ml-4" />
