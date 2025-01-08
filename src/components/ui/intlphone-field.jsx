@@ -48,8 +48,10 @@ const IntlPhoneField = forwardRef(({ ...props }, ref) => {
                     <Input className="border-none" {...props} ref={ref} onChange={handlePhoneValueChange} value={inputValue}/>
                 </div>
 
-                <div className={`p-4 ${visible ? '' : 'hidden'} bg-white shadow-lg  h-[200px] overflow-y-scroll rounded-[5px] absolute w-full border border-neutral-200`}>
-                    <div className="mb-4">
+                <div className={`px-4 ${visible ? '' : 'hidden'} bg-white shadow-lg  h-[220px] overflow-y-scroll rounded-[5px] absolute w-full border border-neutral-200`}>
+                    
+                    <div className=" sticky top-0 bg-white z-10 pl-4 py-4 ">
+
                         <Search className="text-gray-300 w-4 absolute mt-[10px] ml-4" />
                         <input
                             type="text"
@@ -66,6 +68,7 @@ const IntlPhoneField = forwardRef(({ ...props }, ref) => {
                             className={`flex justify-between cursor-pointer p-2  rounded-[5px] ${shortName == country.iso2 ? 'bg-blue-100' : 'hover:bg-gray-100'}`}  
                             onClick={() => {
                                 setCountry(shortName) 
+                                setSearchFilter("")
                                 toggle() 
                             }}
                         >
