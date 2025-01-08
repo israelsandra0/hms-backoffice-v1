@@ -1,5 +1,5 @@
 import { NavLink, Outlet, } from "react-router-dom"
-import { LayoutDashboard, Users } from "lucide-react"
+import { Bell, LayoutDashboard, Subscript, Users } from "lucide-react"
 import { RequireAuth } from "./Auth";
 import AccountIcon from "@/components/icons/account";
 import HotelIcon from "@/components/icons/hotel";
@@ -27,7 +27,7 @@ export default function UserAreaLayout() {
                         <div className="flex-1  sidebar">
                             <nav className="grid items-start px-2 mt-6 text-sm font-medium lg:px-4">
                                 <NavLink to="/dashboard" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                    <LayoutDashboard className="h-4 w-4" />
+                                    <LayoutDashboard className="text-gray-500 w-4"/>
                                     Dashboard
                                 </NavLink>
                                 <NavLink to="/hotels" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
@@ -35,12 +35,16 @@ export default function UserAreaLayout() {
                                     Hotel Management
                                 </NavLink>
                                 <NavLink to="/users" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                    <Users className="h-4 w-4" />
+                                    <Users className="text-gray-500 w-4" />
                                     User
                                 </NavLink>
                                 <NavLink to="/accounts" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     <AccountIcon size='w-4' />
                                     Account
+                                </NavLink>
+                                <NavLink to="/subscriptions" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                    <Bell className="text-gray-500 w-4" />
+                                    Subscription
                                 </NavLink>
                                 <NavLink to="/reports" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     <ReportIcon />
