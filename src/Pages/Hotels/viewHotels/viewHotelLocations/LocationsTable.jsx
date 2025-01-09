@@ -72,7 +72,7 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
         setEditLocation({});
         refreshHotelLocations()
     };
-    // // Define columns (no change needed to the columns)
+    
     const columns = useMemo(() => [
         {
             header: "Name",
@@ -123,10 +123,8 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
             },
         },
     ], []);
+   
 
- 
-    
-    // Filter locations based on search query (name, address, city, state)
     const filteredLocations = useMemo(() => {
         if (!searchFilter) return locations;
 
