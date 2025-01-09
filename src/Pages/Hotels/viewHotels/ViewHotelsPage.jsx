@@ -191,11 +191,11 @@ export default function ViewHotelsPage() {
             </div>
 
             <Tabs className="w-full" value={activeTab}>
-                <TabsList className="w-[95%] ml-6 rounded-[3rem]">
+                <TabsList className="w-[95%] ml-6 px-2 rounded-[3rem]">
                     {validTabs.map((tab) => (
 
                         <TabsTrigger
-                            className="w-[50%] rounded-[3rem] px-4 my-6"
+                            className="w-[50%] rounded-[3rem] py-1 my-6"
                             value={tab}
                             onClick={() => changeActiveTab(tab)}
                         >

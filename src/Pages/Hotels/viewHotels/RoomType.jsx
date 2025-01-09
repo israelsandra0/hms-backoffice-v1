@@ -89,7 +89,6 @@ export default function Rooms() {
         },
     });
 
-    // Filter rooms based on the searchFilter
     const filteredRooms = data.filter(({name}) => {
         return name.toLowerCase().includes(searchFilter.toLowerCase());
     });
@@ -111,7 +110,7 @@ export default function Rooms() {
 
             {/* <h1 className=" mt-8 font-bold text-[1.5rem] text-center">No Available Content !</h1> */}
 
-            <div className="content w-[95%] my-6 ml-6 rounded-[8px] border border-gray-200 overflow-hidden">
+            <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
                 <Table>
                     <TableHeader className="bg-lightPrimary">
                         <TableRow>

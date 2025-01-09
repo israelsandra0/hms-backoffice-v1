@@ -155,7 +155,7 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
     });
 
     return (
-        <div className="content w-[95%] my-6 ml-6 rounded-[8px] border border-gray-200 overflow-hidden">
+        <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
             {table.getPageCount() > 0 && (
                 <Table>
                     <TableHeader className="bg-lightPrimary">

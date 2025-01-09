@@ -6,7 +6,7 @@ export default function HotelsOverview() {
 
     return (
         <div className="mt-4">
-            <div className="flex gap-6 ml-6 text-gray-500">
+            <div className="flex justify-center gap-6 ml-6 text-gray-500">
                 <div className="flex w-[150px] px-2 py-4 rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
                     <Database className="text-[#8D561E]  w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]"/>
                     <div>
@@ -45,8 +45,8 @@ export default function HotelsOverview() {
             </div>
 
 
-            <h1 className=" mt-8 ml-6 font-bold text-[1.5rem]">Top Modules</h1>
-            <Table  className="content w-[95%] my-6 ml-6 rounded  overflow-hidden border border-gray-200">
+            <h1 className=" mt-8 ml-8 font-bold text-[1.5rem]">Top Modules</h1>
+            <Table  className="content w-[95%] my-6 mx-auto rounded  overflow-hidden border border-gray-200">
                 <TableRow className="bg-lightPrimary w-full p-8 mx-6">
                     <TableHead>Modules</TableHead>
                     <TableHead>Number of Clicks</TableHead>

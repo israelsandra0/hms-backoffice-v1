@@ -98,7 +98,7 @@ export default function HotelPageUsers({ hotelId }) {
 
             {/* <h1 className=" mt-8 font-bold text-[1.5rem] text-center">No Available Content !</h1> */}
 
-            <div className="content w-[95%] my-6 ml-6 rounded-[8px] border border-gray-200 overflow-hidden">
+            <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
                 <Table>
                     <TableHeader className='bg-lightPrimary'>
                         <TableRow>

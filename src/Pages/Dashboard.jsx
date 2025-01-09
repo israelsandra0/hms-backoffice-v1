@@ -84,8 +84,8 @@ export default function Dashboard() {
                 <h1 className=" mt-8 font-bold text-[1.5rem] text-center">No Available Content !</h1>
             </div> */}
 
-            <div className="flex justify-around gap-6 mx-6">
-                <div className=" w-[150px] px-2 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
+            <div className="flex justify-center gap-8">
+                <div className=" w-[180px] px-6 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
                     <Hotel className="text-[#8D561E] w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />
                     <div>
                         <p className="text-gray-500 py-2 text-[12px]">Total Hotels</p>
@@ -93,7 +93,7 @@ export default function Dashboard() {
                         <p className="text-green-500 py-2 text-[12px]">50 Active</p>
                     </div>
                 </div>
-                <div className=" w-[150px] px-2 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
+                <div className=" w-[180px] px-6 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
                     <Book className="text-[#8D561E] w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />
                     <div>
                         <p className="text-gray-500 py-2 text-[12px]">Booking Overview</p>
@@ -101,7 +101,7 @@ export default function Dashboard() {
                         <p className="py-2 text-[12px]">Across all hotels</p>
                     </div>
                 </div>
-                <div className=" w-[150px] px-2 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
+                <div className=" w-[180px] px-6 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
                     <DollarSign className="text-[#8D61E] w-8 h-8  bg-lightPrimary p-[0.50rem] rounded-[50%]" />
                     <div>
                         <p className="text-gray-500 py-2 text-[12px]">Revenue</p>
@@ -112,7 +112,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
-                <div className=" w-[150px] px-2 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
+                <div className=" w-[180px] px-6 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
                     <Info className="text-[#8D561E] w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />
                     <div>
                         <p className="text-gray-500 py-2 text-[12px]">Pending Requests</p>
@@ -120,7 +120,7 @@ export default function Dashboard() {
                         <p className="py-2 text-[12px]">Requires attention</p>
                     </div>
                 </div>
-                <div className=" w-[150px] px-2 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
+                <div className=" w-[180px] px-6 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
                     <Hourglass className="text-[#8D51E]  w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />
                     <div>
                         <p className="text-gray-500 py-2 text-[12px]">Expiring Subscriptions</p>
@@ -130,7 +130,7 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            <div className="my-12 flex gap-8 mx-8">
+            <div className="my-10 flex gap-8 mx-8">
                 <Card className="rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
                     <CardHeader>
                         <CardTitle>Booking Statistics</CardTitle>
@@ -157,7 +157,7 @@ export default function Dashboard() {
                                     cursor={false}
                                     content={<ChartTooltipContent hideLabel />}
                                 />
-                                <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
+                                <Bar dataKey="desktop" fill="var(--color-desktop)" barSize={20}/>
                             </BarChart>
                         </ChartContainer>
                     </CardContent>
