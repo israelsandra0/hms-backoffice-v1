@@ -12,7 +12,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { ButtonLink } from "@/components/ui/button_link";
 import UserAreaHeader from "@/components/UserAreaHeader";
-import { MoreVertical, } from "lucide-react"
+import { MoreVertical, Search, } from "lucide-react"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -37,6 +37,7 @@ export default function HotelsPage() {
     const { toast } = useToast()
     const { confirmAction } = useConfirm()
     const navigate = useNavigate()
+    const [searchFilter, setSearchFilter] = useState("");
 
 
     // handle hotel list
@@ -183,21 +184,32 @@ export default function HotelsPage() {
         </Breadcrumb>
     );
 
-
+    const filteredHotels = clients.filter(({name}) => {
+        return name.toLowerCase().includes(searchFilter.toLowerCase());
+    });
 
     return (
         <>
             <UserAreaHeader pages={breadcrumb} />
-            <div className="text-right mr-4 mb-8">
+            <div className="flex justify-between mx-6 my-4">
+                <div className="mb-4">
+                    <Search className="text-gray-300 w-4 absolute mt-[10px] ml-4" />
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        value={searchFilter}
+                        onChange={(e) => setSearchFilter(e.target.value)}
+                        className="border border-b-gray-300 pl-9 rounded py-2 w-[300px] outline-none"
+                    />
+                </div>
                 <ButtonLink to="/hotels/add" variant="primary">
                     Add Hotels
                 </ButtonLink>
             </div>
 
-
-            <Table className="content w-full">
-                <TableHeader>
-                    <TableRow className="bg-lightPrimary w-full hover:bg-lightPrimary p-8 mx-6">
+            <Table className="content w-full rounded overflow-hidden">
+                <TableHeader className="">
+                    <TableRow className="bg-lightPrimary ">
                         <TableHead>Name</TableHead>
                         <TableHead>Website</TableHead>
                         <TableHead>Locations</TableHead>
@@ -207,35 +219,35 @@ export default function HotelsPage() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {clients.map((client) => (
-                        <TableRow key={client?.id}>
-                            <Link onClick={() => navigate(`/hotels/view/${client.id}`)} className="text-primary">
-                                <TableCell>{client?.name}</TableCell>
+                    {filteredHotels.map((hotel) => (
+                        <TableRow key={hotel?.id}>
+                            <Link onClick={() => navigate(`/hotels/view/${hotel.id}`)} className="text-primary">
+                                <TableCell>{hotel?.name}</TableCell>
                             </Link>
-                            <TableCell>{client?.website}</TableCell>
-                            <TableCell>{client?.locations_count}</TableCell>
-                            <TableCell>{client?.subscription}</TableCell>
-                            <TableCell><Badge variant={client?.isActive ? `success` : 'error'}>{client?.isActive ? `Active` : 'Inactive'}</Badge></TableCell>
+                            <TableCell>{hotel?.website}</TableCell>
+                            <TableCell>{hotel?.locations_count}</TableCell>
+                            <TableCell>{hotel?.subscription}</TableCell>
+                            <TableCell><Badge variant={hotel?.isActive ? `success` : 'error'}>{hotel?.isActive ? `Active` : 'Inactive'}</Badge></TableCell>
                             <TableCell>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <MoreVertical className="cursor-pointer" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56 cursor-pointer">
-                                        <DropdownMenuItem onClick={() => navigate(`/hotels/view/${client.id}`)}>
+                                        <DropdownMenuItem onClick={() => navigate(`/hotels/view/${hotel.id}`)}>
                                             <span>View</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem onClick={() => setHotelToEdit(client)}>
+                                        <DropdownMenuItem onClick={() => setHotelToEdit(hotel)}>
                                             <span>Edit</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem onClick={() => handleActionClick(client.id, client.isActive ? 'Deactivate' : 'Activate')}>
-                                            <span>{client.isActive ? 'Deactivate' : 'Activate'}</span>
+                                        <DropdownMenuItem onClick={() => handleActionClick(hotel.id, hotel.isActive ? 'Deactivate' : 'Activate')}>
+                                            <span>{hotel.isActive ? 'Deactivate' : 'Activate'}</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem
-                                            onClick={() => handleActionClick(client.id, 'delete')}>
+                                            onClick={() => handleActionClick(hotel.id, 'delete')}>
                                             <span>Delete</span>
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
