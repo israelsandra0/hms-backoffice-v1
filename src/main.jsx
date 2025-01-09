@@ -27,7 +27,8 @@ import Rooms from "./pages/hotels/viewHotels/RoomType";
 import SubscriptionHistory from "./pages/hotels/viewHotels/Subscription";
 import PageSettings from "./pages/hotels/viewHotels/Settings";
 import ViewHotelsPage from "./pages/hotels/viewHotels/ViewHotelsPage";
-import Subscription from "./pages/Subscription";
+import Subscription from "./pages/subscriptionPage/Subscription";
+import SubscriptionPlan from "./pages/subscriptionPage/SubscriptionPlan";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +48,7 @@ const router = createBrowserRouter(
         <Route path="/users" element={<Users />} />
         <Route path="/accounts" element={<Account />} />
         <Route path="/subscriptions" element={<Subscription />} />
+        <Route path="/subscriptions/subscription_plan" element={<SubscriptionPlan />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/communication" element={<Communication />} />
         <Route path="/support" element={<Support />} />

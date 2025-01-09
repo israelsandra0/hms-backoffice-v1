@@ -163,7 +163,7 @@ export default function Dashboard() {
                     </CardContent>
                 </Card>
 
-                <Card className="rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
+                {/* <Card className="rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
                     <CardHeader className="items-center pb-0">
                         <CardTitle>Pie Chart - Label</CardTitle>
                         <CardDescription>January - June 2024</CardDescription>
@@ -193,7 +193,7 @@ export default function Dashboard() {
                             <p>20%</p>
                         </div>
                     </div>
-                </Card>
+                </Card> */}
 
                 <Card className="w-full rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
                     <CardHeader className="items-center pb-0">
