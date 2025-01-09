@@ -80,11 +80,11 @@ export default function Dashboard() {
         <div>
             <UserAreaHeader pages={breadcrumb} />
 
-            <div>
+            {/* <div>
                 <h1 className=" mt-8 font-bold text-[1.5rem] text-center">No Available Content !</h1>
-            </div>
+            </div> */}
 
-            {/* <div className="flex justify-around gap-6 mx-6">
+            <div className="flex justify-around gap-6 mx-6">
                 <div className=" w-[150px] px-2 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
                     <Hotel className="text-[#8D561E] w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />
                     <div>
@@ -128,10 +128,10 @@ export default function Dashboard() {
                         <p className="py-2 text-[12px]">Renewals due soon</p>
                     </div>
                 </div>
-            </div> */}
+            </div>
 
-            {/* <div className="my-12 flex gap-8 mx-8"> */}
-                {/* <Card className="rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
+            <div className="my-12 flex gap-8 mx-8">
+                <Card className="rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
                     <CardHeader>
                         <CardTitle>Booking Statistics</CardTitle>
                     </CardHeader>
@@ -161,9 +161,9 @@ export default function Dashboard() {
                             </BarChart>
                         </ChartContainer>
                     </CardContent>
-                </Card> */}
+                </Card>
 
-                {/* <Card className="rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
+                <Card className="rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
                     <CardHeader className="items-center pb-0">
                         <CardTitle>Pie Chart - Label</CardTitle>
                         <CardDescription>January - June 2024</CardDescription>
@@ -193,9 +193,9 @@ export default function Dashboard() {
                             <p>20%</p>
                         </div>
                     </div>
-                </Card> */}
+                </Card>
 
-                {/* <Card className="w-full rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
+                <Card className="w-full rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
                     <CardHeader className="items-center pb-0">
                         <CardTitle>Subscription Chart</CardTitle>
                     </CardHeader>
@@ -242,10 +242,10 @@ export default function Dashboard() {
                             <p>20%</p>
                         </div>
                     </div>
-                </Card> */}
-            {/* </div> */}
+                </Card>
+            </div>
 
-            {/* <div className="mx-8 px-8 py-8 mb-6 rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
+            <div className="mx-8 px-8 py-8 mb-6 rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
                 <div className='flex justify-between cursor-pointer items-center'>
                     <b>Support Message</b>
                     <Badge variant='outline' className='py-2'>See all</Badge>
@@ -296,7 +296,7 @@ export default function Dashboard() {
                         </TableRow>
                     </Table>
                 </div>
-            </div> */}
+            </div>
 
         </div>
     )
