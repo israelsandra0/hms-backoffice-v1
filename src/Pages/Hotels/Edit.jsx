@@ -22,12 +22,15 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
         name: yup.string().required("Name is required"),
         email: yup.string().required("Email is required").email(),
         website: yup.string().required("Website is required").url().nullable(),
-        // logo: yup.mixed().test("file", "Logo is required", (value) => {
-        //     if (!value) {
-        //         return hotelToEdit.logo || true; // If the old logo exists, it's valid or allow an empty value
-        //     }
-        //     return true; // If a new file is provided, it's valid
-        // }),
+        logo: yup.mixed().test("file", "Logo must be a file", (value) => {
+            console.log(value)
+            // If no file is selected, allow the existing logo to pass validation
+            if (!value) {
+                return  true; // If there's an existing logo, it's considered valid.
+            }
+            // If a new file is selected, it must be a valid file
+            return value && value.size > 0; // Ensures the selected file has size > 0
+        }),
     });
 
     const { register, handleSubmit, setError, setValue, formState: { errors } } = useForm({
@@ -35,7 +38,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
             name: hotelToEdit.name,
             email: hotelToEdit.email,
             website: hotelToEdit.website,
-            logo: hotelToEdit.logo  || "",
+            logo: "",
         },
         resolver: yupResolver(yupBuild),
     });
@@ -44,6 +47,9 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
 
     const { mutate, isPending } = useMutation({
         mutationFn: async (data) => {
+            if(!data.logo)(
+                delete data.logo
+            )
             const res = await put(`/hotels/update/${hotelToEdit.id}`, data)
             if (res.ok) {
                 toast({
@@ -164,7 +170,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                                 )}
 
                                 {!fileDetails?.preview && (
-                                    <div className="h-[100px] p-3 mt-1 flex gap-2 items-center bg-grey text-gray-600 rounded">
+                                    <div className=" px-3  flex gap-2 items-center">
                                         <div className="w-16 h-16 object-cover border border-gray-300">
                                             {!!hotelToEdit.logo && (
                                                 <img src={hotelToEdit.logo} alt="Hotel Logo" className="w-16 h-16 object-cover" />
