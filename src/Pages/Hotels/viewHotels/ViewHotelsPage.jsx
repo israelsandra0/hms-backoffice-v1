@@ -232,7 +232,7 @@ export default function ViewHotelsPage() {
                     </TabsContent>
                     <TabsContent value={validTabs[5]}>
                         <Card>
-                            <SubscriptionHistory />
+                            <PageSettings />
                         </Card>
                     </TabsContent>
                 </div>
