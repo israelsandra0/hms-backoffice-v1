@@ -209,7 +209,7 @@ export default function HotelsPage() {
                 <TableBody>
                     {clients.map((client) => (
                         <TableRow key={client?.id}>
-                            <Link onClick={() => navigate(`/hotels/view/${client.id}`)}>
+                            <Link onClick={() => navigate(`/hotels/view/${client.id}`)} className="text-primary">
                                 <TableCell>{client?.name}</TableCell>
                             </Link>
                             <TableCell>{client?.website}</TableCell>
