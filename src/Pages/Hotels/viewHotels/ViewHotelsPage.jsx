@@ -28,14 +28,32 @@ import PageSettings from "./Settings";
 import { Badge } from "@/components/ui/badge";
 import { RiEdit2Line } from "@remixicon/react";
 import EditHotelModal from "../Edit";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button";
+
+
 
 export default function ViewHotelsPage() {
     const navigate = useNavigate();
     const [hotelToEdit, setHotelToEdit] = useState({});
+    const [hotelLogo, setHotelLogo] = useState(false); 
 
     const { id } = useParams();
 
-    const [activeTab, setActiveTab] = useState("overview"); 
+    const [activeTab, setActiveTab] = useState("overview");
 
     // check if a tab is saved in localStorage
     useEffect(() => {
@@ -64,11 +82,21 @@ export default function ViewHotelsPage() {
         enabled: !!id,
     });
 
-
+    // Update the logo state when hotel data is loaded
+    useEffect(() => {
+        if (hotel?.logo) {
+            setHotelLogo(hotel.logo); 
+        }
+    }, [hotel]);
 
     const handleEditClose = () => {
         setHotelToEdit({});
         viewHotelRequest();
+    };
+
+    const handleLogoRemove = () => {
+        setHotelLogo(false); // Remove the logo by setting state to null
+        console.log("remioved")
     };
 
     const breadcrumb = (
@@ -85,7 +113,7 @@ export default function ViewHotelsPage() {
         </Breadcrumb>
     );
 
-    
+
     if (isLoading) {
         return (
             <>
@@ -96,21 +124,31 @@ export default function ViewHotelsPage() {
             </>
         )
     }
-
-    const locationId = hotel?.locations
+    
+    // const locationId = hotel?.locations 
 
     return (
         <div>
             <UserAreaHeader pages={breadcrumb} />
+
             <div className="flex justify-between mx-6">
                 <div className="flex gap-4 my-6">
-                    {!!hotel?.logo && (
-                        <img
-                            src={hotel?.logo}
-                            className="w-16 h-16"
-                        />
+                    {!!hotelLogo && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <img
+                                    src={hotelLogo}
+                                    className="w-16 h-16"
+                                />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className=" ml-40 w-56">
+                                <DropdownMenuItem onClick={handleLogoRemove}>Remove</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>Change</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
 
-                    ) }
+                    )}
 
                     <div>
                         <h1 className="font-bold text-[22px]">{hotel?.name}</h1>
@@ -136,8 +174,8 @@ export default function ViewHotelsPage() {
 
 
 
-            <Tabs className="w-full"  value={activeTab} onValueChange={handleTabChange}>
-                <TabsList className="w-[80%] ml-6 rounded-[3rem]">
+            <Tabs className="w-full" value={activeTab} onValueChange={handleTabChange}>
+                <TabsList className="w-[95%] ml-6 rounded-[3rem]">
                     <TabsTrigger
                         className="w-[50%] rounded-[3rem] px-4 my-6"
                         value="overview"
@@ -170,7 +208,7 @@ export default function ViewHotelsPage() {
                     </TabsTrigger>
                     <TabsTrigger
                         className="w-[50%] rounded-[3rem] px-4 my-6"
-                        value="settingd"
+                        value="setting"
                     >
                         Settings
                     </TabsTrigger>
@@ -202,16 +240,16 @@ export default function ViewHotelsPage() {
                             <SubscriptionHistory />
                         </Card>
                     </TabsContent>
-                    <TabsContent value="settings">
+                    <TabsContent value="setting">
                         <Card>
-                            <PageSettings />
+                            <SubscriptionHistory />
                         </Card>
                     </TabsContent>
                 </div>
             </Tabs>
 
             {!!hotelToEdit?.id && (
-                <EditHotelModal closeFn={handleEditClose} hotelToEdit={hotelToEdit}/>
+                <EditHotelModal closeFn={handleEditClose} hotelToEdit={hotelToEdit} />
             )}
         </div>
     );
