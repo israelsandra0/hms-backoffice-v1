@@ -1,6 +1,6 @@
 import { ChevronDown, Search } from "lucide-react";
 import { Input } from "./input";
-import { forwardRef, useState } from "react";
+import { forwardRef, useMemo, useState } from "react";
 import {  usePhoneInput, defaultCountries, FlagImage } from "react-international-phone";
 
 
@@ -30,10 +30,13 @@ const IntlPhoneField = forwardRef(({ ...props }, ref) => {
         setVisible(!visible)
     }
 
-    // Filter countries based on the searchFilter
-    const filteredCountries = defaultCountries.filter(([fullName]) => {
-        return fullName.toLowerCase().includes(searchFilter.toLowerCase());
-    });
+   
+    const filteredCountries = useMemo(() => {
+        return defaultCountries.filter(([fullName]) => {
+            return fullName.toLowerCase().includes(searchFilter.toLowerCase());
+        });
+    }, [defaultCountries, searchFilter]) 
+        
 
 
     return (
