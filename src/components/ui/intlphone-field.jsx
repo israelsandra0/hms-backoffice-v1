@@ -50,7 +50,7 @@ const IntlPhoneField = forwardRef(({ ...props }, ref) => {
 
                 <div className={`px-4 ${visible ? '' : 'hidden'} bg-white shadow-lg  h-[220px] overflow-y-scroll rounded-[5px] absolute w-full border border-neutral-200`}>
                     
-                    <div className=" sticky top-0 bg-white z-10 pl-4 py-4 ">
+                    <div className=" sticky top-0 bg-white shadow-[-1px_4px_2px_-2px_rgba(0,0,0,0.1)] pl-4 py-4 ">
 
                         <Search className="text-gray-300 w-4 absolute mt-[10px] ml-4" />
                         <input
