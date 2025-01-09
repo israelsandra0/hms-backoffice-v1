@@ -14,10 +14,9 @@ import {
     Link,
     useNavigate,
     useParams,
+    useSearchParams,
 } from "react-router-dom";
-import {
-    Card,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HotelsOverview from "./Overview";
 import HotelPageUsers from "./viewHotelUsers/Users";
@@ -41,35 +40,57 @@ import {
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-
-
 
 export default function ViewHotelsPage() {
     const navigate = useNavigate();
     const [hotelToEdit, setHotelToEdit] = useState({});
-    const [hotelLogo, setHotelLogo] = useState(false); 
+    const [hotelLogo, setHotelLogo] = useState(false);
+
+    let [searchParams, setSearchParams] = useSearchParams();
 
     const { id } = useParams();
 
-    const [activeTab, setActiveTab] = useState("overview");
-
-    // check if a tab is saved in localStorage
-    useEffect(() => {
-        const savedTab = localStorage.getItem("activeTab");
-        if (savedTab) {
-            setActiveTab(savedTab); // If there's a saved tab, set it as active
-        }
-    }, []);
-
-    // Save the active tab in localStorage whenever it changes
-    const handleTabChange = (value) => {
-        setActiveTab(value);
-        localStorage.setItem("activeTab", value); // Save the active tab
+    const validTabs = [
+        "Overview",
+        "Users",
+        "Locations",
+        "Room Type",
+        "Subscription Plan",
+        "Setting",
+    ];
+    const getInitialTab = () => {
+        const requestedTab = searchParams.get("active");
+        return validTabs.includes(requestedTab) ? requestedTab : validTabs[0];
     };
 
-    const { data: hotel, isLoading, refetch: viewHotelRequest } = useQuery({
+    const [activeTab, setActiveTab] = useState(getInitialTab());
+
+    const changeActiveTab = (newTab) => {
+        setActiveTab(newTab);
+        setSearchParams(new URLSearchParams({active: newTab}))
+    };
+
+    // check if a tab is saved in localStorage
+    // useEffect(() => {
+    //     const savedTab = localStorage.getItem("activeTab");
+    //     if (savedTab) {
+    //         setActiveTab(savedTab); // If there's a saved tab, set it as active
+    //     }
+    // }, []);
+
+    // Save the active tab in localStorage whenever it changes
+    // const handleTabChange = (value) => {
+    //     setActiveTab(value);
+    //     localStorage.setItem("activeTab", value); // Save the active tab
+    // };
+
+    const {
+        data: hotel,
+        isLoading,
+        refetch: viewHotelRequest,
+    } = useQuery({
         queryKey: ["hotelData", id],
         queryFn: async () => {
             const res = await get(`/hotels/show/${id}`);
@@ -85,7 +106,7 @@ export default function ViewHotelsPage() {
     // Update the logo state when hotel data is loaded
     useEffect(() => {
         if (hotel?.logo) {
-            setHotelLogo(hotel.logo); 
+            setHotelLogo(hotel.logo);
         }
     }, [hotel]);
 
@@ -96,7 +117,7 @@ export default function ViewHotelsPage() {
 
     const handleLogoRemove = () => {
         setHotelLogo(false); // Remove the logo by setting state to null
-        console.log("remioved")
+        console.log("remioved");
     };
 
     const breadcrumb = (
@@ -113,7 +134,6 @@ export default function ViewHotelsPage() {
         </Breadcrumb>
     );
 
-
     if (isLoading) {
         return (
             <>
@@ -122,10 +142,10 @@ export default function ViewHotelsPage() {
                     <Spinner className="me-3 text-gray-300 h-16 w-16" />
                 </div>
             </>
-        )
+        );
     }
-    
-    // const locationId = hotel?.locations 
+
+    // const locationId = hotel?.locations
 
     return (
         <div>
@@ -136,18 +156,16 @@ export default function ViewHotelsPage() {
                     {!!hotelLogo && (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <img
-                                    src={hotelLogo}
-                                    className="w-16 h-16"
-                                />
+                                <img src={hotelLogo} className="w-16 h-16" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className=" ml-40 w-56">
-                                <DropdownMenuItem onClick={handleLogoRemove}>Remove</DropdownMenuItem>
+                                <DropdownMenuItem onClick={handleLogoRemove}>
+                                    Remove
+                                </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>Change</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-
                     )}
 
                     <div>
@@ -172,75 +190,47 @@ export default function ViewHotelsPage() {
                 </div>
             </div>
 
-
-
-            <Tabs className="w-full" value={activeTab} onValueChange={handleTabChange}>
+            <Tabs className="w-full" value={activeTab}>
                 <TabsList className="w-[95%] ml-6 rounded-[3rem]">
-                    <TabsTrigger
-                        className="w-[50%] rounded-[3rem] px-4 my-6"
-                        value="overview"
-                    >
-                        Overview
-                    </TabsTrigger>
-                    <TabsTrigger
-                        className="w-[50%] rounded-[3rem] px-4 my-6"
-                        value="users"
-                    >
-                        Users
-                    </TabsTrigger>
-                    <TabsTrigger
-                        className="w-[50%] rounded-[3rem] px-4 my-6"
-                        value="locations"
-                    >
-                        Locations
-                    </TabsTrigger>
-                    <TabsTrigger
-                        className="w-[50%] rounded-[3rem] px-4 my-6"
-                        value="rooms"
-                    >
-                        Room Type
-                    </TabsTrigger>
-                    <TabsTrigger
-                        className="w-[50%] rounded-[3rem] px-4 my-6"
-                        value="subscription"
-                    >
-                        Subscription Plan
-                    </TabsTrigger>
-                    <TabsTrigger
-                        className="w-[50%] rounded-[3rem] px-4 my-6"
-                        value="setting"
-                    >
-                        Settings
-                    </TabsTrigger>
+                    {validTabs.map((tab) => (
+
+                        <TabsTrigger
+                            className="w-[50%] rounded-[3rem] px-4 my-6"
+                            value={tab}
+                            onClick={() => changeActiveTab(tab)}
+                        >
+                            {tab}
+                        </TabsTrigger>
+                    ))}
                 </TabsList>
 
                 <div className="border border-b-0 border-l-0 border-r-0 mt-4">
-                    <TabsContent value="overview">
+                    <TabsContent value={validTabs[0]}>
                         <Card>
                             <HotelsOverview />
                         </Card>
                     </TabsContent>
-                    <TabsContent value="users">
+                    <TabsContent value={validTabs[1]}>
                         <Card>
                             <HotelPageUsers hotelId={hotel} />
                         </Card>
                     </TabsContent>
-                    <TabsContent value="locations">
+                    <TabsContent value={validTabs[2]}>
                         <Card>
                             <Locations hotelId={hotel.id} />
                         </Card>
                     </TabsContent>
-                    <TabsContent value="rooms">
+                    <TabsContent value={validTabs[3]}>
                         <Card>
                             <Rooms />
                         </Card>
                     </TabsContent>
-                    <TabsContent value="subscription">
+                    <TabsContent value={validTabs[4]}>
                         <Card>
                             <SubscriptionHistory />
                         </Card>
                     </TabsContent>
-                    <TabsContent value="setting">
+                    <TabsContent value={validTabs[5]}>
                         <Card>
                             <SubscriptionHistory />
                         </Card>
