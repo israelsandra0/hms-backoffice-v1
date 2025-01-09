@@ -96,7 +96,7 @@ export default function Rooms() {
 
     return (
         <div>
-            <div className="flex items-center justify-center px-6 pt-6">
+            <div className="flex items-center justify-end px-6 pt-6">
                 <div className="mb-4">
                     <Search className="text-gray-300 w-4 absolute mt-[10px] ml-4" />
                     <input
@@ -104,7 +104,7 @@ export default function Rooms() {
                         placeholder="Search"
                         value={searchFilter}
                         onChange={(e) => setSearchFilter(e.target.value)}
-                        className="border border-b-gray-300 pl-9 rounded py-2 w-[400px] outline-none"
+                        className="border border-b-gray-300 pl-9 rounded py-2 w-[300px] outline-none"
                     />
                 </div>
             </div>
