@@ -3,6 +3,7 @@ import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, 
 import { Button } from "@/components/ui/button";
 import { ButtonLink } from "@/components/ui/button_link";
 import { CardContent } from "@/components/ui/card";
+import CountryNames from "@/components/ui/country-names-input";
 import { Input } from "@/components/ui/input";
 import IntlPhoneField from "@/components/ui/intlphone-field";
 import Spinner from "@/components/ui/spinner";
@@ -28,6 +29,7 @@ export default function EditHotelLocation({ closeFn, locationId, hotelId }) {
         name: yup.string().required("Name is required"),
         address: yup.string().required("Address is required"),
         state: yup.string().required("State is required"),
+        country: yup.string().required("Country is required"),
         city: yup.string().required("City is required")
     });
 
@@ -44,6 +46,7 @@ export default function EditHotelLocation({ closeFn, locationId, hotelId }) {
             name: locationId.name,
             address: locationId.address,
             state: locationId.state,
+            country: locationId.country,
             city: locationId.city,
             phone: locationId.phone,
         },
@@ -177,6 +180,19 @@ export default function EditHotelLocation({ closeFn, locationId, hotelId }) {
                                 )}
                             />
                             <p>{errors.phone?.message}</p>
+                        </div>
+
+                        <div className="mb-2">
+                            <Label htmlFor="country">Country</Label>
+                            <br />
+                            <Controller
+                                name="country"
+                                control={control}
+                                render={({ field }) => (
+                                    <CountryNames {...field} id="country" />
+                                )}
+                            />
+                            <p>{errors.country?.message}</p>
                         </div>
 
                         <div className="flex gap-2">

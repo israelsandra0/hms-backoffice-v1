@@ -7,28 +7,21 @@ import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { get, post } from "@/functions";
-import { BACKEND_URL } from "@/constants";
 import { Label } from "@/components/ui/label";
 import StateField from "@/components/ui/state-field";
 import { Link, useNavigate } from "react-router-dom";
-import UserAreaHeader from "@/components/UserAreaHeader";
-import { Check, Delete, DeleteIcon, Upload, X } from "lucide-react";
-import {
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { ButtonLink } from "@/components/ui/button_link";
+import { X } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import IntlPhoneField from "@/components/ui/intlphone-field";
+import CountryNames from "@/components/ui/country-names-input";
 
 export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) {
     // Yup schema
     const yupBuild = yup.object({
         name: yup.string().required("Name is required"),
         address: yup.string().required("Address is required"),
+        phone: yup.string().required("Phone number is required").min(10).max(15),
+        country: yup.string().required("Country is required"),
         state: yup.string().required("State is required"),
         city: yup.string().required("City is required")
     });
@@ -45,6 +38,8 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
         defaultValues: {
             name: "",
             address: "",
+            phone: "",
+            country: "",
             state: "",
             city: "",
             phone: "",
@@ -128,6 +123,7 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
                 const hotelData = {
                     address: hotelInput.address,
                     state: hotelInput.state,
+                    country: hotelInput.state,
                     city: hotelInput.city,
                     phone: hotelInput.phone
                 };
@@ -228,7 +224,7 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
                     </Link>
                     <h1 className="text-[1.3rem] font-bold mb-2 mx-auto">Add New Location</h1>
                 </div>
-                
+
                 {!!errorMessage?.length && (
                     <Alert className="alert text-red-900 border-0 h-full  bg-[#fee] mb-4">
                         <AlertDescription>{errorMessage}</AlertDescription>
@@ -248,7 +244,7 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
                             <Input {...register("name")} id="name" />
                             <p>{errors.name?.message}</p>
                         </div>
-                        
+
                         <div className="mb-2">
                             <Label htmlFor="address">Address</Label>
                             <br />
@@ -267,6 +263,19 @@ export default function AddHotelLocation({ closeFn, onLocationAdded, hotelId }) 
                                 )}
                             />
                             <p>{errors.phone?.message}</p>
+                        </div>
+
+                        <div className="mb-2">
+                            <Label htmlFor="country">Country</Label>
+                            <br />
+                            <Controller
+                                name="country"
+                                control={control}
+                                render={({ field }) => (
+                                    <CountryNames {...field} id="country" />
+                                )}
+                            />
+                            <p>{errors.country?.message}</p>
                         </div>
 
                         <div className="flex gap-2">

@@ -34,6 +34,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { RiDeleteBin2Line } from "@remixicon/react";
+import CountryNames from "@/components/ui/country-names-input";
 
 export default function Add() {
     // Yup schema
@@ -50,6 +51,7 @@ export default function Add() {
         .nullable(),
         phone: yup.string().required("Phone number is required").min(10).max(15),
         address: yup.string().required("Address is required"),
+        country: yup.string().required("Country is required"),
         state: yup.string().required("State is required"),
         city: yup.string().required("City is required"),
         logo: yup.mixed().required("Logo is required")
@@ -72,6 +74,7 @@ export default function Add() {
             website: "",
             phone: "",
             address: "",
+            country: "",
             state: "",
             city: "",
             logo: "",
@@ -105,6 +108,7 @@ export default function Add() {
                     website: hotelInput.website,
                     phone: hotelInput.phone,
                     address: hotelInput.address,
+                    country: hotelInput.country,
                     state: hotelInput.state, 
                     city: hotelInput.city, 
                     logo: hotelInput.logo, 
@@ -334,6 +338,19 @@ export default function Add() {
                                 <br />
                                 <Input {...register("address")} id="address" />
                                 <p>{errors.address?.message}</p>
+                            </div>
+
+                            <div className="mb-2">
+                                <Label htmlFor="country">Country</Label>
+                                <br />
+                                <Controller
+                                    name="country"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <CountryNames {...field} id="country" />
+                                    )}
+                                />
+                                <p>{errors.country?.message}</p>
                             </div>
 
                             <div className="flex gap-2">
