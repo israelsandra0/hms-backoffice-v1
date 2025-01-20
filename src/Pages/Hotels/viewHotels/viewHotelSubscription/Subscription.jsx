@@ -35,6 +35,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { ButtonLink } from "@/components/ui/button_link";
+import { useNavigate } from "react-router-dom";
 
 export default function SubscriptionHistory() {
     const [sorting, setSorting] = useState([]);
@@ -42,40 +44,41 @@ export default function SubscriptionHistory() {
     const [columnVisibility, setColumnVisibility] = useState({});
     const [rowSelection, setRowSelection] = useState({});
     const [date, setDate] = useState()
+    const navigate = useNavigate()
 
     const data = [
         {
             id: "m5gr84i9",
             plan: "Standard",
-            datePaid: "01st-Nov-2024",
+            datePaid: "01st Nov 2024",
             amount: "₦180,000.00",
             expiryDate: "30th-Nov-2024",
         },
         {
             id: "m5gr84i9",
             plan: "Premium Plan",
-            datePaid: "15tht-Oct-2024",
+            datePaid: "15tht Oct 2024",
             amount: "₦250,000.00",
             expiryDate: "14th-Nov-2024",
         },
         {
             id: "m5gr84i9",
             plan: "Basic Plan",
-            datePaid: "20th-Sep-2024",
+            datePaid: "20th Sep 2024",
             amount: "₦100,000.00",
             expiryDate: "19th-Oct-2024",
         },
         {
             id: "m5gr84i9",
             plan: "Basic Plan",
-            datePaid: "5th-Aug-2024",
+            datePaid: "5th Aug 2024",
             amount: "₦100,000.00",
             expiryDate: "5th-Sep-2024",
         },
         {
             id: "m5gr84i9",
             plan: "Premium Plan",
-            datePaid: "01st-Jul-2024",
+            datePaid: "01st Jul 2024",
             amount: "₦250,000.00",
             expiryDate: "31st-Jul-2024",
         },
@@ -135,9 +138,9 @@ export default function SubscriptionHistory() {
                     </PopoverContent>
                 </Popover>
 
-                <Button variant="primary" onClick={() => setAddUserBox(true)}>
+                <ButtonLink variant="primary" onClick={() => navigate("/hotels/view/suscription/add")}>
                     + New Subscription
-                </Button>
+                </ButtonLink>
             </div>
 
             {/* <h1 className=" mt-8 font-bold text-[1.5rem] text-center">No Available Content !</h1> */}
