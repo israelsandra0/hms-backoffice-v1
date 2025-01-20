@@ -21,12 +21,19 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
     const yupBuild = yup.object({
         name: yup.string().required("Name is required"),
         email: yup.string().required("Email is required").email(),
-        website: yup.string().required("Website is required").url().nullable(),
+        website: yup.string()
+        .required("Website is required")
+        .test('valid-url', 'Website must be a valid URL', (value) => {
+            if (!value) return false;
+            const urlPattern = /^(https?:\/\/|www\.)?[a-zA-Z0-9-.]+(\.[a-zA-Z]{2,})$/;
+            return urlPattern.test(value);
+        })
+        .nullable(),
         logo: yup.mixed().test("file", "Logo must be a file", (value) => {
             console.log(value)
             // If no file is selected, allow the existing logo to pass validation
             if (!value) {
-                return  true; // If there's an existing logo, it's considered valid.
+                return true; // If there's an existing logo, it's considered valid.
             }
             // If a new file is selected, it must be a valid file
             return value && value.size > 0; // Ensures the selected file has size > 0
@@ -47,7 +54,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
 
     const { mutate, isPending } = useMutation({
         mutationFn: async (data) => {
-            if(!data.logo)(
+            if (!data.logo) (
                 delete data.logo
             )
             const res = await put(`/hotels/update/${hotelToEdit.id}`, data)
@@ -105,7 +112,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
             setValue('logo', file)
 
             reader.readAsDataURL(file); // Read the file as a data URL (image preview)
-        }else {
+        } else {
             setFileDetails({
                 name: "",
                 size: 0,
@@ -121,7 +128,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
             size: 0,
             preview: "",
         });
-        setValue('logo', null); 
+        setValue('logo', null);
     };
 
 
@@ -205,7 +212,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                             </div>
                             <p>{errors.logo?.message}</p>
                         </div>
-                        
+
                         <div className="mb-2">
                             <Label htmlFor="name">Name</Label>
                             <br />

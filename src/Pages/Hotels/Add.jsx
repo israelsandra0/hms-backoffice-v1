@@ -45,7 +45,7 @@ export default function Add() {
         .required("Website is required")
         .test('valid-url', 'Website must be a valid URL', (value) => {
             if (!value) return false;
-            const urlPattern = /^(https?:\/\/|www\.)[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+            const urlPattern = /^(https?:\/\/|www\.)?[a-zA-Z0-9-.]+(\.[a-zA-Z]{2,})$/;
             return urlPattern.test(value);
         })
         .nullable(),
