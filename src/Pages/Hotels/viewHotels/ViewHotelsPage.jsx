@@ -135,6 +135,7 @@ export default function ViewHotelsPage() {
   );
 
   if (isLoading) {
+    console.log(hotel)
     return (
       <>
         <UserAreaHeader pages={breadcrumb} />
@@ -196,6 +197,7 @@ export default function ViewHotelsPage() {
             <TabsTrigger
               className="w-[50%] rounded-[3rem] py-1 my-6"
               value={tab}
+              key={tab}
               onClick={() => changeActiveTab(tab)}
             >
               {tab}
