@@ -11,7 +11,7 @@ export default function Locations({ hotelId }) {
 
     const [searchFilter, setSearchFilter] = useState("");
 
-    const { data: locations, isLoading, isPending, refetch: fetchHotelsLocations } = useQuery({
+    const { data: locations, isLoading, isPending, refetch: fetchHotelLocations } = useQuery({
         queryKey: ["hotelLocations"],
         queryFn: async () => {
             // setLocations([])
@@ -27,24 +27,8 @@ export default function Locations({ hotelId }) {
     });
 
     useEffect(() => {
-        fetchHotelsLocations()
+        fetchHotelLocations()
     }, [])
-
-    const queryClient = useQueryClient()
-
-    const refreshHotelLocations = () => {
-
-        queryClient.invalidateQueries(
-            {
-                queryKey: ['hotelLocations'],
-                refetchType: 'all'
-            },
-            {
-                cancelRefetch: true
-            }
-        )
-        fetchHotelsLocations()
-    }
 
 
     if (isLoading) {
