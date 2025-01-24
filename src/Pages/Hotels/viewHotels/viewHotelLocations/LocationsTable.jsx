@@ -1,77 +1,13 @@
 import Pagination from "@/components/Pagination";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { flexRender, useReactTable } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {useMemo, useState } from "react";
 import { getCoreRowModel, getPaginationRowModel } from "@tanstack/react-table";
-import { MoreVertical } from "lucide-react";
-import { useConfirm } from "@/hooks/use-confirm";
-import { useToast } from "@/hooks/use-toast";
-import EditHotelLocation from "./EditHotelLocation";
-import { apiDelete } from "@/functions";
 
-export default function LocationsTable({locations, hotelId, refreshHotelLocations, searchFilter }) {
+export default function LocationsTable({locations, searchFilter }) {
 
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10
-    const { confirmAction } = useConfirm()
-    const { toast } = useToast()
-    const [editLocation, setEditLocation] = useState({});
-
-    
-    const confirmModalSetup = {
-        delete: {
-            title: 'Are you sure?',
-            message: "you're about to delete this location, This action cannot be undone.",
-            confirmButtonText: 'Delete',
-            buttonVariant: 'error',
-            cancelButtonText: 'Cancel'
-        }
-    }
-
-    const handleConfirmation = async (locationId, hotelAction) => {
-        if (hotelAction === 'delete') {
-            return await apiDelete(`/hotels/${hotelId}/locations/destroy/${locationId}`)
-        }
-    }
-
-    const handleDeleteResponse = (res, locationId) => {
-        if (res.ok) {
-            toast({
-                success: true,
-                duration: 5000,
-                title: 'Hotel Location deleted successfully!'
-            });
-            
-        } else {
-            toast({
-                error: true,
-                duration: 5000,
-                title: 'Failed to delete the hotel location. Please try again.'
-            });
-        }
-        refreshHotelLocations()
-    }
-    
-    // Handle button click for delete/activation/deactivation
-    const handleActionClick = (locationId, actionType) => {
-        confirmAction({
-            ...confirmModalSetup[actionType.toLowerCase()],
-            isDestructive: actionType.toLowerCase() === 'delete',
-            confirmFn: () => handleConfirmation(locationId, actionType),
-            completeFn: (res) => {
-                if (actionType.toLowerCase() === 'delete') {
-                    handleDeleteResponse(res, locationId)
-                }
-            }
-            
-        })
-    };
-        
-    const handleEditClose = () => {
-        setEditLocation({});
-        refreshHotelLocations()
-    };
     
     const columns = useMemo(() => [
         {
@@ -98,30 +34,6 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
             header: "Rooms",
             accessorKey: "rooms",
         },
-        {
-            id: "actions",
-            enableHiding: false,
-            cell: ({ row }) => {
-                const location = row.original;
-
-                return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <MoreVertical className="cursor-pointer" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56 cursor-pointer">
-                            <DropdownMenuItem onClick={() => setEditLocation(location)}>
-                                <span>Edit</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => handleActionClick(location.id, 'delete')}>
-                                <span>Delete</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                );
-            },
-        },
     ], []);
    
 
@@ -131,7 +43,7 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
         const lowerCaseFilter = searchFilter.toLowerCase();
 
         return locations.filter(location => 
-            // location.name.toLowerCase().includes(lowerCaseFilter) ||
+            location.name.toLowerCase().includes(lowerCaseFilter) ||
             location.address.toLowerCase().includes(lowerCaseFilter) ||
             location.state.toLowerCase().includes(lowerCaseFilter)
             // location.city.toLowerCase().includes(lowerCaseFilter) 
@@ -165,8 +77,7 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
                             <TableHead>State</TableHead>
                             <TableHead>City</TableHead>
                             <TableHead>Number of Users</TableHead>
-                            <TableHead>Rooms</TableHead>
-                            <TableHead></TableHead>
+                            <TableHead>Rooms</TableHead>\
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -184,10 +95,6 @@ export default function LocationsTable({locations, hotelId, refreshHotelLocation
             )}
 
             <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
-
-            {!!editLocation?.id && (
-                <EditHotelLocation closeFn={handleEditClose} locationId={editLocation} hotelId={hotelId} />
-            )}
 
         </div>
     )
