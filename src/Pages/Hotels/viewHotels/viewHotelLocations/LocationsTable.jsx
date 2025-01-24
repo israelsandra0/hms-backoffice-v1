@@ -46,7 +46,6 @@ export default function LocationsTable({locations, searchFilter }) {
             location.name.toLowerCase().includes(lowerCaseFilter) ||
             location.address.toLowerCase().includes(lowerCaseFilter) ||
             location.state.toLowerCase().includes(lowerCaseFilter)
-            // location.city.toLowerCase().includes(lowerCaseFilter) 
         );
     }, [locations, searchFilter]);
 
