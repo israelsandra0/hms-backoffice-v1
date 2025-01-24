@@ -390,9 +390,9 @@ export default function Add() {
                             open={isSuccess}
                             onOpenChange={(open) => setIsSuccess(open)}
                         >
-                            <AlertDialogContent className="w-[340px] h-[210px] p-8 border-none rounded-[1.5rem] lg:rounded-[1.5rem]">
+                            <AlertDialogContent className="w-[300px] h-[210px] p-8 border-none rounded-[1.5rem] lg:rounded-[1.5rem]">
                                 <AlertDialogHeader>
-                                    <Check className="bg-lightPrimary text-[#542A12] mb-4 rounded-full p-2 w-[50px] h-[50px] mx-auto" />
+                                    <Check className="bg-lightPrimary text-[#542A12] mb-2 rounded-full p-2 w-[50px] h-[50px] mx-auto" />
                                     <AlertDialogTitle className="mx-auto ">
                                         Hotel Added Successfully!
                                     </AlertDialogTitle>
