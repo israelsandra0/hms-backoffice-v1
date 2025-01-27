@@ -12,7 +12,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { ButtonLink } from "@/components/ui/button_link";
 import UserAreaHeader from "@/components/UserAreaHeader";
-import { MoreVertical, Search, } from "lucide-react"
+import { ExternalLink, MoreVertical, Search, } from "lucide-react"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -227,8 +227,9 @@ export default function HotelsPage() {
                                 </Link>
                             </TableCell>
                             <TableCell>
-                                <a  href={`https://${hotel?.website}`} className="text-primary"  target="_blank" rel="noopener noreferrer">
+                                <a  href={`https://${hotel?.website}`} className="text-primary flex gap-1 items-center"  target="_blank" rel="noopener noreferrer">
                                     {hotel?.website}
+                                    <ExternalLink className='w-4'/>
                                 </a>
                             </TableCell>
                             <TableCell>{hotel?.locations_count}</TableCell>
