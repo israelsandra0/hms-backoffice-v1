@@ -23,15 +23,21 @@ import {
 import { ButtonLink } from "@/components/ui/button_link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import IntlPhoneField from "@/components/ui/intlphone-field";
+import PasswordField from "@/components/ui/password-field";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AddHotelUsers({ closeFn, hotelId }) {
     // Yup schema
     const yupBuild = yup.object({
-        name: yup.string().required("Name is required"),
+        firstName: yup.string().required("First Name is required"),
+        lastName: yup.string().required("Last Name is required"),
         email: yup.string().required("Email is required").email(),
+        auto_generate_password: yup.boolean(),
+        password: yup.string().when('auto_generate_password', {
+            is: false,
+            then: (password) => password.required('Password is requiored').min(6).max(25)
+        }),
         phone: yup.string().required("Phone number is required").min(10).max(15),
-        role: yup.string().required("State is required"),
-        location: yup.string().required("City is required")
     });
 
     // UseForm hook
@@ -44,19 +50,88 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
         getValues,
     } = useForm({
         defaultValues: {
-            name: "",
+            firstName: "",
+            lastName: "",
             email: "",
             phone: "",
-            role: "",
-            location: "",
+            password: "",
+            auto_generate_password: true
         },
         resolver: yupResolver(yupBuild),
     });
 
-    const [isSuccess, setIsSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [disabledButton, setDisabledButton] = useState(false);
-    const [states, setStates] = useState([]);
+    const { toast } = useToast()
+    const [generatePassword, setGeneratePassword] = useState(true)
+
+    const handleCheckboxChange = () => {
+        setGeneratePassword(!generatePassword);
+    };
+
+
+    const { mutate } = useMutation({
+        mutationFn: async () => {
+
+            const userInput = getValues();
+            setErrorMessage("");
+            setDisabledButton(true);
+
+            try {
+                const userData = {
+                    firstName: userInput.firstName,
+                    lastName: userInput.lastName,
+                    email: userInput.email,
+                    phone: userInput.phone,
+                    password: userInput.password,
+                    auto_generate_password: userInput.auto_generate
+                };
+                const res = await post(`/hotels/${hotelId.id}/users/store`, userData);
+
+                if (res.ok) {
+                    toast({
+                        success: true,
+                        duration: 5000,
+                        title: 'User added successfully!'
+                    });
+                    closeFn()
+
+                } else if (res.status.toString().startsWith(4)) {
+                    setDisabledButton(false);
+                    setErrorMessage(
+                        "User details not saved, correct all indicated fields and try again!"
+                    );
+
+                    const responseErrors = await res.json();
+
+                    if (responseErrors.errors) {
+                        responseErrors.errors.forEach((error) => {
+                            setError(error.field, {
+                                type: "custom",
+                                message: error.message,
+                            });
+                        });
+                    }
+                    return null;
+                }
+
+                if (res.status === 500) {
+                    setDisabledButton(false);
+                    setErrorMessage("An error occurred, please try again");
+                    return null;
+                }
+
+                const responseData = await res.json();
+                closeFn()
+                setDisabledButton(true);
+
+
+                return responseData;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+    })
 
 
     return (
@@ -77,23 +152,30 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
 
                 <form
                     className="hotelForm text-left"
+                    onSubmit={handleSubmit(mutate)}
                 >
                     {/* {JSON.stringify(errors)} */}
                     <div className="mt-4">
 
-                        <div className="mb-2">
-                            <Label htmlFor="name">Full Name</Label>
-                            <br />
-                            <Input {...register("name")} id="name" />
-                            <p>{errors.name?.message}</p>
+                        <div className="flex gap-2 mb-2">
+                            <div>
+                                <Label htmlFor="firstName">First Name</Label>
+                                <Input {...register("firstName")} id="firstName" />
+                                <p>{errors.firstName?.message}</p>
+                            </div>
+                            <div>
+                                <Label htmlFor="lastName">Last Name</Label>
+                                <Input {...register("lastName")} id="lastName" />
+                                <p>{errors.lastName?.message}</p>
+                            </div>
                         </div>
 
                         <div className="mb-2">
-                                <Label htmlFor="email">Email</Label>
-                                <br />
-                                <Input {...register("email")} type="email" id="email" />
-                                <p>{errors.email?.message}</p>
-                            </div>
+                            <Label htmlFor="email">Email</Label>
+                            <br />
+                            <Input {...register("email")} type="email" id="email" />
+                            <p>{errors.email?.message}</p>
+                        </div>
 
                         <div className="mb-2">
                             <Label htmlFor="phone">Phone</Label>
@@ -108,19 +190,31 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
                             <p>{errors.phone?.message}</p>
                         </div>
 
-                        <div className="mb-2">
-                                <Label htmlFor="role">Role</Label>
-                                <br />
-                                <Input {...register("role")} type="role" id="role" />
-                                <p>{errors.role?.message}</p>
-                            </div>
+                        {generatePassword && (
 
-                            <div className="mb-2">
-                                <Label htmlFor="location">Location</Label>
-                                <br />
-                                <Input {...register("location")} type="location" id="location" />
-                                <p>{errors.location?.message}</p>
+                            <div>
+                                <Label htmlFor="password">Password</Label>
+                                <Controller
+                                    name="password"
+                                    control={control}
+                                    render={({ field }) => <PasswordField {...field} />}
+                                />
+
+
+                                <p className="text-red-700">{errors.password?.message}</p>
+
                             </div>
+                        )}
+                        <div className="mt-2 flex items-center">
+                            <input type="checkbox"
+                                checked={!generatePassword}
+                                onChange={handleCheckboxChange}
+                            />
+                            <h2 className="ml-2 text-[12px]">
+                                auto-generate password?
+                            </h2>
+                        </div>
+
                     </div>
 
                     <br />
@@ -132,32 +226,6 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
                     >
                         {disabledButton ? "Submitting..." : "Submit"}
                     </Button>
-
-                    <AlertDialog
-                        open={isSuccess}
-                        onOpenChange={(open) => setIsSuccess(open)}
-                    >
-                        <AlertDialogContent className="w-[340px] h-[210px] p-8 border-none rounded-[1.5rem] lg:rounded-[1.5rem]">
-                            <AlertDialogHeader>
-                                <Check className="bg-lightPrimary text-[#542A12] mb-4 rounded-full p-2 w-[50px] h-[50px] mx-auto" />
-                                <AlertDialogTitle className="mx-auto ">
-                                    Location Added Successfully!
-                                </AlertDialogTitle>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter className="mt-2">
-                                <ButtonLink
-                                    variant="primary"
-                                    className="w-full p-[16px] text-[16px]"
-                                    onClick={() => {
-                                        setIsSuccess(false);
-                                        // navigate(`/hotels/view/${hotelId}`);
-                                    }}
-                                >
-                                    Done
-                                </ButtonLink>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
                 </form>
             </CardContent>
         </div>
