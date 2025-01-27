@@ -1,26 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { get, post } from "@/functions";
-import { BACKEND_URL } from "@/constants";
+import { useMutation } from "@tanstack/react-query";
+import { post } from "@/functions";
 import { Label } from "@/components/ui/label";
-import StateField from "@/components/ui/state-field";
-import { Link, useNavigate } from "react-router-dom";
-import UserAreaHeader from "@/components/UserAreaHeader";
-import { Check, Delete, DeleteIcon, Upload, X } from "lucide-react";
-import {
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { ButtonLink } from "@/components/ui/button_link";
+import { Link } from "react-router-dom";
+import { X } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import IntlPhoneField from "@/components/ui/intlphone-field";
 import PasswordField from "@/components/ui/password-field";
