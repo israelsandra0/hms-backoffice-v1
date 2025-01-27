@@ -184,7 +184,7 @@ export default function HotelsPage() {
         </Breadcrumb>
     );
 
-    const filteredHotels = clients.filter(({name}) => {
+    const filteredHotels = clients.filter(({ name }) => {
         return name.toLowerCase().includes(searchFilter.toLowerCase());
     });
 
@@ -221,13 +221,20 @@ export default function HotelsPage() {
                 <TableBody>
                     {filteredHotels.map((hotel) => (
                         <TableRow key={hotel?.id}>
-                            <Link onClick={() => navigate(`/hotels/view/${hotel.id}`)} className="text-primary">
-                                <TableCell>{hotel?.name}</TableCell>
-                            </Link>
-                            <TableCell>{hotel?.website}</TableCell>
+                            <TableCell>
+                                <Link onClick={() => navigate(`/hotels/view/${hotel.id}`)} className="text-primary">
+                                    {hotel?.name}
+                                </Link>
+                            </TableCell>
+                            <TableCell>
+                                <a  href={`https://${hotel?.website}`} className="text-primary"  target="_blank" rel="noopener noreferrer">
+                                    {hotel?.website}
+                                </a>
+                            </TableCell>
                             <TableCell>{hotel?.locations_count}</TableCell>
                             <TableCell>{hotel?.subscription}</TableCell>
                             <TableCell><Badge variant={hotel?.isActive ? `success` : 'error'}>{hotel?.isActive ? `Active` : 'Inactive'}</Badge></TableCell>
+                            {/* <TableCell></TableCell> */}
                             <TableCell>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
