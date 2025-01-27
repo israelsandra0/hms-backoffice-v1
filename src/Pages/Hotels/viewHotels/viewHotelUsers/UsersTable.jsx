@@ -66,7 +66,7 @@ export default function UsersTable({users, hotelId, searchFilter }) {
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}>
+                            <TableRow key={row.id}  className="hover:bg-grey">
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={row.id}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}

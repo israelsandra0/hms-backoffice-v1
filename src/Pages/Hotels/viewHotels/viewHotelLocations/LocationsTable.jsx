@@ -76,12 +76,12 @@ export default function LocationsTable({locations, searchFilter }) {
                             <TableHead>State</TableHead>
                             <TableHead>City</TableHead>
                             <TableHead>Number of Users</TableHead>
-                            <TableHead>Rooms</TableHead>\
+                            <TableHead>Rooms</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}>
+                            <TableRow key={row.id}  className="hover:bg-grey">
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={row.id}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}

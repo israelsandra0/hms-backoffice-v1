@@ -122,7 +122,7 @@ export default function Rooms() {
                     </TableHeader>
                     <TableBody>
                         {filteredRooms.map((data) => (
-                            <TableRow key={data.id}>
+                            <TableRow key={data.id}  className="hover:bg-grey">
                                 <TableCell>{data.name}</TableCell>
                                 <TableCell>{data.locations}</TableCell>
                                 <TableCell>{data.description}</TableCell>

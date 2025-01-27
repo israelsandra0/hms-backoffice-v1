@@ -51,19 +51,19 @@ export default function HotelsOverview() {
                     <TableHead>Modules</TableHead>
                     <TableHead>Number of Clicks</TableHead>
                 </TableRow>
-                <TableRow>
+                <TableRow  className="hover:bg-grey">
                     <TableHead>Module 1</TableHead>
                     <TableCell>20 Clicks</TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow  className="hover:bg-grey">
                     <TableHead>Module 2</TableHead>
                     <TableCell>20 Clicks</TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow  className="hover:bg-grey">
                     <TableHead>Module 3</TableHead>
                     <TableCell>20 Clicks</TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow  className="hover:bg-grey">
                     <TableHead>Module 4</TableHead>
                     <TableCell>20 Clicks</TableCell>
                 </TableRow>

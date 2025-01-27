@@ -220,7 +220,7 @@ export default function HotelsPage() {
                 </TableHeader>
                 <TableBody>
                     {filteredHotels.map((hotel) => (
-                        <TableRow key={hotel?.id}>
+                        <TableRow key={hotel?.id}  className="hover:bg-grey">
                             <TableCell>
                                 <Link onClick={() => navigate(`/hotels/view/${hotel.id}`)} className="text-primary">
                                     {hotel?.name}

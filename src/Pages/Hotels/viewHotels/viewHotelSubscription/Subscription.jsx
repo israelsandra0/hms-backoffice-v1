@@ -158,7 +158,7 @@ export default function SubscriptionHistory() {
                     </TableHeader>
                     <TableBody>
                         {data.map((data) => (
-                            <TableRow key={data.id}>
+                            <TableRow key={data.id}  className="hover:bg-grey">
                                 <TableCell>{data.plan}</TableCell>
                                 <TableCell>{data.datePaid}</TableCell>
                                 <TableCell>{data.amount}</TableCell>
