@@ -14,8 +14,7 @@ export default function HotelPageUsers({ hotelId }) {
     const [searchFilter, setSearchFilter] = useState("");
     const [addUserBox, setAddUserBox] = useState(false);
 
-    const closeAddUserBox = () => setAddUserBox(false);
-
+    
     const { data: users, isLoading, isPending, refetch: fetchHotelUsers } = useQuery({
         queryKey: ["hotelUsers"],
         queryFn: async () => {
@@ -30,11 +29,15 @@ export default function HotelPageUsers({ hotelId }) {
         },
         enabled: false
     });
-
+    
     useEffect(() => {
         fetchHotelUsers()
     }, [])
-
+    
+    const closeAddUserBox = () => {
+        setAddUserBox(false)
+        fetchHotelUsers()
+    };
 
     if (isLoading) {
         return <div className="text-center flex items-center justify-center mx-auto my-5">
