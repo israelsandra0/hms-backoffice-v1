@@ -12,12 +12,7 @@ export default function UsersTable({users, hotelId, searchFilter }) {
     const columns = useMemo(() => [
         {
             header: "Name",
-            accessorKey: "fullName", // We'll create a new key 'fullName'
             cell: info => `${info.row.original.firstName} ${info.row.original.lastName}`,
-        },
-        {
-            header: "Role",
-            accessorKey: "role",
         },
         {
             header: "Location",
@@ -65,7 +60,6 @@ export default function UsersTable({users, hotelId, searchFilter }) {
                     <TableHeader className="bg-lightPrimary">
                         <TableRow>
                             <TableHead>Name</TableHead>
-                            <TableHead>Role</TableHead>
                             <TableHead>Location</TableHead>
                             <TableHead>Status</TableHead>
                         </TableRow>
