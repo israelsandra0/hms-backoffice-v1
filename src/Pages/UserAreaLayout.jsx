@@ -9,15 +9,28 @@ import SupportIcon from "@/components/icons/Support";
 import SettingsIcon from "@/components/icons/Setting";
 import { Toaster } from "@/components/ui/toaster";
 import ConfirmModal from "@/components/ConfirmModal";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Moon, Sun } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useTheme } from "@/components/theme-provider"
 
 
 
 export default function UserAreaLayout() {
 
+    const { setTheme } = useTheme()
+
     return (
         <RequireAuth>
             <Toaster />
-            <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+            <div className="grid min-h-screen dark:bg-black dark:text-white w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
 
                 {/* containing the sidebar */}
                 <div className="hidden border-r bg-muted/40 md:block">
@@ -27,7 +40,7 @@ export default function UserAreaLayout() {
                         <div className="flex-1  sidebar">
                             <nav className="grid items-start px-2 mt-6 text-sm font-medium lg:px-4">
                                 <NavLink to="/dashboard" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                    <LayoutDashboard className="text-gray-500 w-4"/>
+                                    <LayoutDashboard className="text-gray-500 w-4" />
                                     Dashboard
                                 </NavLink>
                                 <NavLink to="/hotels" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
@@ -59,7 +72,7 @@ export default function UserAreaLayout() {
                                     Support & help
                                 </NavLink>
                                 <NavLink to="/settings" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                <   SettingsIcon />
+                                    <   SettingsIcon />
                                     Setting
                                 </NavLink>
                             </nav>
