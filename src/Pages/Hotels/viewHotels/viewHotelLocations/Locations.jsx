@@ -52,7 +52,7 @@ export default function Locations({ hotelId }) {
                 </div>
             </div>
 
-            {!isPending && locations?.length && (
+            {!isPending && locations?.length > 0 && (
                 <LocationsTable locations={locations}  searchFilter={searchFilter}  />
             )}
         </div>

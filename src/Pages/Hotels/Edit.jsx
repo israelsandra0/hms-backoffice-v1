@@ -19,8 +19,8 @@ import * as yup from "yup";
 export default function EditHotelModal({ closeFn, hotelToEdit }) {
 
     const yupBuild = yup.object({
-        name: yup.string().required("Name is required"),
-        email: yup.string().required("Email is required").email(),
+        name: yup.string().required("Name is required").max(50),
+        email: yup.string().required("Email is required").email().max(50),
         website: yup.string()
         .required("Website is required")
         .test('valid-url', 'Website must be a valid URL', (value) => {
@@ -28,7 +28,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
             const urlPattern = /^(https?:\/\/|www\.)?[a-zA-Z0-9-.]+(\.[a-zA-Z]{2,})$/;
             return urlPattern.test(value);
         })
-        .nullable(),
+        .nullable().max(30),
         logo: yup.mixed().test("file", "Logo must be a file", (value) => {
             console.log(value)
             // If no file is selected, allow the existing logo to pass validation
@@ -216,21 +216,21 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                         <div className="mb-2">
                             <Label htmlFor="name">Name</Label>
                             <br />
-                            <Input {...register("name")} id="name" />
+                            <Input {...register("name")} id="name"  maxLength='50' />
                             <p>{errors.name?.message}</p>
                         </div>
 
                         <div className="mb-2">
                             <Label htmlFor="email">Email</Label>
                             <br />
-                            <Input {...register("email")} type="email" id="email" />
+                            <Input {...register("email")} type="email" id="email"  maxLength='50'/>
                             <p>{errors.email?.message}</p>
                         </div>
 
                         <div className="mb-2">
                             <Label htmlFor="website">Website</Label>
                             <br />
-                            <Input {...register("website")} id="website" />
+                            <Input {...register("website")} id="website"  maxLength='30'/>
                             <p>{errors.website?.message}</p>
                         </div>
                     </div>

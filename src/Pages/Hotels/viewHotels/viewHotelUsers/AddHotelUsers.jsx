@@ -19,13 +19,13 @@ import { useToast } from "@/hooks/use-toast";
 export default function AddHotelUsers({ closeFn, hotelId }) {
     // Yup schema
     const yupBuild = yup.object({
-        firstName: yup.string().required("First Name is required"),
-        lastName: yup.string().required("Last Name is required"),
-        email: yup.string().required("Email is required").email(),
+        firstName: yup.string().required("First Name is required").max(25),
+        lastName: yup.string().required("Last Name is required").max(25),
+        email: yup.string().required("Email is required").email().max(50),
         auto_generate_password: yup.boolean(),
         password: yup.string().when('auto_generate_password', {
             is: false,
-            then: (password) => password.required('Password is required').min(6).max(25),
+            then: (password) => password.required('Password is required').min(6).max(50),
             otherwise: (password) => password.optional()
         }),
         phone: yup.string().required("Phone number is required").min(10).max(15),
@@ -154,21 +154,21 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
                         <div className="mb-2">
                             <Label htmlFor="firstName">First Name</Label>
                             <br />
-                            <Input {...register("firstName")} id="firstName" />
+                            <Input {...register("firstName")} id="firstName"  maxLength='25'/>
                             <p>{errors.firstName?.message}</p>
                         </div>
 
                         <div className="mb-2">
                             <Label htmlFor="lastName">Last Name</Label>
                             <br />
-                            <Input {...register("lastName")} id="lastName" />
+                            <Input {...register("lastName")} id="lastName"  maxLength='25'/>
                             <p>{errors.lastName?.message}</p>
                         </div>
 
                         <div className="mb-2">
                             <Label htmlFor="email">Email</Label>
                             <br />
-                            <Input {...register("email")} type="email" id="email" />
+                            <Input {...register("email")} type="email" id="email"  maxLength='50'/>
                             <p>{errors.email?.message}</p>
                         </div>
 

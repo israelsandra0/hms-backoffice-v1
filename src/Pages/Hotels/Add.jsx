@@ -39,8 +39,8 @@ import CountryNames from "@/components/ui/country-names-input";
 export default function Add() {
     // Yup schema
     const yupBuild = yup.object({
-        name: yup.string().required("Name is required"),
-        email: yup.string().required("Email is required").email(),
+        name: yup.string().required("Name is required").max(50),
+        email: yup.string().required("Email is required").email().max(50),
         website: yup.string()
         .required("Website is required")
         .test('valid-url', 'Website must be a valid URL', (value) => {
@@ -48,12 +48,12 @@ export default function Add() {
             const urlPattern = /^(https?:\/\/|www\.)?[a-zA-Z0-9-.]+(\.[a-zA-Z]{2,})$/;
             return urlPattern.test(value);
         })
-        .nullable(),
+        .nullable().max(50),
         phone: yup.string().required("Phone number is required").min(10).max(15),
-        address: yup.string().required("Address is required"),
+        address: yup.string().required("Address is required").max(120),
         country: yup.string().required("Country is required"),
         state: yup.string().required("State is required"),
-        city: yup.string().required("City is required"),
+        city: yup.string().required("City is required").max(25),
         logo: yup.mixed().required("Logo is required")
         //     return value && value.size <= 1000000}),
     });
@@ -302,21 +302,21 @@ export default function Add() {
                             <div className="mb-2">
                                 <Label htmlFor="name">Name of hotel</Label>
                                 <br />
-                                <Input {...register("name")} id="name" />
+                                <Input {...register("name")} id="name" maxLength='50'/>
                                 <p>{errors.name?.message}</p>
                             </div>
 
                             <div className="mb-2">
                                 <Label htmlFor="email">Email</Label>
                                 <br />
-                                <Input {...register("email")} type="email" id="email" />
+                                <Input {...register("email")} type="email" id="email" maxLength='50'/>
                                 <p>{errors.email?.message}</p>
                             </div>
 
                             <div className="mb-2">
                                 <Label htmlFor="website">Website</Label>
                                 <br />
-                                <Input {...register("website")} id="website" />
+                                <Input {...register("website")} id="website" maxLength='30' />
                                 <p>{errors.website?.message}</p>
                             </div>
 
@@ -336,7 +336,7 @@ export default function Add() {
                             <div className="mb-2">
                                 <Label htmlFor="address">Address</Label>
                                 <br />
-                                <Input {...register("address")} id="address" />
+                                <Input {...register("address")} id="address" maxLength='120'/>
                                 <p>{errors.address?.message}</p>
                             </div>
 
@@ -370,7 +370,7 @@ export default function Add() {
                                 <div className="mb-2 w-full">
                                     <Label htmlFor="city">City</Label>
                                     <br />
-                                    <Input {...register("city")} id="city" />
+                                    <Input {...register("city")} id="city" maxLength='25'/>
                                     <p>{errors.city?.message}</p>
                                 </div>
                             </div>
