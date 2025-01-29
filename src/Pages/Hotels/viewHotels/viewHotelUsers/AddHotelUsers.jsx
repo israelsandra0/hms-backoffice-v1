@@ -15,6 +15,7 @@ import IntlPhoneField from "@/components/ui/intlphone-field";
 import PasswordField from "@/components/ui/password-field";
 import { useToast } from "@/hooks/use-toast";
 
+
 export default function AddHotelUsers({ closeFn, hotelId }) {
     // Yup schema
     const yupBuild = yup.object({
@@ -24,7 +25,8 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
         auto_generate_password: yup.boolean(),
         password: yup.string().when('auto_generate_password', {
             is: false,
-            then: (password) => password.required('Password is requiored').min(6).max(25)
+            then: (password) => password.required('Password is required').min(6).max(25),
+            otherwise: (password) => password.optional()
         }),
         phone: yup.string().required("Phone number is required").min(10).max(15),
     });
@@ -37,6 +39,7 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
         formState: { errors },
         control,
         getValues,
+        setValue
     } = useForm({
         defaultValues: {
             firstName: "",
@@ -44,7 +47,7 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
             email: "",
             phone: "",
             password: "",
-            auto_generate_password: true
+            auto_generate_password: false
         },
         resolver: yupResolver(yupBuild),
     });
@@ -52,10 +55,12 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
     const [errorMessage, setErrorMessage] = useState("");
     const [disabledButton, setDisabledButton] = useState(false);
     const { toast } = useToast()
-    const [generatePassword, setGeneratePassword] = useState(true)
+    const [autoGeneratePassword, setGeneratePassword] = useState(false)
 
-    const handleCheckboxChange = () => {
-        setGeneratePassword(!generatePassword);
+
+    const handleCheckboxChange = (e) => {
+        setGeneratePassword(e.target.checked);
+        setValue('auto_generate_password', e.target.checked)
     };
 
 
@@ -73,7 +78,7 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
                     email: userInput.email,
                     phone: userInput.phone,
                     password: userInput.password,
-                    auto_generate_password: userInput.auto_generate
+                    auto_generate_password: userInput.auto_generate_password
                 };
                 const res = await post(`/hotels/${hotelId.id}/users/store`, userData);
 
@@ -125,18 +130,18 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
 
     return (
         <div className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
-            <CardContent className='w-[30%] rounded-[24px] text-center mx-auto border-none bg-white py-8'>
+            <CardContent style={{ borderRadius: '16px' }} className='fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg dark:border-neutral-800 dark:bg-neutral-950'>
                 {!!errorMessage?.length && (
                     <Alert className="alert text-red-900 border-0 h-full  bg-[#fee] mb-4">
                         <AlertDescription>{errorMessage}</AlertDescription>
                     </Alert>
                 )}
 
-                <div className="flex gap-20">
+                <div className="flex mt-4">
                     <Link>
                         <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={closeFn} />
                     </Link>
-                    <h1 className="text-[1.3rem] font-bold mb-2">Add New Users</h1>
+                    <h1 className="text-[1.3rem] font-bold mx-auto">Add New Users</h1>
                 </div>
 
                 <form
@@ -146,17 +151,18 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
                     {/* {JSON.stringify(errors)} */}
                     <div className="mt-4">
 
-                        <div className="flex gap-2 mb-2">
-                            <div>
-                                <Label htmlFor="firstName">First Name</Label>
-                                <Input {...register("firstName")} id="firstName" />
-                                <p>{errors.firstName?.message}</p>
-                            </div>
-                            <div>
-                                <Label htmlFor="lastName">Last Name</Label>
-                                <Input {...register("lastName")} id="lastName" />
-                                <p>{errors.lastName?.message}</p>
-                            </div>
+                        <div className="mb-2">
+                            <Label htmlFor="firstName">First Name</Label>
+                            <br />
+                            <Input {...register("firstName")} id="firstName" />
+                            <p>{errors.firstName?.message}</p>
+                        </div>
+
+                        <div className="mb-2">
+                            <Label htmlFor="lastName">Last Name</Label>
+                            <br />
+                            <Input {...register("lastName")} id="lastName" />
+                            <p>{errors.lastName?.message}</p>
                         </div>
 
                         <div className="mb-2">
@@ -179,7 +185,7 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
                             <p>{errors.phone?.message}</p>
                         </div>
 
-                        {generatePassword && (
+                        {!autoGeneratePassword && (
 
                             <div>
                                 <Label htmlFor="password">Password</Label>
@@ -196,7 +202,7 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
                         )}
                         <div className="mt-2 flex items-center">
                             <input type="checkbox"
-                                checked={!generatePassword}
+                                checked={autoGeneratePassword}
                                 onChange={handleCheckboxChange}
                             />
                             <h2 className="ml-2 text-[12px]">
@@ -217,6 +223,99 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
                     </Button>
                 </form>
             </CardContent>
+
+            {/* <Dialog>
+
+                <DialogTrigger asChild>
+                    <Button variant="outline">Edit Profile</Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+
+                    <form className="hotelForm text-left"
+                        onSubmit={handleSubmit(mutate)}
+                    >
+                        <DialogHeader>
+                            <DialogTitle>Edit profile</DialogTitle>
+                            <DialogDescription>
+                                Make changes to your profile here. Click save when you're done.
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <div className="mt-4 mb-4">
+
+                            <div className="mb-2">
+                                <Label htmlFor="firstName">First Name</Label>
+                                <br />
+                                <Input {...register("firstName")} id="firstName" />
+                                <p>{errors.firstName?.message}</p>
+                            </div>
+
+                            <div className="mb-2">
+                                <Label htmlFor="lastName">Last Name</Label>
+                                <br />
+                                <Input {...register("lastName")} id="lastName" />
+                                <p>{errors.lastName?.message}</p>
+                            </div>
+
+                            <div className="mb-2">
+                                <Label htmlFor="email">Email</Label>
+                                <br />
+                                <Input {...register("email")} type="email" id="email" />
+                                <p>{errors.email?.message}</p>
+                            </div>
+
+                            <div className="mb-2">
+                                <Label htmlFor="phone">Phone</Label>
+                                <br />
+                                <Controller
+                                    name="phone"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <IntlPhoneField {...field} id="phone" />
+                                    )}
+                                />
+                                <p>{errors.phone?.message}</p>
+                            </div>
+
+                            {generatePassword && (
+
+                                <div>
+                                    <Label htmlFor="password">Password</Label>
+                                    <Controller
+                                        name="password"
+                                        control={control}
+                                        render={({ field }) => <PasswordField {...field} />}
+                                    />
+
+
+                                    <p className="text-red-700">{errors.password?.message}</p>
+
+                                </div>
+                            )}
+                            <div className="mt-2 flex items-center">
+                                <input type="checkbox"
+                                    checked={!generatePassword}
+                                    onChange={handleCheckboxChange}
+                                />
+                                <h2 className="ml-2 text-[12px]">
+                                    auto-generate password?
+                                </h2>
+                            </div>
+
+                        </div>
+                        <Button
+                            variant="primary"
+                            disabled={disabledButton}
+                            type="submit"
+                            className="w-full p-[16px] text-[16px]"
+                        >
+                            {disabledButton ? "Submitting..." : "Submit"}
+                        </Button>
+                    </form>
+                </DialogContent>
+            </Dialog> */}
+
+
         </div>
     );
 }
