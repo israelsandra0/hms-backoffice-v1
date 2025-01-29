@@ -30,6 +30,7 @@ import ViewHotelsPage from "./pages/hotels/viewHotels/ViewHotelsPage";
 import Subscription from "./pages/subscriptionPage/Subscription";
 import SubscriptionPlan from "./pages/subscriptionPage/SubscriptionPlan";
 import AddSubscriptionPage from "./pages/hotels/viewHotels/viewHotelSubscription/AddSubscription";
+import { ThemeProvider } from "./components/theme-provider";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -67,10 +68,12 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </AuthProvider>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </StrictMode>
 );
