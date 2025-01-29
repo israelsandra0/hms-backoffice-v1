@@ -1,14 +1,15 @@
 import Pagination from "@/components/Pagination";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { flexRender, useReactTable } from "@tanstack/react-table";
-import {useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { getCoreRowModel, getPaginationRowModel } from "@tanstack/react-table";
 
-export default function UsersTable({users, hotelId, searchFilter }) {
+
+export default function UsersTable({ users, hotelId, searchFilter }) {
 
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10
-    
+
     const columns = useMemo(() => [
         {
             header: "Name",
@@ -23,18 +24,17 @@ export default function UsersTable({users, hotelId, searchFilter }) {
             accessorKey: hotelId?.isActive ? "Active" : "Inactive",
         }
     ], []);
-   
+
 
     const filteredUsers = useMemo(() => {
         if (!searchFilter) return users;
 
         const lowerCaseFilter = searchFilter.toLowerCase();
 
-        return users.filter(user => 
-            user.name.toLowerCase().includes(lowerCaseFilter) ||
-            user.role.toLowerCase().includes(lowerCaseFilter) 
-            // user.state.toLowerCase().includes(lowerCaseFilter)
+        return users.filter(user =>
+            `${user.firstName} ${user.lastName}`.toLowerCase().includes(lowerCaseFilter)
         );
+
     }, [users, searchFilter]);
 
     const table = useReactTable({
@@ -66,7 +66,7 @@ export default function UsersTable({users, hotelId, searchFilter }) {
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}  className="hover:bg-grey">
+                            <TableRow key={row.id} className="hover:bg-grey">
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={row.id}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
