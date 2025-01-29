@@ -1,12 +1,14 @@
 import { get } from "@/functions";
-import {  useQuery } from "@tanstack/react-query";
-import { Search } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Search, User2, UserCircle } from "lucide-react";
 import { useState } from "react";
 import Spinner from "@/components/ui/spinner";
 import { useEffect } from "react";
 import UsersTable from "./UsersTable";
 import { Button } from "@/components/ui/button";
 import AddHotelUsers from "./AddHotelUsers";
+import SubscriptionImg from "@/components/icons/SubscriptionImg";
+import { RiUser3Fill } from "@remixicon/react";
 
 
 export default function HotelPageUsers({ hotelId }) {
@@ -48,9 +50,12 @@ export default function HotelPageUsers({ hotelId }) {
     return (
         <div>
             {!users?.length && (
-                <div className=" text-center pb-6">
+                <div className='mx-auto items-center mt-16 grid place-items-center text-center'>
+                    <div className="bg-grey w-[170px] grid place-items-center  h-[170px] rounded-[50%]">
+                        <RiUser3Fill className='w-[100px] h-[100px] text-primary' />
+                    </div>
                     <h1 className="text-[1.5rem] my-6  font-bold">No User Found!</h1>
-                    <Button variant="primary" onClick={() => setAddUserBox(true)}>
+                    <Button variant="primary" className='mb-[7rem]' onClick={() => setAddUserBox(true)}>
                         + Add
                     </Button>
                 </div>
