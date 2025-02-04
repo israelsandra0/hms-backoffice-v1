@@ -121,7 +121,6 @@ export default function ViewHotelsPage() {
     );
 
     if (isLoading) {
-        console.log(hotel)
         return (
             <>
                 <UserAreaHeader pages={breadcrumb} />
