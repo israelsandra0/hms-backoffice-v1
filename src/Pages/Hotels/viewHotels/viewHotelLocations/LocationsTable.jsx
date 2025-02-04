@@ -24,11 +24,11 @@ export default function LocationsTable({locations, searchFilter }) {
         },
         {
             header: "City",
-            accessorKey: "location_counts",
+            accessorKey: "city",
         },
         {
             header: "Number of Users",
-            accessorKey: "location_counts",
+            accessorKey: "users_count",
         },
         {
             header: "Rooms",
