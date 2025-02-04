@@ -14,6 +14,8 @@ const badgeVariants = cva(
         error: "bg-[#FEECEB] text-[#DF362B]",
         //ATSL success
         success: "bg-[#E7F8F0] text-[#27AE60]",
+        //ATSL gray
+        gray: "bg-gray-200 text-gray-600",
         secondary:
           "border-transparent bg-neutral-100 text-neutral-900 hover:bg-neutral-100/80 dark:bg-neutral-800 dark:text-neutral-50 dark:hover:bg-neutral-800/80",
         destructive:
