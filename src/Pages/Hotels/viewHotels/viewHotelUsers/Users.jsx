@@ -79,7 +79,7 @@ export default function HotelPageUsers({ hotelId }) {
             )}
 
             {!isPending && users?.length > 0 && (
-                <UsersTable users={users} hotelId={hotelId} searchFilter={searchFilter} />
+                <UsersTable users={users} hotelId={hotelId} pageUpdate={fetchHotelUsers} searchFilter={searchFilter} />
             )}
 
             {!!addUserBox && (
