@@ -254,7 +254,28 @@ export default function UsersTable({
                             className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400"
                             onClick={() => setSelectedUser(null)}
                         />
-                        
+                        <div className="grid justify-center">
+                            <div className="text-primary bg-lightPrimary rounded-full w-[80px] h-[80px] text-[2rem] font-bold items-center flex justify-center">
+                                <p>{`${selectedUser.firstName.charAt(0)}`}</p>
+                            </div>
+                            <b>{`${selectedUser.firstName} ${selectedUser.lastName}`}</b>
+                        </div>
+                        <p>
+                            <strong>First-Name:</strong> {`${selectedUser.firstName}`}
+                        </p>
+                        <p>
+                            <strong>Last-Name:</strong> {` ${selectedUser.lastName}`}
+                        </p>
+                        <p>
+                            <strong>Email: </strong>
+                            {selectedUser.email ? `${selectedUser.email.slice(0, 2)}${"*".repeat(selectedUser.email.indexOf("@") - 1)}
+                            ${selectedUser.email.slice(selectedUser.email.indexOf("@"))}` : "N/A"}
+                        </p>
+                        <p>
+                            <strong>Phone:</strong>{" "}
+                            {selectedUser.phone ? `${selectedUser.phone.slice(0, 2)}${"*".repeat(selectedUser.phone.length - 4)}
+                            ${selectedUser.phone.slice(-4)}` : "N/A"}
+                        </p>
                     </CardContent>
                 </Card>
             )}
