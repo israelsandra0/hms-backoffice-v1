@@ -5,6 +5,7 @@ import { useState } from "react";
 import Spinner from "@/components/ui/spinner";
 import LocationsTable from "./LocationsTable";
 import { useEffect } from "react";
+import { RiUser3Fill } from "@remixicon/react";
 
 
 export default function Locations({ hotelId }) {
@@ -39,18 +40,28 @@ export default function Locations({ hotelId }) {
 
     return (
         <div>
-            <div className="flex justify-between mx-6 my-8 ">
-                <div className="mb-4">
-                    <Search className="text-gray-300 w-4 absolute mt-[10px] ml-4" />
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        value={searchFilter}
-                        onChange={(e) => setSearchFilter(e.target.value)}
-                        className="border border-b-gray-300 pl-9 rounded px-4 py-2 w-[300px] outline-none"
-                    />
+            {!locations?.length && (
+                <div className='mx-auto items-center mt-16 grid place-items-center text-center'>
+                    <div className="bg-grey w-[170px] grid place-items-center  h-[170px] rounded-[50%]">
+                        <RiUser3Fill className='w-[100px] h-[100px] text-primary' />
+                    </div>
+                    <h1 className="text-[1.5rem] my-6  font-bold">No Location Found!</h1>
                 </div>
-            </div>
+            )}
+            {!!locations?.length && (
+                <div className="flex justify-between mx-6 my-8 ">
+                    <div className="mb-4">
+                        <Search className="text-gray-300 w-4 absolute mt-[10px] ml-4" />
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            value={searchFilter}
+                            onChange={(e) => setSearchFilter(e.target.value)}
+                            className="border border-b-gray-300 pl-9 rounded px-4 py-2 w-[300px] outline-none"
+                        />
+                    </div>
+                </div>
+            )}
 
             {!isPending && locations?.length > 0 && (
                 <LocationsTable locations={locations}  searchFilter={searchFilter}  />
