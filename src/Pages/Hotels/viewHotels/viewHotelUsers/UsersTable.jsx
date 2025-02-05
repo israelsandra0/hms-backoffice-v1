@@ -22,14 +22,18 @@ import { Badge } from "@/components/ui/badge";
 import { RiStarFill } from "@remixicon/react";
 import { useConfirm } from "@/hooks/use-confirm";
 import { Card, CardContent } from "@/components/ui/card";
+import { apiDelete, post } from "@/functions";
+import { toast } from "@/hooks/use-toast";
 
-
-
-export default function UsersTable({ users, hotelId, searchFilter }) {
-
+export default function UsersTable({
+    users,
+    hotelId,
+    searchFilter,
+    pageUpdate,
+}) {
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10;
-    const { confirmAction } = useConfirm()
+    const { confirmAction } = useConfirm();
     const [selectedUser, setSelectedUser] = useState(null);
 
     const columns = useMemo(
@@ -39,7 +43,10 @@ export default function UsersTable({ users, hotelId, searchFilter }) {
                 cell: (info) => {
                     const isAdmin = info.row.original.isAdmin;
                     return (
-                        <span className="cursor-pointer">
+                        <span
+                            className="cursor-pointer"
+                            onClick={() => setSelectedUser(info.row.original)}
+                        >
                             {`${info.row.original.firstName} ${info.row.original.lastName}`}
                             {isAdmin === 1 && (
                                 <RiStarFill className="inline rounded w-7 ml-2 p-1 bg-lightPrimary text-primary" />
@@ -52,33 +59,34 @@ export default function UsersTable({ users, hotelId, searchFilter }) {
                 header: "Location",
                 cell: (info) => {
                     const hotelLocation = info.row.original.hotelLocation;
-
                     return hotelLocation?.state ? (
                         <span>{`${hotelLocation.city}, ${hotelLocation.state}, ${hotelLocation.country}`}</span>
                     ) : (
                         <span></span>
                     );
-                }
+                },
             },
             {
                 header: "Status",
                 cell: (info) => {
                     const status = info.row.original.isActive;
-
                     return status ? (
-                        <span> <Badge variant="success">Active</Badge></span>
+                        <span>
+                            <Badge variant="success">Active</Badge>
+                        </span>
                     ) : (
-                        <span><Badge variant="gray">Inactive</Badge></span>
+                        <span>
+                            <Badge variant="gray">Inactive</Badge>
+                        </span>
                     );
-                }
+                },
             },
             {
                 id: "actions",
                 enableHiding: false,
                 cell: ({ row }) => {
-                    const location = row.original;
+                    const user = row.original;
                     const isAdmin = row.original.isAdmin;
-
                     return (
                         <span>
                             {isAdmin === 1 && (
@@ -87,12 +95,19 @@ export default function UsersTable({ users, hotelId, searchFilter }) {
                                         <MoreVertical className="cursor-pointer" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56 cursor-pointer">
-                                        <DropdownMenuItem onClick={() => handleActionClick(hotelId.id, hotelId.isActive ? 'Activate' : 'Deactivate')}>
-                                            <span>{hotelId.isActive ? 'Activate' : 'Deactivate'}</span>
+                                        <DropdownMenuItem
+                                            onClick={() =>
+                                                handleActionClick(
+                                                    user.id,
+                                                    user.isActive ? "Deactivate" : "Activate"
+                                                )
+                                            }
+                                        >
+                                            <span>{user.isActive ? "Deactivate" : "Activate"}</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem
-                                            onClick={() => handleActionClick(location.id, "delete")}
+                                            onClick={() => handleActionClick(user.id, "delete")}
                                         >
                                             <span>Delete</span>
                                         </DropdownMenuItem>
@@ -112,79 +127,81 @@ export default function UsersTable({ users, hotelId, searchFilter }) {
             toast({
                 success: true,
                 duration: 5000,
-                title: isActivate ? 'User activated successfully!' : 'User deactivated successfully!'
+                title: isActivate
+                    ? "User activated successfully!"
+                    : "User deactivated successfully!",
             });
-            fetchAllHotels();
+            pageUpdate();
         } else {
             toast({
                 error: true,
                 duration: 5000,
-                title: 'Failed to update user staus. Please try again.'
+                title: "Failed to update user status. Please try again.",
             });
         }
-    }
-
+    };
 
     const confirmModalSetup = {
         delete: {
-            title: 'Are you sure?',
-            message: "you're about to delete this user, This action cannot be undone.",
-            confirmButtonText: 'Delete',
-            buttonVariant: 'error',
-            cancelButtonText: 'Cancel'
+            title: "Are you sure?",
+            message:
+                "You're about to delete this user. This action cannot be undone.",
+            confirmButtonText: "Delete",
+            buttonVariant: "error",
+            cancelButtonText: "Cancel",
         },
         activate: {
-            title: 'Activate User?',
-            message: 'This action will activate the user and allow it to be visible to users.',
-            confirmButtonText: 'Activate',
-            buttonVariant: 'primary',
-            cancelButtonText: 'Cancel'
+            title: "Activate User?",
+            message:
+                "This action will activate the user and allow it to be visible to users.",
+            confirmButtonText: "Activate",
+            buttonVariant: "primary",
+            cancelButtonText: "Cancel",
         },
         deactivate: {
-            title: 'Deactivate User?',
-            message: 'This action will deactivate the user and allow it to be invisible to users.',
-            confirmButtonText: 'Deactivate',
-            buttonVariant: 'primary',
-            cancelButtonText: 'Cancel'
-        }
-    }
-
-    // Handle button click for delete/activation/deactivation
-    const handleActionClick = (hotelId, actionType) => {
-        confirmAction({
-            ...confirmModalSetup[actionType.toLowerCase()],
-            isDestructive: actionType.toLowerCase() === 'delete',
-            confirmFn: () => handleConfirmation(hotelId, actionType),
-            completeFn: (res) => {
-                if (actionType.toLowerCase() === 'delete') {
-                    handleDeleteResponse(res)
-                }
-                else {
-                    handleStatusUpdateResponse(res, actionType == 'Activate')
-                }
-            }
-
-        })
+            title: "Deactivate User?",
+            message:
+                "This action will deactivate the user and make it invisible to users.",
+            confirmButtonText: "Deactivate",
+            buttonVariant: "primary",
+            cancelButtonText: "Cancel",
+        },
     };
 
-    //handle delete, activation / deactivation fetching
-    const handleConfirmation = async (hotelId, hotelAction) => {
+    const handleActionClick = (userId, actionType) => {
+        confirmAction({
+            ...confirmModalSetup[actionType.toLowerCase()],
+            isDestructive: actionType.toLowerCase() === "delete",
+            confirmFn: () => handleConfirmation(userId, actionType),
+            completeFn: (res) => {
+                if (actionType.toLowerCase() === "delete") {
+                    handleDeleteResponse(res);
+                } else {
+                    handleStatusUpdateResponse(res, actionType === "Activate");
+                }
+            },
+        });
+    };
 
-        if (hotelAction === 'Activate' || hotelAction === 'Deactivate') {
-            return await post(`/hotels/update-active-status/${hotelId}`, { isActive: hotelAction === 'Activate' })
-        } else {
-            return await apiDelete(`/hotels/destroy/${hotelId}`)
-
+    // handle delete, activation / deactivation fetching
+    const handleConfirmation = async (userId, hotelAction) => {
+        if (hotelAction === "Activate" || hotelAction === "Deactivate") {
+            return await post(`/hotels/${hotelId.id}/users/${userId}/change-status`, {
+                is_active: hotelAction === "Activate",
+            });
+        } else if (hotelAction === "delete") {
+            return await apiDelete(`/hotels/destroy/${hotelId}`);
         }
-    }
+    };
 
     const filteredUsers = useMemo(() => {
         if (!searchFilter) return users;
 
         const lowerCaseFilter = searchFilter.toLowerCase();
-
-        return users.filter(user =>
-            `${user.firstName} ${user.lastName}`.toLowerCase().includes(lowerCaseFilter)
+        return users.filter((user) =>
+            `${user.firstName} ${user.lastName}`
+                .toLowerCase()
+                .includes(lowerCaseFilter)
         );
     }, [users, searchFilter]);
 
@@ -218,7 +235,7 @@ export default function UsersTable({ users, hotelId, searchFilter }) {
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id} className="hover:bg-grey" onClick={() => setSelectedUser(row.original)}>
+                            <TableRow key={row.id} className="hover:bg-grey">
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={row.id}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -232,18 +249,12 @@ export default function UsersTable({ users, hotelId, searchFilter }) {
 
             {!!selectedUser && (
                 <Card className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
-                    <CardContent className='fixed rounded sm:rounded-xl md:rounded-xl  lg:rounded-xl left-[50%] top-[50%] z-50 grid w-[400px] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]  dark:border-neutral-800 dark:bg-neutral-950'>
-                        <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={() => setSelectedUser(null)} />
-                        <div className="grid justify-center">
-                            <div  className="text-primary bg-lightPrimary rounded-full w-[80px] h-[80px] text-[2rem] font-bold items-center flex justify-center">
-                                <p>{`${selectedUser.firstName.charAt(0)}`}</p>
-                            </div>
-                            <b>{`${selectedUser.firstName} ${selectedUser.lastName}`}</b>
-                        </div>
-                        <p><strong>First-Name:</strong> {`${selectedUser.firstName}`}</p>
-                        <p><strong>Last-Name:</strong> {` ${selectedUser.lastName}`}</p>
-                        <p><strong>Email:</strong> {selectedUser.email}</p>
-                        <p><strong>Phone:</strong> {selectedUser.phone ? `*** **** ${selectedUser.phone.slice(-4)}` : 'N/A'}</p>
+                    <CardContent className="fixed rounded sm:rounded-xl md:rounded-xl lg:rounded-xl left-[50%] top-[50%] z-50 grid w-[400px] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-white p-6 shadow-lg duration-200">
+                        <X
+                            className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400"
+                            onClick={() => setSelectedUser(null)}
+                        />
+                        
                     </CardContent>
                 </Card>
             )}
