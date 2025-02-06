@@ -19,7 +19,7 @@ export default function HotelPageUsers({ hotelId }) {
     const { data: users, isLoading, isPending, refetch: fetchHotelUsers } = useQuery({
         queryKey: ["hotelUsers"],
         queryFn: async () => {
-            const res = await get(`/hotels/${hotelId}/users`);
+            const res = await get(`/hotels/${hotelId.id}/users`);
             if (!res.ok) {
                 throw new Error("Failed to fetch hotel users data");
             }

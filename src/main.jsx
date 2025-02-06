@@ -23,7 +23,6 @@ import Users from "./Pages/Users";
 import HotelsOverview from "./pages/hotels/viewHotels/Overview";
 import HotelPageUsers from "./pages/hotels/viewHotels/viewHotelUsers/Users";
 import Locations from "./pages/hotels/viewHotels/viewHotelLocations/Locations";
-import Rooms from "./pages/hotels/viewHotels/RoomType";
 import SubscriptionHistory from "./pages/hotels/viewHotels/viewHotelSubscription/Subscription";
 import PageSettings from "./pages/hotels/viewHotels/Settings";
 import ViewHotelsPage from "./pages/hotels/viewHotels/ViewHotelsPage";
@@ -31,6 +30,7 @@ import Subscription from "./pages/subscriptionPage/Subscription";
 import SubscriptionPlan from "./pages/subscriptionPage/SubscriptionPlan";
 import AddSubscriptionPage from "./pages/hotels/viewHotels/viewHotelSubscription/AddSubscription";
 import { ThemeProvider } from "./components/theme-provider";
+import Rooms from "./pages/hotels/viewHotels/viewHotelRooms/Rooms";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

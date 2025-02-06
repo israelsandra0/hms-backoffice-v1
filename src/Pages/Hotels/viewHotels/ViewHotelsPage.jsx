@@ -21,7 +21,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HotelsOverview from "./Overview";
 import HotelPageUsers from "./viewHotelUsers/Users";
 import Locations from "./viewHotelLocations/Locations";
-import Rooms from "./RoomType";
 import SubscriptionHistory from "./viewHotelSubscription/Subscription";
 import PageSettings from "./Settings";
 import { Badge } from "@/components/ui/badge";
@@ -30,18 +29,11 @@ import EditHotelModal from "../Edit";
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import Rooms from "./viewHotelRooms/Rooms";
 
 export default function ViewHotelsPage() {
     const navigate = useNavigate();
@@ -208,7 +200,7 @@ export default function ViewHotelsPage() {
                     </TabsContent>
                     <TabsContent value={validTabs[3]}>
                         <Card>
-                            <Rooms />
+                            <Rooms hotelId={hotel.id}/>
                         </Card>
                     </TabsContent>
                     <TabsContent value={validTabs[4]}>
