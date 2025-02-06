@@ -1,13 +1,12 @@
 import { get } from "@/functions";
 import { useQuery } from "@tanstack/react-query";
-import { Search, User2, UserCircle } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState } from "react";
 import Spinner from "@/components/ui/spinner";
 import { useEffect } from "react";
 import UsersTable from "./UsersTable";
 import { Button } from "@/components/ui/button";
 import AddHotelUsers from "./AddHotelUsers";
-import SubscriptionImg from "@/components/icons/SubscriptionImg";
 import { RiUser3Fill } from "@remixicon/react";
 
 
@@ -20,13 +19,11 @@ export default function HotelPageUsers({ hotelId }) {
     const { data: users, isLoading, isPending, refetch: fetchHotelUsers } = useQuery({
         queryKey: ["hotelUsers"],
         queryFn: async () => {
-            // setLocations([])
-            const res = await get(`/hotels/${hotelId.id}/users`);
+            const res = await get(`/hotels/${hotelId}/users`);
             if (!res.ok) {
                 throw new Error("Failed to fetch hotel users data");
             }
             const response = await res.json();
-            //setLocations(response.data)
             return response.data;
         },
         enabled: false
