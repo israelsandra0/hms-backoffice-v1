@@ -17,7 +17,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreVertical, Star, StarHalf, StarIcon, X } from "lucide-react";
+import { MoreVertical, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { RiStarFill } from "@remixicon/react";
 import { useConfirm } from "@/hooks/use-confirm";
@@ -255,10 +255,11 @@ export default function UsersTable({
                             onClick={() => setSelectedUser(null)}
                         />
                         <div className="grid justify-center">
-                            <div className="text-primary bg-lightPrimary rounded-full w-[80px] h-[80px] text-[2rem] font-bold items-center flex justify-center">
+                            <div className="text-primary mb-2 bg-lightPrimary rounded-full w-[80px] h-[80px] text-[2rem] font-bold items-center flex justify-center">
                                 <p>{`${selectedUser.firstName.charAt(0)}`}</p>
                             </div>
                             <b>{`${selectedUser.firstName} ${selectedUser.lastName}`}</b>
+                            {selectedUser?.isAdmin && <Badge variant="primary" className='mx-auto mt-2'>Admin</Badge>}
                         </div>
                         <p>
                             <strong>First-Name:</strong> {`${selectedUser.firstName}`}
