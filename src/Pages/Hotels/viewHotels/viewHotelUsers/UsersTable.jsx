@@ -273,7 +273,7 @@ export default function UsersTable({
                         </p>
                         <p>
                             <strong>Phone:</strong>{" "}
-                            {selectedUser.phone ? `${selectedUser.phone.slice(0, 2)}${"*".repeat(selectedUser.phone.length - 4)}
+                            {selectedUser.phone ? `${selectedUser.phone.slice(0, 6)}${"*".repeat(selectedUser.phone.length - 4)}
                             ${selectedUser.phone.slice(-4)}` : "N/A"}
                         </p>
                     </CardContent>
