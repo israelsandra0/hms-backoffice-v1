@@ -86,7 +86,7 @@ export default function LoginPage() {
 
 					return null;
 				}
-				if (res.status === 500) {
+				if (res.status >= 500) {
 					setDisabledButton(false);
 					setErrorMessage("An error occurred, please try again");
 					return null;
