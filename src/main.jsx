@@ -18,7 +18,7 @@ import Account from "./Pages/Account";
 import Reports from "./Pages/Reports";
 import Communication from "./Pages/Communication";
 import Support from "./Pages/Support";
-import Settings from "./Pages/Settings";
+import Settings from "./pages/settings/AccessControl";
 import Users from "./Pages/Users";
 import HotelsOverview from "./pages/hotels/viewHotels/Overview";
 import HotelPageUsers from "./pages/hotels/viewHotels/viewHotelUsers/Users";
@@ -31,6 +31,7 @@ import SubscriptionPlan from "./pages/subscriptionPage/SubscriptionPlan";
 import AddSubscriptionPage from "./pages/hotels/viewHotels/viewHotelSubscription/AddSubscription";
 import { ThemeProvider } from "./components/theme-provider";
 import Rooms from "./pages/hotels/viewHotels/viewHotelRooms/Rooms";
+import AccessControl from "./pages/settings/AccessControl";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -58,7 +59,7 @@ const router = createBrowserRouter(
         <Route path="/reports" element={<Reports />} />
         <Route path="/communication" element={<Communication />} />
         <Route path="/support" element={<Support />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/access_control" element={<AccessControl />} />
       </Route>
     </Route>
   )
