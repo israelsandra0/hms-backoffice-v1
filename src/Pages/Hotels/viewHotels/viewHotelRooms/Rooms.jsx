@@ -14,7 +14,6 @@ export default function Rooms({ hotelId }) {
     const { data: rooms, isLoading, refetch: fetchHotelRooms } = useQuery({
         queryKey: ["hotelRooms"],
         queryFn: async () => {
-            console.log(hotelId);
             const res = await get(`/hotels/${hotelId}/room-categories`);
             if (!res.ok) {
                 throw new Error("Failed to fetch hotel rooms data");
