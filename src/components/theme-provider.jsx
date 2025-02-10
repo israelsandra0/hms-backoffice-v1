@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 const initialState = {
-  theme: "system",
+  theme: "light",  
   setTheme: () => null,
 };
 
@@ -9,7 +9,7 @@ const ThemeProviderContext = createContext(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
+  defaultTheme = "light", 
   storageKey = "vite-ui-theme",
   ...props
 }) {
@@ -23,8 +23,8 @@ export function ThemeProvider({
     root.classList.remove("light", "dark");
 
     if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").
+        matches
         ? "dark"
         : "light";
 
