@@ -14,16 +14,18 @@ export default function HotelPageUsers({ hotelId }) {
 
     const [searchFilter, setSearchFilter] = useState("");
     const [addUserBox, setAddUserBox] = useState(false);
+    const [users, setUsers] = useState({})
 
 
-    const { data: users, isLoading, isPending, refetch: fetchHotelUsers } = useQuery({
+    const { isLoading, isPending, refetch: fetchHotelUsers } = useQuery({
         queryKey: ["hotelUsers"],
         queryFn: async () => {
-            const res = await get(`/hotels/${hotelId.id}/users`);
+            const res = await get(`/hotels/${hotelId}/users`);
             if (!res.ok) {
                 throw new Error("Failed to fetch hotel users data");
             }
             const response = await res.json();
+            setUsers(response.data)
             return response.data;
         },
         enabled: false
@@ -31,6 +33,7 @@ export default function HotelPageUsers({ hotelId }) {
 
     useEffect(() => {
         fetchHotelUsers()
+        return () => setUsers({})
     }, [])
 
     const closeAddUserBox = () => {

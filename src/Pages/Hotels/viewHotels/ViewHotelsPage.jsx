@@ -39,6 +39,7 @@ export default function ViewHotelsPage() {
     const navigate = useNavigate();
     const [hotelToEdit, setHotelToEdit] = useState({});
     const [hotelLogo, setHotelLogo] = useState(false);
+    const [hotel, setHotel] = useState({})
 
     let [searchParams, setSearchParams] = useSearchParams();
 
@@ -64,8 +65,7 @@ export default function ViewHotelsPage() {
         setSearchParams(new URLSearchParams({ active: newTab }));
     };
 
-    const {
-        data: hotel,
+    const { 
         isLoading,
         refetch: viewHotelRequest,
     } = useQuery({
@@ -76,9 +76,12 @@ export default function ViewHotelsPage() {
                 throw new Error("Failed to fetch hotel data");
             }
             const response = await res.json();
+            setHotel(response.data)
             return response.data;
         },
         enabled: !!id,
+        staleTime: 0,   
+        cacheTime: 0, 
     });
 
     // Update the logo state when hotel data is loaded
@@ -88,6 +91,8 @@ export default function ViewHotelsPage() {
         }
     }, [hotel]);
 
+    
+
     const handleEditClose = () => {
         setHotelToEdit({});
         viewHotelRequest();
@@ -95,7 +100,7 @@ export default function ViewHotelsPage() {
 
     const handleLogoRemove = () => {
         setHotelLogo(false); // Remove the logo by setting state to null
-        console.log("remioved");
+        console.log("removed");
     };
 
     const breadcrumb = (
@@ -190,7 +195,7 @@ export default function ViewHotelsPage() {
                     </TabsContent>
                     <TabsContent value={validTabs[1]}>
                         <Card>
-                            <HotelPageUsers hotelId={hotel} />
+                            <HotelPageUsers hotelId={hotel.id} />
                         </Card>
                     </TabsContent>
                     <TabsContent value={validTabs[2]}>
@@ -205,12 +210,12 @@ export default function ViewHotelsPage() {
                     </TabsContent>
                     <TabsContent value={validTabs[4]}>
                         <Card>
-                            <SubscriptionHistory />
+                            <SubscriptionHistory hotelId={hotel.id} />
                         </Card>
                     </TabsContent>
                     <TabsContent value={validTabs[5]}>
                         <Card>
-                            <PageSettings />
+                            <PageSettings hotelId={hotel.id} />
                         </Card>
                     </TabsContent>
                 </div>
