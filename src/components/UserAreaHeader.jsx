@@ -26,7 +26,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collap
 export default function UserAreaHeader({ pages }) {
     const [openSidebar, setOpenSidebar] = useState(false);
     const [username, setUsername] = useState('');
-    const [isOpen, setIsOpen] = useState(false)
+    
 
     const { setTheme } = useTheme()
 
@@ -62,6 +62,19 @@ export default function UserAreaHeader({ pages }) {
             console.log("logout error:", error);
         }
     }
+
+    // Check if the collapsible state is saved in localStorage, defaulting to false
+    const [isOpen, setIsOpen] = useState(() => {
+        const savedState = localStorage.getItem("collapsibleState");
+        return savedState ? JSON.parse(savedState) : false;
+    });
+
+    // Update localStorage whenever the state changes
+    useEffect(() => {
+        localStorage.setItem("collapsibleState", JSON.stringify(isOpen));
+    }, [isOpen]);
+
+
 
     return (
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] mb-6 lg:px-6">
@@ -115,7 +128,7 @@ export default function UserAreaHeader({ pages }) {
                             open={isOpen}
                             onOpenChange={setIsOpen}
                         >
-                            <div className="flex items-center ml-3 mt-2 gap-6">
+                            <div className="flex items-center ml-3 mt-2 justify-between">
                                 <h4 className="text-sm flex gap-3 font-semibold">
                                     <SettingsIcon />
                                     Setting

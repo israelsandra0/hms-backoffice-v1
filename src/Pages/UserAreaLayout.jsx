@@ -21,14 +21,25 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/components/theme-provider"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 
 
 export default function UserAreaLayout() {
 
-    const [isOpen, setIsOpen] = useState(false)
+    // Check if the collapsible state is saved in localStorage, defaulting to false
+    const [isOpen, setIsOpen] = useState(() => {
+        const savedState = localStorage.getItem("collapsibleState");
+        return savedState ? JSON.parse(savedState) : false;
+    });
+
+    // Update localStorage whenever the state changes
+    useEffect(() => {
+        localStorage.setItem("collapsibleState", JSON.stringify(isOpen));
+    }, [isOpen]);
+
+    
 
     return (
         <RequireAuth>
@@ -78,7 +89,7 @@ export default function UserAreaLayout() {
                                     open={isOpen}
                                     onOpenChange={setIsOpen}
                                 >
-                                    <div className="flex items-center ml-3 mt-2 gap-6">
+                                    <div className="flex items-center ml-3 mt-2 justify-between">
                                         <h4 className="text-sm flex gap-3 font-semibold">
                                             <SettingsIcon />
                                             Setting
