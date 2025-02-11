@@ -33,7 +33,6 @@ export default function EditRole({ closeFn, editId }) {
     });
 
     const { toast } = useToast()
-    console.log(editId)
 
     const { mutate, isPending } = useMutation({
         mutationFn: async (data) => {
