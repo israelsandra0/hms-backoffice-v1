@@ -18,7 +18,7 @@ import Account from "./Pages/Account";
 import Reports from "./Pages/Reports";
 import Communication from "./Pages/Communication";
 import Support from "./Pages/Support";
-import Settings from "./pages/settings/AccessControl";
+import Settings from "./pages/settings/rolesAndPermission/AccessControl";
 import Users from "./Pages/Users";
 import HotelsOverview from "./pages/hotels/viewHotels/Overview";
 import HotelPageUsers from "./pages/hotels/viewHotels/viewHotelUsers/Users";
@@ -31,7 +31,7 @@ import SubscriptionPlan from "./pages/subscriptionPage/SubscriptionPlan";
 import AddSubscriptionPage from "./pages/hotels/viewHotels/viewHotelSubscription/AddSubscription";
 import { ThemeProvider } from "./components/theme-provider";
 import Rooms from "./pages/hotels/viewHotels/viewHotelRooms/Rooms";
-import AccessControl from "./pages/settings/AccessControl";
+import AccessControl from "./pages/settings/rolesAndPermission/AccessControl";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
