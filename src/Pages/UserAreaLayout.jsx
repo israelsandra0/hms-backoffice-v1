@@ -1,5 +1,5 @@
 import { NavLink, Outlet, } from "react-router-dom"
-import { Bell, LayoutDashboard, Subscript, Users } from "lucide-react"
+import { Bell, ChevronDown, ChevronRight, ChevronUp, LayoutDashboard, MoreVertical, Subscript, Users } from "lucide-react"
 import { RequireAuth } from "./Auth";
 import AccountIcon from "@/components/icons/account";
 import HotelIcon from "@/components/icons/hotel";
@@ -17,15 +17,18 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/components/theme-provider"
+import { useState } from "react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 
 
 export default function UserAreaLayout() {
 
-    const { setTheme } = useTheme()
+    const [isOpen, setIsOpen] = useState(false)
 
     return (
         <RequireAuth>
@@ -71,10 +74,29 @@ export default function UserAreaLayout() {
                                     <SupportIcon />
                                     Support & help
                                 </NavLink>
-                                <NavLink to="/settings" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                    <   SettingsIcon />
-                                    Setting
-                                </NavLink>
+                                <Collapsible
+                                    open={isOpen}
+                                    onOpenChange={setIsOpen}
+                                >
+                                    <div className="flex items-center ml-3 mt-2 gap-6">
+                                        <h4 className="text-sm flex gap-3 font-semibold">
+                                            <SettingsIcon />
+                                            Setting
+                                        </h4>
+                                        <CollapsibleTrigger asChild className="mt-1">
+                                            {isOpen ? (
+                                                <ChevronDown className="h-4 w-4" />
+                                            ) : (
+                                                <ChevronRight className="h-4 w-4" />
+                                            )}
+                                        </CollapsibleTrigger>
+                                    </div>
+                                    <CollapsibleContent className="space-y-2 ml-9 mt-2">
+                                        <NavLink to="/access_control" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                            Access Control
+                                        </NavLink>
+                                    </CollapsibleContent>
+                                </Collapsible>
                             </nav>
                         </div>
                     </div>
