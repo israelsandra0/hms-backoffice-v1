@@ -1,0 +1,151 @@
+import { Button } from "@/components/ui/button";
+import { CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import React, { useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { post } from "@/functions";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Link } from "react-router-dom";
+import { X } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+
+export default function AddRole({closeFn}) {
+
+    const yupBuild = yup.object({
+        name: yup.string().required("Name is required").max(50),
+        description: yup.string().required("Description is required").max(150)
+    });
+
+    const {
+        register,
+        handleSubmit,
+        setError,
+        formState: { errors },
+        getValues,
+    } = useForm({
+        defaultValues: {
+            name: "",
+            description: ""
+        },
+        resolver: yupResolver(yupBuild),
+    });
+
+    const [errorMessage, setErrorMessage] = useState("");
+    const [disabledButton, setDisabledButton] = useState(false);
+
+
+    const { mutate } = useMutation({
+
+        mutationFn: async () => {
+
+            const roleInput = getValues();
+            setErrorMessage("");
+            setDisabledButton(true);
+
+            try {
+                const roleData = {
+                    name: roleInput.name,
+                    description: roleInput.description
+                };
+
+                const res = await post("/roles/store", roleData);
+
+                if (res.ok) {
+                    toast({
+                        success: true,
+                        duration: 5000,
+                        title: 'Data added successfully!'
+                    });
+                    closeFn()
+
+                } else if (res.status.toString().startsWith(4)) {
+                    setDisabledButton(false);
+                    setErrorMessage(
+                        "Data not saved, correct all indicated fields and try again!"
+                    );
+
+                    const responseErrors = await res.json();
+
+                    if (responseErrors.errors) {
+                        responseErrors.errors.forEach((error) => {
+                            setError(error.field, {
+                                type: "custom",
+                                message: error.message,
+                            });
+                        });
+                    }
+                    return null;
+                }
+
+                if (res.status >= 500) {
+                    setDisabledButton(false);
+                    setErrorMessage("An error occurred, please try again");
+                    return null;
+                }
+
+                const responseData = await res.json();
+                setDisabledButton(true);
+                return responseData;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+    });
+
+
+    return (
+
+        <div className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
+
+            <CardContent style={{ borderRadius: '16px' }} className='fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg dark:border-neutral-800 dark:bg-neutral-950'>
+                {!!errorMessage?.length && (
+                    <Alert className="alert text-red-900 border-0 h-full  bg-[#fee]">
+                        <AlertDescription>{errorMessage}</AlertDescription>
+                    </Alert>
+                )}
+
+                <div className="flex mt-4">
+                    <Link>
+                        <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={closeFn} />
+                    </Link>
+                    <h1 className="text-[1.3rem] font-bold mx-auto">Add New Users</h1>
+                </div>
+
+                <form
+                    onSubmit={handleSubmit(mutate)}
+                    className="hotelForm text-left"
+                >
+                    <div className="mt-4">
+
+                        <div className="mb-2">
+                            <Label htmlFor="name">Name</Label>
+                            <br />
+                            <Input {...register("name")} id="name" maxLength='50' />
+                            <p>{errors.name?.message}</p>
+                        </div>
+                        <div className="mb-2">
+                            <Label htmlFor="description">Description</Label>
+                            <br />
+                            <Input {...register("description")} id="description" maxLength='150' />
+                            <p>{errors.description?.message}</p>
+                        </div>
+                    </div>
+
+                    <br />
+                    <Button
+                        variant="primary"
+                        disabled={disabledButton}
+                        type="submit"
+                        className="w-full p-[16px] text-[16px]"
+                    >
+                        {disabledButton ? "Adding..." : "Add"}
+                    </Button>
+                </form>
+            </CardContent>
+        </div>
+    );
+}
