@@ -103,7 +103,7 @@ export default function UserAreaLayout() {
                                         </div>
                                     </CollapsibleTrigger>
                                     <CollapsibleContent className="space-y-2 ml-9 mt-2">
-                                        <NavLink to="/access_control" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                        <NavLink to="/setting/access_control" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                             Access Control
                                         </NavLink>
                                     </CollapsibleContent>
