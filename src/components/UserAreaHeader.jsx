@@ -26,7 +26,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collap
 export default function UserAreaHeader({ pages }) {
     const [openSidebar, setOpenSidebar] = useState(false);
     const [username, setUsername] = useState('');
-    
+
 
     const { setTheme } = useTheme()
 
@@ -128,19 +128,19 @@ export default function UserAreaHeader({ pages }) {
                             open={isOpen}
                             onOpenChange={setIsOpen}
                         >
-                            <div className="flex items-center ml-3 mt-2 justify-between">
-                                <h4 className="text-sm flex gap-3 font-semibold">
-                                    <SettingsIcon />
-                                    Setting
-                                </h4>
-                                <CollapsibleTrigger asChild className="mt-1">
+                            <CollapsibleTrigger asChild className="mt-1">
+                                <div className="flex items-center ml-3 mt-2 justify-between">
+                                    <h4 className="text-sm flex gap-3 font-semibold cursor-default">
+                                        <SettingsIcon />
+                                        Setting
+                                    </h4>
                                     {isOpen ? (
                                         <ChevronDown className="h-4 w-4" />
                                     ) : (
                                         <ChevronRight className="h-4 w-4" />
                                     )}
-                                </CollapsibleTrigger>
-                            </div>
+                                </div>
+                            </CollapsibleTrigger>
                             <CollapsibleContent className="space-y-2 ml-9 mt-2">
                                 <NavLink to="/access_control" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     Access Control
