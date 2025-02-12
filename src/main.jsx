@@ -19,7 +19,7 @@ import Reports from "./Pages/Reports";
 import Communication from "./Pages/Communication";
 import Support from "./Pages/Support";
 import Settings from "./pages/settings/rolesAndPermission/AccessControl";
-import Users from "./Pages/Users";
+import Users from "./pages/users/Users";
 import HotelsOverview from "./pages/hotels/viewHotels/Overview";
 import HotelPageUsers from "./pages/hotels/viewHotels/viewHotelUsers/Users";
 import Locations from "./pages/hotels/viewHotels/viewHotelLocations/Locations";
@@ -59,7 +59,7 @@ const router = createBrowserRouter(
         <Route path="/reports" element={<Reports />} />
         <Route path="/communication" element={<Communication />} />
         <Route path="/support" element={<Support />} />
-        <Route path="/access_control" element={<AccessControl />} />
+        <Route path="/setting/access_control" element={<AccessControl />} />
       </Route>
     </Route>
   )
