@@ -4,7 +4,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbS
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { get } from "@/functions";
+import { apiDelete, get } from "@/functions";
 import { useQuery } from "@tanstack/react-query";
 import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
 import { MoreVertical, Search, Shield } from "lucide-react";
@@ -13,6 +13,8 @@ import { Link, useNavigate } from "react-router-dom";
 import AddRole from "./AddRole";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import EditRole from "./EditRole";
+import { useConfirm } from "@/hooks/use-confirm";
+import { toast } from "@/hooks/use-toast";
 
 export default function AccessControl() {
 
@@ -21,10 +23,36 @@ export default function AccessControl() {
     const [searchFilter, setSearchFilter] = useState("");
     const [addRoleBox, setAddRoleBox] = useState(false);
     const [editRoleBox, setEditRoleBox] = useState(false);
-    const [editId, setEditId] = useState(null)
-
+    const [roleId, setRoleId] = useState(null)
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10
+    const { confirmAction } = useConfirm()
+
+    const confirmModalSetup = {
+        delete: {
+            title: 'Are you sure?',
+            message: "you're about to delete this hotel, This action cannot be undone.",
+            confirmButtonText: 'Delete',
+            buttonVariant: 'error',
+            cancelButtonText: 'Cancel'
+        },
+        activate: {
+            title: 'Activate Hotel?',
+            message: 'This action will activate the hotel and allow it to be visible to users.',
+            confirmButtonText: 'Activate',
+            buttonVariant: 'primary',
+            cancelButtonText: 'Cancel'
+        },
+        deactivate: {
+            title: 'Deactivate Hotel?',
+            message: 'This action will deactivate the hotel and allow it to be invisible to users.',
+            confirmButtonText: 'Deactivate',
+            buttonVariant: 'primary',
+            cancelButtonText: 'Cancel'
+        }
+    }
+
+    const handleConfirmation = async (roleId) => await apiDelete(`/roles/${roleId}/destroy`)
 
 
     const columns = useMemo(() => [
@@ -46,10 +74,11 @@ export default function AccessControl() {
                             <MoreVertical className="cursor-pointer" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56 cursor-pointer">
-                            <DropdownMenuItem
-                                onClick={() => { setEditId(row.original); setEditRoleBox(true)}}
-                            >
+                            <DropdownMenuItem onClick={() => { setRoleId(row.original); setEditRoleBox(true) }}>
                                 <span>Edit</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleActionClick(row.original.id, 'delete')}>
+                                <span>Delete</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -68,7 +97,6 @@ export default function AccessControl() {
         );
     }, [roles, searchFilter]);
 
-
     const table = useReactTable({
         data: filteredRole,
         columns,
@@ -84,7 +112,6 @@ export default function AccessControl() {
         getPaginationRowModel: getPaginationRowModel(),
         getCoreRowModel: getCoreRowModel(),
     });
-
 
     const { isLoading, refetch: fetchRoles } = useQuery({
         queryKey: ["roles"],
@@ -104,6 +131,41 @@ export default function AccessControl() {
         fetchRoles()
     }, [])
 
+    const handleDeleteResponse = (res) => {
+        if (res.ok) {
+            toast({
+                success: true,
+                duration: 5000,
+                title: 'Role deleted successfully!'
+            });
+            fetchRoles()
+        } else {
+            toast({
+                error: true,
+                duration: 5000,
+                title: 'Failed to delete the Role. Please try again.'
+            });
+        }
+    }
+
+    // Handle button click for delete/activation/deactivation
+    const handleActionClick = (roleId, actionType) => {
+        confirmAction({
+            ...confirmModalSetup[actionType.toLowerCase()],
+            isDestructive: actionType.toLowerCase() === 'delete',
+            confirmFn: () => handleConfirmation(roleId, actionType),
+            completeFn: (res) => {
+                if (actionType.toLowerCase() === 'delete') {
+                    handleDeleteResponse(res)
+                }
+                else {
+                    handleStatusUpdateResponse(res, actionType == 'Activate')
+                }
+            }
+
+        })
+    };
+
     const closeAddRoleBox = () => {
         setAddRoleBox(false)
         fetchRoles()
@@ -117,10 +179,6 @@ export default function AccessControl() {
     const breadcrumb = (
         <Breadcrumb>
             <BreadcrumbList>
-                <BreadcrumbItem>
-                    <Link onClick={() => navigate('/hotels')}>Hotels</Link>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
                 <BreadcrumbItem>
                     Setting
                 </BreadcrumbItem>
@@ -149,7 +207,7 @@ export default function AccessControl() {
                         <Shield className='w-[100px] h-[100px] text-primary' />
                     </div>
                     <h1 className="text-[1.5rem] my-6  font-bold">No Data Found!</h1>
-                    <Button variant='primary' onClick={() => ( setAddRoleBox(true))}>Add</Button>
+                    <Button variant='primary' onClick={() => (setAddRoleBox(true))}>Add</Button>
                 </div>
             )}
             {!!roles?.length && (
@@ -165,7 +223,7 @@ export default function AccessControl() {
                                 className="border border-b-gray-300 pl-9 rounded px-4 py-2 w-[300px] outline-none"
                             />
                         </div>
-                        <Button variant='primary' onClick={() => ( setAddRoleBox(true))}>Add</Button>
+                        <Button variant='primary' onClick={() => (setAddRoleBox(true))}>Add</Button>
                     </div>
                     <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
                         {table.getPageCount() > 0 && (
@@ -201,7 +259,7 @@ export default function AccessControl() {
                 <AddRole closeFn={closeAddRoleBox} />
             )}
 
-            {!!editRoleBox && <EditRole closeFn={handleEditClose} editId={editId} />}
+            {!!editRoleBox && <EditRole closeFn={handleEditClose} editId={roleId} />}
         </div>
     )
 }
