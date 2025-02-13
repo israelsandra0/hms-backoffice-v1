@@ -21,10 +21,11 @@ export default function Users() {
     const navigate = useNavigate()
     const [users, setUsers] = useState([])
     const [searchFilter, setSearchFilter] = useState("");
-    const [addUserBox,  setAddUserBox] = useState(false);
+    const [addUserBox, setAddUserBox] = useState(false);
     const [editRoleBox, setEditRoleBox] = useState(false);
     const [roleId, setRoleId] = useState(null)
     const [pageIndex, setPageIndex] = useState(0);
+    const [roleData, setRoleData] = useState()
     const pageSize = 10
     const { confirmAction } = useConfirm()
 
@@ -70,7 +71,7 @@ export default function Users() {
     //         cancelButtonText: 'Cancel'
     //     }
     // }
-    
+
     // const handleConfirmation = async (hotelId) => await apiDelete(`/hotels/destroy/${hotelId}`)
 
 
@@ -168,7 +169,21 @@ export default function Users() {
         getCoreRowModel: getCoreRowModel(),
     });
 
-    const { isLoading, refetch: fetchUsers } = useQuery({
+    const { data: data2, refetch: fetchAllRoles } = useQuery({
+        queryKey: ["users/create"],
+        queryFn: async () => {
+            const res = await get(`/users/create`);
+            if (!res.ok) {
+                throw new Error("Failed to fetch data");
+            }
+            const response = await res.json();
+            setRoleData(response.data.roles)
+            return response.data.roles;
+        },
+        enabled: false
+    });
+
+    const { isPending, refetch: fetchUsers } = useQuery({
         queryKey: ["users"],
         queryFn: async () => {
             const res = await get(`/users`);
@@ -183,6 +198,7 @@ export default function Users() {
     });
 
     useEffect(() => {
+        fetchAllRoles()
         fetchUsers()
     }, [])
 
@@ -207,17 +223,18 @@ export default function Users() {
     );
 
 
+
     return (
         <div>
             <UserAreaHeader pages={breadcrumb} />
 
-            {isLoading && (
+            {isPending && (
                 <div className="text-center flex items-center justify-center mx-auto my-5">
                     <Spinner className="me-3 text-gray-300 h-16 w-16" />
                 </div>
             )}
 
-            {!isLoading && !users?.length && (
+            {!isPending && !users?.length && (
                 <div className='mx-auto items-center mt-16 grid place-items-center text-center'>
                     <div className="bg-grey w-[170px] grid place-items-center  h-[170px] rounded-[50%]">
                         <Shield className='w-[100px] h-[100px] text-primary' />
@@ -226,6 +243,7 @@ export default function Users() {
                     <Button variant='primary' onClick={() => (setAddUserBox(true))}>Add</Button>
                 </div>
             )}
+
             {!!users?.length && (
                 <div>
                     <div className="flex justify-between mx-6 my-8 ">
@@ -272,7 +290,7 @@ export default function Users() {
             )}
 
             {!!addUserBox && (
-                <AddUsers closeFn={closeAddUserBox} />
+                <AddUsers closeFn={closeAddUserBox} roleData={roleData} />
             )}
 
             {/* {!!editRoleBox && <EditRole closeFn={handleEditClose} editId={roleId} />} */}
