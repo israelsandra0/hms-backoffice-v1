@@ -200,26 +200,29 @@ export default function AddUsers({ closeFn, roleData }) {
                         </div>
 
                         {!isAdmin && (
-                            <div className="mb-2">
+                            <div>
                                 <Label htmlFor="roleId">RoleId</Label>
                                 <br />
 
-                                <select {...register("roleId")} className="border w-16 outline-none">
+                                <select {...register("roleId")} className="flex h-10 w-1/2 rounded border border-neutral-200 bg-[#F2F2F5] px-3 autofill:bg-[#F2F2F5] py-2 text-sm  file:border-0 file:bg-[#F2F2F5] file:text-sm file:font-medium file:text-neutral-950 placeholder:text-[#BBBAC5] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-[#F2F2F5] dark:ring-offset-neutral-950 outline-none text-black dark:file:text-neutral-50 dark:placeholder:text-neutral-400 ">
                                     {roleData.map((data) => (
-                                        
-                                        <option value={data.id}>{data.id}</option>
+
+                                        <option value={data.id}>{data.name}</option>
                                     ))}
                                 </select>
                                 <p>{errors.roleId?.message}</p>
                             </div>
                         )}
-                        <div className="mt-2 flex items-center my-2">
+                        <div className="flex gap-2 mb-2">
                             <input
                                 type="checkbox"
                                 checked={isAdmin}
                                 onChange={handleAdminChange}
                             />
-                            <h2 className="ml-2 text-[12px]">isAdmin?</h2>
+                            <h2 className="text-gray-700 mt-5">
+                                <b className="text-[1rem] text-black">Set as Administrator </b> <br />
+                                This grants the user access to all features and functionalities.
+                            </h2>
                         </div>
 
                         {!autoGeneratePassword && (
