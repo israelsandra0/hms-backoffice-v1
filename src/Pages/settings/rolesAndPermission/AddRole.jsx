@@ -112,7 +112,7 @@ export default function AddRole({closeFn}) {
                     <Link>
                         <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={closeFn} />
                     </Link>
-                    <h1 className="text-[1.3rem] font-bold mx-auto">Add New Users</h1>
+                    <h1 className="text-[1.3rem] font-bold mx-auto">Add New Role</h1>
                 </div>
 
                 <form
