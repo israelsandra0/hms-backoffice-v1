@@ -138,10 +138,10 @@ export default function AddUsers({ closeFn, roleData }) {
     });
 
     return (
-        <div className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
+        <div className="fixed inset-x-0 inset-y-0 bg-black/50 flex justify-center items-center">
             <CardContent
                 style={{ borderRadius: "16px" }}
-                className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg dark:border-neutral-800 dark:bg-neutral-950"
+                className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] bg-white shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg dark:border-neutral-800 dark:bg-neutral-950"
             >
                 {!!errorMessage?.length && (
                     <Alert className="alert text-red-900 border-0 h-full  bg-[#fee] mb-4">
@@ -204,8 +204,8 @@ export default function AddUsers({ closeFn, roleData }) {
                                 <Label htmlFor="role">Role</Label>
                                 <br />
 
-                                <select name='Select role' {...register("roleId")} className="flex h-10 w-full rounded border border-neutral-200 bg-[#F2F2F5] px-3 autofill:bg-[#F2F2F5] py-2 text-sm  file:border-0 file:bg-[#F2F2F5] file:text-sm file:font-medium file:text-neutral-950 placeholder:text-[#BBBAC5] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-[#F2F2F5] dark:ring-offset-neutral-950 outline-none text-black dark:file:text-neutral-50 dark:placeholder:text-neutral-400 ">
-                                    <option selected disabled>Select role</option>
+                                <select name='Select role' {...register("roleId")} className="flex h-10 mb-[-16px] w-full rounded border border-neutral-200 bg-[#F2F2F5] px-3 autofill:bg-[#F2F2F5] py-2 text-sm  file:border-0 file:bg-[#F2F2F5] file:text-sm file:font-medium file:text-neutral-950 placeholder:text-[#BBBAC5] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-[#F2F2F5] dark:ring-offset-neutral-950 outline-none text-black dark:file:text-neutral-50 dark:placeholder:text-neutral-400 ">
+                                <   option value="" disabled selected>Select a role</option> 
                                     {roleData.map((data) => (
 
                                         <option value={data.id}>{data.name}</option>
@@ -227,7 +227,7 @@ export default function AddUsers({ closeFn, roleData }) {
                         </div>
 
                         {!autoGeneratePassword && (
-                            <div>
+                            <div className=" mb-[-12px]">
                                 <Label htmlFor="password">Password</Label>
                                 <Controller
                                     name="password"

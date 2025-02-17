@@ -42,11 +42,11 @@ const IntlPhoneField = forwardRef(({ ...props }, ref) => {
     return (
         <>
             <div className="w-full relative">
-                <div className="bg-grey flex p-1 border border-neutral-200 rounded-[5px]">
-                    <div className="bg-white text-[#333333] px-2 flex rounded-[5px] gap-2 w-[150px] justify-start items-center" onClick={toggle}>
+                <div className="bg-grey flex border border-neutral-200 rounded-[5px]">
+                    <div className="bg-white text-[#333333] h-6 px-2 my-auto flex rounded-[5px] gap-2 w-[150px] justify-start items-center" onClick={toggle}>
                         <FlagImage iso2={country.iso2} className="w-6" />
                         <span>+{country.dialCode}</span>
-                        <ChevronDown className="w-6 h-6" />
+                        <ChevronDown className="w-4 h-4" />
                     </div>
                     <Input className="border-none" {...props} ref={ref} onChange={handlePhoneValueChange} value={inputValue} />
                 </div>
