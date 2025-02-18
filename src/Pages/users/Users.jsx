@@ -307,7 +307,7 @@ export default function Users() {
                 <AddUsers closeFn={closeAddUserBox} roleData={roleData} />
             )}
 
-            {/* {!!editUserBox && <EditUserManagement closeFn={handleEditClose} editId={userId} />} */}
+            {!!editUserBox && <EditUserManagement closeFn={handleEditClose} editId={userId} />}
         </div>
     )
 }
