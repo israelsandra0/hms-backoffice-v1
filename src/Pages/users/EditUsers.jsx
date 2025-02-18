@@ -105,6 +105,8 @@ export default function EditUserManagement({ closeFn, editId }) {
         editUserRequest()
     }, [])
 
+    const userRoles = editUser?.roles
+
 
 
     return (
@@ -162,8 +164,8 @@ export default function EditUserManagement({ closeFn, editId }) {
 
                                 <select name='Select role' {...register("roleId")} className="flex h-10 mb-[-16px] w-full rounded border border-neutral-200 bg-[#F2F2F5] px-3 autofill:bg-[#F2F2F5] py-2 text-sm  file:border-0 file:bg-[#F2F2F5] file:text-sm file:font-medium file:text-neutral-950 placeholder:text-[#BBBAC5] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-[#F2F2F5] dark:ring-offset-neutral-950 outline-none text-black dark:file:text-neutral-50 dark:placeholder:text-neutral-400 ">
                                     <   option value="" disabled selected>Select a role</option>
-                                    {editUser.roles.map((data) => (
-                                    <option value={data.id}>{data.name}</option>
+                                    {userRoles?.map((data) => (
+                                        <option value={data.id}>{data.name}</option>
 
                                     ))}
                                 </select>
