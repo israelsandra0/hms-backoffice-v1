@@ -4,7 +4,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbS
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { apiDelete, get } from "@/functions";
+import { apiDelete, get, post, put } from "@/functions";
 import { useQuery } from "@tanstack/react-query";
 import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
 import { MoreVertical, Search, Shield } from "lucide-react";
@@ -15,6 +15,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useConfirm } from "@/hooks/use-confirm";
 import { toast } from "@/hooks/use-toast";
 import AddUsers from "./AddUser";
+import { Badge } from "@/components/ui/badge";
+import EditUserManagement from "./EditUsers";
 
 export default function Users() {
 
@@ -22,76 +24,39 @@ export default function Users() {
     const [users, setUsers] = useState([])
     const [searchFilter, setSearchFilter] = useState("");
     const [addUserBox, setAddUserBox] = useState(false);
-    const [editRoleBox, setEditRoleBox] = useState(false);
-    const [roleId, setRoleId] = useState(null)
+    const [editUserBox, setEditUserBox] = useState(false);
+    const [userId, setUserId] = useState(null)
     const [pageIndex, setPageIndex] = useState(0);
     const [roleData, setRoleData] = useState()
     const pageSize = 10
     const { confirmAction } = useConfirm()
 
 
-    // const handleDeleteResponse = (res) => {
-    //     if (res.ok) {
-    //         toast({
-    //             success: true,
-    //             duration: 5000,
-    //             title: 'Hotel deleted successfully!'
-    //         });
-    //         fetchAllHotels()
-    //     } else {
-    //         toast({
-    //             error: true,
-    //             duration: 5000,
-    //             title: 'Failed to delete the hotel. Please try again.'
-    //         });
-    //     }
-    // }
+    const confirmModalSetup = {
+        delete: {
+            title: 'Are you sure?',
+            message: "you're about to delete this user, This action cannot be undone.",
+            confirmButtonText: 'Delete',
+            buttonVariant: 'error',
+            cancelButtonText: 'Cancel'
+        },
+        activate: {
+            title: 'Activate User?',
+            message: 'This action will activate the user and allow it to be visible to users.',
+            confirmButtonText: 'Activate',
+            buttonVariant: 'primary',
+            cancelButtonText: 'Cancel'
+        },
+        deactivate: {
+            title: 'Deactivate User?',
+            message: 'This action will deactivate the user and allow it to be invisible to users.',
+            confirmButtonText: 'Deactivate',
+            buttonVariant: 'primary',
+            cancelButtonText: 'Cancel'
+        }
+    }
 
-
-    // const confirmModalSetup = {
-    //     delete: {
-    //         title: 'Are you sure?',
-    //         message: "you're about to delete this hotel, This action cannot be undone.",
-    //         confirmButtonText: 'Delete',
-    //         buttonVariant: 'error',
-    //         cancelButtonText: 'Cancel'
-    //     },
-    //     activate: {
-    //         title: 'Activate Hotel?',
-    //         message: 'This action will activate the hotel and allow it to be visible to users.',
-    //         confirmButtonText: 'Activate',
-    //         buttonVariant: 'primary',
-    //         cancelButtonText: 'Cancel'
-    //     },
-    //     deactivate: {
-    //         title: 'Deactivate Hotel?',
-    //         message: 'This action will deactivate the hotel and allow it to be invisible to users.',
-    //         confirmButtonText: 'Deactivate',
-    //         buttonVariant: 'primary',
-    //         cancelButtonText: 'Cancel'
-    //     }
-    // }
-
-    // const handleConfirmation = async (hotelId) => await apiDelete(`/hotels/destroy/${hotelId}`)
-
-
-    // Handle button click for delete/activation/deactivation
-    // const handleActionClick = (hotelId, actionType) => {
-    //     confirmAction({
-    //         ...confirmModalSetup[actionType.toLowerCase()],
-    //         isDestructive: actionType.toLowerCase() === 'delete',
-    //         confirmFn: () => handleConfirmation(hotelId, actionType),
-    //         completeFn: (res) => {
-    //             if (actionType.toLowerCase() === 'delete') {
-    //                 handleDeleteResponse(res)
-    //             }
-    //             else {
-    //                 handleStatusUpdateResponse(res, actionType == 'Activate')
-    //             }
-    //         }
-
-    //     })
-    // };
+    const handleConfirmation = async (userId, userAction) => await put(`/users/${userId}/status`, { isActive: userAction === 'Activate' })
 
 
     const columns = useMemo(() => [
@@ -108,6 +73,16 @@ export default function Users() {
         {
             header: "Role",
             accessorKey: "roleId",
+        },
+        {
+            header: "Status",
+            cell: (info) => {
+                return (
+                    <span>
+                        <Badge variant={info.row.original.isActive ? `success` : 'error'}>{info.row.original.isActive ? `Active` : 'Inactive'}</Badge>
+                    </span>
+                );
+            },
         },
         // {
         //     header: "Email",
@@ -130,11 +105,11 @@ export default function Users() {
                             <MoreVertical className="cursor-pointer" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56 cursor-pointer">
-                            <DropdownMenuItem onClick={() => { setRoleId(row.original); setEditRoleBox(true) }}>
+                            <DropdownMenuItem onClick={() => { setUserId(row.original); setEditUserBox(true) }}>
                                 <span>Edit</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleActionClick(roleId, 'delete')}>
-                                <span>Delete</span>
+                            <DropdownMenuItem onClick={() => handleActionClick(row.original.id, row.original.isActive ? 'Deactivate' : 'Activate')}>
+                                <span>{row.original.isActive ? 'Deactivate' : 'Activate'}</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -153,6 +128,7 @@ export default function Users() {
         );
     }, [users, searchFilter]);
 
+
     const table = useReactTable({
         data: filteredUsers,
         columns,
@@ -168,6 +144,7 @@ export default function Users() {
         getPaginationRowModel: getPaginationRowModel(),
         getCoreRowModel: getCoreRowModel(),
     });
+
 
     const { data: data2, refetch: fetchAllRoles } = useQuery({
         queryKey: ["users/create"],
@@ -202,14 +179,50 @@ export default function Users() {
         fetchUsers()
     }, [])
 
+
+    const handleStatusUpdateResponse = (res, isActive) => {
+        if (res.ok) {
+            toast({
+                success: true,
+                duration: 5000,
+                title: isActive ? 'User activated successfully!' : 'User deactivated successfully!'
+            });
+            fetchAllHotels();
+        } else {
+            toast({
+                error: true,
+                duration: 5000,
+                title: 'Failed to update user staus. Please try again.'
+            });
+        }
+    }
+
+    const handleActionClick = (userId, actionType) => {
+        confirmAction({
+            ...confirmModalSetup[actionType.toLowerCase()],
+            isDestructive: actionType.toLowerCase() === 'delete',
+            confirmFn: () => handleConfirmation(userId, actionType),
+            completeFn: (res) => {
+                if (actionType.toLowerCase() === 'delete') {
+                    handleDeleteResponse(res)
+                }
+                else {
+                    handleStatusUpdateResponse(res, actionType == 'Activate')
+                }
+            }
+
+        })
+    };
+
+
     const closeAddUserBox = () => {
         setAddUserBox(false)
         fetchUsers()
     }
-    // const handleEditClose = () => {
-    //     setEditRoleBox(false)
-    //     fetchRoles()
-    // }
+    const handleEditClose = () => {
+        setEditUserBox(false)
+        fetchUsers()
+    }
 
 
     const breadcrumb = (
@@ -267,6 +280,7 @@ export default function Users() {
                                         <TableHead>Name</TableHead>
                                         <TableHead>Role</TableHead>
                                         <TableHead></TableHead>
+                                        <TableHead></TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -293,7 +307,7 @@ export default function Users() {
                 <AddUsers closeFn={closeAddUserBox} roleData={roleData} />
             )}
 
-            {/* {!!editRoleBox && <EditRole closeFn={handleEditClose} editId={roleId} />} */}
+            {/* {!!editUserBox && <EditUserManagement closeFn={handleEditClose} editId={userId} />} */}
         </div>
     )
 }
