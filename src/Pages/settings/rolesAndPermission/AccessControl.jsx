@@ -31,21 +31,21 @@ export default function AccessControl() {
     const confirmModalSetup = {
         delete: {
             title: 'Are you sure?',
-            message: "you're about to delete this hotel, This action cannot be undone.",
+            message: "you're about to delete this role, This action cannot be undone.",
             confirmButtonText: 'Delete',
             buttonVariant: 'error',
             cancelButtonText: 'Cancel'
         },
         activate: {
-            title: 'Activate Hotel?',
-            message: 'This action will activate the hotel and allow it to be visible to users.',
+            title: 'Activate Role?',
+            message: 'This action will activate the role and allow it to be visible to users.',
             confirmButtonText: 'Activate',
             buttonVariant: 'primary',
             cancelButtonText: 'Cancel'
         },
         deactivate: {
-            title: 'Deactivate Hotel?',
-            message: 'This action will deactivate the hotel and allow it to be invisible to users.',
+            title: 'Deactivate Role?',
+            message: 'This action will deactivate the role and allow it to be invisible to users.',
             confirmButtonText: 'Deactivate',
             buttonVariant: 'primary',
             cancelButtonText: 'Cancel'
@@ -148,7 +148,6 @@ export default function AccessControl() {
         }
     }
 
-    // Handle button click for delete/activation/deactivation
     const handleActionClick = (roleId, actionType) => {
         confirmAction({
             ...confirmModalSetup[actionType.toLowerCase()],
