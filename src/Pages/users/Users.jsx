@@ -187,7 +187,7 @@ export default function Users() {
                 duration: 5000,
                 title: isActive ? 'User activated successfully!' : 'User deactivated successfully!'
             });
-            fetchAllHotels();
+            fetchUsers();
         } else {
             toast({
                 error: true,
