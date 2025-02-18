@@ -72,7 +72,7 @@ export default function Users() {
         },
         {
             header: "Role",
-            accessorKey: "roleId",
+            accessorKey: "role.name",
         },
         {
             header: "Status",
