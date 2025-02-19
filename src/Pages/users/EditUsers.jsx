@@ -30,7 +30,6 @@ export default function EditUserManagement({ closeFn, editId }) {
         firstName: yup.string().required("First Name is required").max(25),
         lastName: yup.string().required("Last Name is required").max(25),
         email: yup.string().required("Email is required").email().max(50),
-        username: yup.string().required("Name is required").max(50),
         isAdmin: yup.boolean(),
         roleId: yup.string().when('isAdmin', {
             is: false,
@@ -44,7 +43,6 @@ export default function EditUserManagement({ closeFn, editId }) {
             firstName: editId.firstName || "",
             lastName: editId.lastName || "",
             email: editId.email || "",
-            username: editId.username || "",
             isAdmin: editId.isAdmin || "",
             roleId: editId.roleId || "",
         },
@@ -124,7 +122,7 @@ export default function EditUserManagement({ closeFn, editId }) {
                     <Link>
                         <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={closeFn} />
                     </Link>
-                    <h1 className="text-[1.3rem] font-bold mx-auto">Add New Users</h1>
+                    <h1 className="text-[1.3rem] font-bold mx-auto">Edit Users</h1>
                 </div>
 
                 <form
@@ -134,22 +132,16 @@ export default function EditUserManagement({ closeFn, editId }) {
                     <div className="mt-4">
 
                         <div className="mb-2">
-                            <Label htmlFor="firstname">Firstname</Label>
+                            <Label htmlFor="firstname">First Name</Label>
                             <br />
                             <Input {...register("firstName")} id="firstname" maxLength='50' />
                             <p>{errors.firstName?.message}</p>
                         </div>
                         <div className="mb-2">
-                            <Label htmlFor="lastname">Lastname</Label>
+                            <Label htmlFor="lastname">Last Name</Label>
                             <br />
                             <Input {...register("lastName")} id="lastname" maxLength='50' />
                             <p>{errors.lastName?.message}</p>
-                        </div>
-                        <div className="mb-2">
-                            <Label htmlFor="username">Username</Label>
-                            <br />
-                            <Input {...register("username")} id="username" maxLength='50' />
-                            <p>{errors.username?.message}</p>
                         </div>
                         <div className="mb-2">
                             <Label htmlFor="email">Email</Label>
