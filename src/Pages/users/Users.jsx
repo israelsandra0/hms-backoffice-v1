@@ -88,7 +88,16 @@ export default function Users() {
                 );
             },
         },
-       
+        {
+            header: "Role",
+            cell: (info) => {
+                return (
+                    <span>
+                       <Badge variant={info.row.original.isActive ? `success` : 'error'}>{info.row.original.isActive ? `Active` : 'Inactive'}</Badge>
+                    </span>
+                );
+            },
+        },
         
         // {
         //     header: "Email",
