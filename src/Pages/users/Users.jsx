@@ -4,10 +4,10 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbS
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { apiDelete, get, post, put } from "@/functions";
+import { apiDelete, get, getDataObject, post, put } from "@/functions";
 import { useQuery } from "@tanstack/react-query";
 import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
-import { MoreVertical, Search, Shield } from "lucide-react";
+import { MoreVertical, Search, Shield, Star } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -17,6 +17,7 @@ import { toast } from "@/hooks/use-toast";
 import AddUsers from "./AddUser";
 import { Badge } from "@/components/ui/badge";
 import EditUserManagement from "./EditUsers";
+import { USER_DATA_KEY } from "@/constants";
 
 export default function Users() {
 
@@ -31,6 +32,8 @@ export default function Users() {
     const pageSize = 10
     const { confirmAction } = useConfirm()
 
+
+    const loggedInUser = getDataObject(USER_DATA_KEY);
 
     const confirmModalSetup = {
         delete: {
@@ -71,19 +74,22 @@ export default function Users() {
             },
         },
         {
-            header: "Role",
-            accessorKey: "role.name",
-        },
-        {
             header: "Status",
             cell: (info) => {
                 return (
-                    <span>
-                        <Badge variant={info.row.original.isActive ? `success` : 'error'}>{info.row.original.isActive ? `Active` : 'Inactive'}</Badge>
-                    </span>
+                    info.row.original.isAdmin == 0 ? (
+
+                        <span>
+                            <Badge variant='primary' className=" bg-lightPrimary text-primary">Admin <Star className=" p-1"/> </Badge>
+                        </span>
+                    ) : (
+                       `${info.row.original.role?.name}` 
+                    )
                 );
             },
         },
+       
+        
         // {
         //     header: "Email",
         //     cell: (info) => {
@@ -99,20 +105,29 @@ export default function Users() {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
+
+                const isLoggedInUser = row.original.id === loggedInUser.id;
+               
+
                 return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <MoreVertical className="cursor-pointer" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56 cursor-pointer">
-                            <DropdownMenuItem onClick={() => { setUserId(row.original); setEditUserBox(true) }}>
-                                <span>Edit</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleActionClick(row.original.id, row.original.isActive ? 'Deactivate' : 'Activate')}>
-                                <span>{row.original.isActive ? 'Deactivate' : 'Activate'}</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div>
+
+                        {!isLoggedInUser && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <MoreVertical className="cursor-pointer" />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56 cursor-pointer">
+                                    <DropdownMenuItem onClick={() => { setUserId(row.original); setEditUserBox(true) }}>
+                                        <span>Edit</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleActionClick(row.original.id, row.original.isActive ? 'Deactivate' : 'Activate')}>
+                                        <span>{row.original.isActive ? 'Deactivate' : 'Activate'}</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
+                    </div>
                 );
             },
         },
@@ -279,18 +294,21 @@ export default function Users() {
                                     <TableRow>
                                         <TableHead>Name</TableHead>
                                         <TableHead>Role</TableHead>
-                                        <TableHead></TableHead>
+                                        <TableHead>Status</TableHead>
                                         <TableHead></TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {table.getRowModel().rows.map((row) => (
                                         <TableRow key={row.id} className="hover:bg-grey">
-                                            {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={row.id}>
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </TableCell>
-                                            ))}
+                                            {row.getVisibleCells().map((cell) => {
+
+                                                return (
+                                                    <TableCell key={row.id}>
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                );
+                                            })}
                                         </TableRow>
                                     ))}
                                 </TableBody>
