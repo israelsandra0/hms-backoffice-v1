@@ -18,8 +18,7 @@ import * as yup from "yup";
 export default function EditUserManagement({ closeFn, editId }) {
 
     const [errorMessage, setErrorMessage] = useState("");
-    const [isAdmin, setIsAdmin] = useState(false);
-    // const [roleData, setRoleData] = useState()
+    const [isAdmin, setIsAdmin] = useState(editId.isAdmin === 0 ? true : false);
 
     const handleAdminChange = (e) => {
         setIsAdmin(e.target.checked);
