@@ -27,6 +27,7 @@ export default function LoginPage() {
 		handleSubmit,
 		formState: { errors },
 		getValues,
+		setError,
 		control
 	} = useForm({
 		defaultValues: { email: "", password: "" },
@@ -82,7 +83,13 @@ export default function LoginPage() {
 
 				if (res.status.toString().startsWith(4)) {
 					setDisabledButton(false);
-					setErrorMessage("invalid credentials");
+					setErrorMessage("invalid credentials"); 
+
+					const responseErrors = await res.json();
+
+					if (responseErrors?.message) {
+						setErrorMessage(responseErrors.message); 
+					}
 
 					return null;
 				}
