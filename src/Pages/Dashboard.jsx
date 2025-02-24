@@ -85,7 +85,7 @@ export default function Dashboard() {
             </div> */}
 
             <div className="flex justify-center gap-8">
-                <div className=" w-[180px] px-6 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
+                <div className=" dashboardCards">
                     <Hotel className="text-[#8D561E] w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />
                     <div>
                         <p className="text-gray-500 py-2 text-[12px]">Total Hotels</p>
@@ -93,7 +93,7 @@ export default function Dashboard() {
                         <p className="text-green-500 py-2 text-[12px]">50 Active</p>
                     </div>
                 </div>
-                <div className=" w-[180px] px-6 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
+                <div className=" dashboardCards">
                     <Book className="text-[#8D561E] w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />
                     <div>
                         <p className="text-gray-500 py-2 text-[12px]">Booking Overview</p>
@@ -101,7 +101,7 @@ export default function Dashboard() {
                         <p className="py-2 text-[12px]">Across all hotels</p>
                     </div>
                 </div>
-                <div className=" w-[180px] px-6 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
+                <div className=" dashboardCards">
                     <DollarSign className="text-[#8D61E] w-8 h-8  bg-lightPrimary p-[0.50rem] rounded-[50%]" />
                     <div>
                         <p className="text-gray-500 py-2 text-[12px]">Revenue</p>
@@ -112,7 +112,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
-                <div className=" w-[180px] px-6 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
+                <div className=" dashboardCards">
                     <Info className="text-[#8D561E] w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />
                     <div>
                         <p className="text-gray-500 py-2 text-[12px]">Pending Requests</p>
@@ -120,7 +120,7 @@ export default function Dashboard() {
                         <p className="py-2 text-[12px]">Requires attention</p>
                     </div>
                 </div>
-                <div className=" w-[180px] px-6 py-4   rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
+                <div className=" dashboardCards">
                     <Hourglass className="text-[#8D51E]  w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />
                     <div>
                         <p className="text-gray-500 py-2 text-[12px]">Expiring Subscriptions</p>
@@ -131,7 +131,7 @@ export default function Dashboard() {
             </div>
 
             <div className="my-10 flex gap-8 mx-8">
-                <Card className="rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
+                <Card className="rounded-[1rem] border shadow-[3px_3px_20px_-14px_rgba(0,0,0,0.5)]">
                     <CardHeader>
                         <CardTitle>Booking Statistics</CardTitle>
                     </CardHeader>
@@ -195,7 +195,7 @@ export default function Dashboard() {
                     </div>
                 </Card> */}
 
-                <Card className="w-full rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
+                <Card className="w-full border rounded-[1rem] shadow-[3px_3px_20px_-14px_rgba(0,0,0,0.5)]">
                     <CardHeader className="items-center pb-0">
                         <CardTitle>Subscription Chart</CardTitle>
                     </CardHeader>
@@ -245,7 +245,7 @@ export default function Dashboard() {
                 </Card>
             </div>
 
-            <div className="mx-8 px-8 py-8 mb-6 rounded-[1rem] shadow-[3px_3px_25px_-14px_rgba(0,0,0,0.5)]">
+            <div className="mx-8 border px-8 py-8 mb-6 rounded-[1rem] shadow-[3px_3px_20px_-14px_rgba(0,0,0,0.5)]">
                 <div className='flex justify-between cursor-pointer items-center'>
                     <b>Support Message</b>
                     <Badge variant='outline' className='py-2'>See all</Badge>
