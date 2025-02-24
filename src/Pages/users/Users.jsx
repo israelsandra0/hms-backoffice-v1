@@ -74,10 +74,10 @@ export default function Users() {
             },
         },
         {
-            header: "Status",
+            header: "Role",
             cell: (info) => {
                 return (
-                    info.row.original.isAdmin == 0 ? (
+                    info.row.original.isAdmin == 1 ? (
 
                         <span>
                             <Badge variant='primary' className=" bg-lightPrimary text-primary">Admin <Star className=" p-1"/> </Badge>
@@ -89,7 +89,7 @@ export default function Users() {
             },
         },
         {
-            header: "Role",
+            header: "Status",
             cell: (info) => {
                 return (
                     <span>
