@@ -83,7 +83,9 @@ export default function Users() {
                             <Badge variant='primary' className=" bg-lightPrimary text-primary">Admin <Star className=" p-1"/> </Badge>
                         </span>
                     ) : (
-                       `${info.row.original.role?.name}` 
+                        <span>
+                            <Badge variant='gray'>{`${info.row.original.role?.name}`}</Badge>
+                        </span> 
                     )
                 );
             },
