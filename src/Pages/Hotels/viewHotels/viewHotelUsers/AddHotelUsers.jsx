@@ -80,7 +80,7 @@ export default function AddHotelUsers({ closeFn, hotelId }) {
                     password: userInput.password,
                     auto_generate_password: userInput.auto_generate_password
                 };
-                const res = await post(`/hotels/${hotelId.id}/users/store`, userData);
+                const res = await post(`/hotels/${hotelId}/users/store`, userData);
 
                 if (res.ok) {
                     toast({

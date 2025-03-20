@@ -20,11 +20,18 @@ function secretReplace(plain) {
     .replace(/[\=]/g, "");
 }
 function secretReplaceReverse(plain) {
+  if (!plain) return '';  
   return plain
     .replace(/(\?x_)/g, "a")
     .replace(/(\?n_)/g, "m")
     .replace(/(\?a_)/g, "z");
 }
+// function secretReplaceReverse(plain) {
+//   return plain
+//     .replace(/(\?x_)/g, "a")
+//     .replace(/(\?n_)/g, "m")
+//     .replace(/(\?a_)/g, "z");
+// }
 
 export function encode(text) {
   // replace carriage returns and new line feeds
