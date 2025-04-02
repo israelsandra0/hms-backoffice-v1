@@ -13,16 +13,16 @@ import EditRole from "./EditRole";
 import { useConfirm } from "@/hooks/use-confirm";
 import { toast } from "@/hooks/use-toast";
 import { ButtonLink } from "@/components/ui/button_link";
+import { useNavigate } from "react-router-dom";
 
 export default function AccessControl() {
 
     const [roles, setRoles] = useState([])
     const [searchFilter, setSearchFilter] = useState("");
-    const [editRoleBox, setEditRoleBox] = useState(false);
-    const [roleId, setRoleId] = useState(null)
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10
     const { confirmAction } = useConfirm()
+    const navigate = useNavigate()
 
     const confirmModalSetup = {
         delete: {
@@ -48,6 +48,10 @@ export default function AccessControl() {
         }
     }
 
+    const handleEditRole = (editId) => {
+        navigate('/setting/access_control/edit', { state: { editId } });
+    };
+
     const handleConfirmation = async (roleId) => await apiDelete(`/roles/${roleId}/destroy`)
 
 
@@ -70,7 +74,7 @@ export default function AccessControl() {
                             <MoreVertical className="cursor-pointer" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56 cursor-pointer">
-                            <DropdownMenuItem onClick={() => { setRoleId(row.original); setEditRoleBox(true) }}>
+                            <DropdownMenuItem onClick={() => handleEditRole(row.original)}>
                                 <span>Edit</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleActionClick(row.original.id, 'delete')}>
@@ -161,10 +165,6 @@ export default function AccessControl() {
         })
     };
 
-    const handleEditClose = () => {
-        setEditRoleBox(false)
-        fetchRoles()
-    }
 
 
     const breadcrumb = (
@@ -249,8 +249,6 @@ export default function AccessControl() {
                     </div>
                 </div>
             )}
-
-            {!!editRoleBox && <EditRole closeFn={handleEditClose} editId={roleId} />}
         </div>
     )
 }
