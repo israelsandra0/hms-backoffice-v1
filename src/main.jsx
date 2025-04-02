@@ -32,6 +32,7 @@ import AddSubscriptionPage from "./pages/hotels/viewHotels/viewHotelSubscription
 import { ThemeProvider } from "./components/theme-provider";
 import Rooms from "./pages/hotels/viewHotels/viewHotelRooms/Rooms";
 import AccessControl from "./pages/settings/rolesAndPermission/AccessControl";
+import AddRole from "./pages/settings/rolesAndPermission/AddRole";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -60,6 +61,7 @@ const router = createBrowserRouter(
         <Route path="/communication" element={<Communication />} />
         <Route path="/support" element={<Support />} />
         <Route path="/setting/access_control" element={<AccessControl />} />
+        <Route path="/setting/access_control/create" element={<AddRole />} />
       </Route>
     </Route>
   )
