@@ -1,24 +1,27 @@
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { post } from "@/functions";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { get, post } from "@/functions";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Link } from "react-router-dom";
-import { X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import UserAreaHeader from "@/components/UserAreaHeader";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
-export default function AddRole({closeFn}) {
+export default function AddRole() {
 
     const yupBuild = yup.object({
         name: yup.string().required("Name is required").max(50),
         description: yup.string().required("Description is required").max(150)
     });
+
+    const navigate = useNavigate();
 
     const {
         register,
@@ -26,31 +29,37 @@ export default function AddRole({closeFn}) {
         setError,
         formState: { errors },
         getValues,
+        setValue,
+        watch
     } = useForm({
         defaultValues: {
             name: "",
-            description: ""
+            description: "",
+            permissions: [] 
         },
         resolver: yupResolver(yupBuild),
     });
 
+    const selectedPermissions = watch('permissions')
     const [errorMessage, setErrorMessage] = useState("");
     const [disabledButton, setDisabledButton] = useState(false);
-
+    const [permissionCategories, setPermissionCategories] = useState([]);
 
     const { mutate } = useMutation({
-
         mutationFn: async () => {
-
             const roleInput = getValues();
+            console.log("role input",roleInput)
             setErrorMessage("");
             setDisabledButton(true);
 
             try {
                 const roleData = {
                     name: roleInput.name,
-                    description: roleInput.description
+                    description: roleInput.description,
+                    permissions: [...roleInput.permissions]
                 };
+
+                console.log(roleData)
 
                 const res = await post("/roles/store", roleData);
 
@@ -60,8 +69,7 @@ export default function AddRole({closeFn}) {
                         duration: 5000,
                         title: 'Data added successfully!'
                     });
-                    closeFn()
-
+                    // Add code to handle success (close modal, navigate, etc.)
                 } else if (res.status.toString().startsWith(4)) {
                     setDisabledButton(false);
                     setErrorMessage(
@@ -89,6 +97,7 @@ export default function AddRole({closeFn}) {
 
                 const responseData = await res.json();
                 setDisabledButton(true);
+
                 return responseData;
             } catch (error) {
                 console.log(error);
@@ -96,56 +105,126 @@ export default function AddRole({closeFn}) {
         },
     });
 
+    const { refetch: fetchPermissions } = useQuery({
+        queryKey: ["permissions"],
+        queryFn: async () => {
+            const res = await get(`/roles/create`);
+            if (!res.ok) {
+                throw new Error("Failed to fetch data");
+            }
+            const response = await res.json();
+
+            const PermissionData = response.data.permissionCategories;
+            setPermissionCategories(PermissionData);
+
+            return PermissionData;
+        },
+    });
+
+    useEffect(() => {
+        fetchPermissions();
+    }, [fetchPermissions]);
+
+    const handlePermissionChange = (permissionId) => {
+        const currentPermissions = getValues("permissions"); // Get current permissions from the form state
+        const updatedPermissions = currentPermissions.includes(permissionId)
+            ? currentPermissions.filter((id) => id !== permissionId) // Remove if already selected
+            : [...currentPermissions, permissionId]; // Add if not selected
+    
+        setValue("permissions", updatedPermissions); 
+    };
+
+
+
+    const breadcrumb = (
+        <Breadcrumb>
+            <BreadcrumbList>
+                <BreadcrumbItem>
+                    Setting
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className='mt-1' />
+                <BreadcrumbItem>
+                    <Link onClick={() => navigate('/setting/access_control')}>Access Control</Link>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className='mt-1' />
+                <BreadcrumbItem>
+                    <BreadcrumbPage>Add</BreadcrumbPage>
+                </BreadcrumbItem>
+            </BreadcrumbList>
+        </Breadcrumb>
+    );
 
     return (
+        <div className="bg-[#f1f1f1] h-full">
+            <UserAreaHeader pages={breadcrumb} />
 
-        <div className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
-
-            <CardContent style={{ borderRadius: '16px' }} className='fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg dark:border-neutral-800 dark:bg-neutral-950'>
+            <CardContent>
                 {!!errorMessage?.length && (
                     <Alert className="alert text-red-900 border-0 h-full  bg-[#fee]">
                         <AlertDescription>{errorMessage}</AlertDescription>
                     </Alert>
                 )}
 
-                <div className="flex mt-4">
-                    <Link>
-                        <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={closeFn} />
-                    </Link>
-                    <h1 className="text-[1.3rem] font-bold mx-auto">Add New Role</h1>
-                </div>
-
                 <form
                     onSubmit={handleSubmit(mutate)}
                     className="hotelForm text-left"
                 >
                     <div className="mt-4">
-
                         <div className="mb-2">
                             <Label htmlFor="name">Name</Label>
                             <br />
-                            <Input {...register("name")} id="name" maxLength='50' />
+                            <Input className="bg-white" {...register("name")} id="name" placeholder="name" maxLength='100' />
                             <p>{errors.name?.message}</p>
                         </div>
+
                         <div className="mb-2">
                             <Label htmlFor="description">Description</Label>
                             <br />
-                            <Input {...register("description")} id="description" maxLength='150' />
+                            <Input className="h-16 bg-white" {...register("description")} id="description" placeholder="description" maxLength='100' />
                             <p>{errors.description?.message}</p>
                         </div>
                     </div>
-
                     <br />
+
+                    <div>
+                        <b>Select Role Permissions</b>
+                        <hr />
+                        <div>
+                            {permissionCategories.map((category) => (
+                                <div key={category.id}>
+                                    <h3>{category.name}</h3>
+                                    <ul>
+                                        {category.permissions.map((permission) => (
+                                            <li key={permission.id}>
+                                                <label>
+                                                    <input
+                                                        type="checkbox"
+                                                        value={permission.id}
+                                                        checked={selectedPermissions.includes(permission.id)} 
+                                                        onChange={() => handlePermissionChange(permission.id)}
+                                                    />
+                                                    {permission.name} - {permission.category}
+                                                </label>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
                     <Button
                         variant="primary"
                         disabled={disabledButton}
                         type="submit"
-                        className="w-full p-[16px] text-[16px]"
+                        className="w-full p-[16px] text-[16px] mt-28"
                     >
                         {disabledButton ? "Adding..." : "Add"}
                     </Button>
                 </form>
             </CardContent>
+
         </div>
+
     );
 }
