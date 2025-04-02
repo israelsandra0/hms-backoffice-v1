@@ -1,5 +1,4 @@
 import UserAreaHeader from "@/components/UserAreaHeader";
-import SubscriptionImg from "@/components/icons/SubscriptionImg";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { ButtonLink } from "@/components/ui/button_link";
 import { Card } from "@/components/ui/card";
@@ -20,7 +19,7 @@ export default function SubscriptionPlan() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                    <BreadcrumbPage>Subscription Plan</BreadcrumbPage>
+                    <BreadcrumbPage>Add Subscription Plan</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>

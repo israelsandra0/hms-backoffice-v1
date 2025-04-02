@@ -48,7 +48,6 @@ export default function AddRole() {
     const { mutate } = useMutation({
         mutationFn: async () => {
             const roleInput = getValues();
-            console.log("role input",roleInput)
             setErrorMessage("");
             setDisabledButton(true);
 
@@ -59,8 +58,6 @@ export default function AddRole() {
                     permissions: [...roleInput.permissions]
                 };
 
-                console.log(roleData)
-
                 const res = await post("/roles/store", roleData);
 
                 if (res.ok) {
@@ -69,6 +66,7 @@ export default function AddRole() {
                         duration: 5000,
                         title: 'Data added successfully!'
                     });
+                    navigate("/setting/access_control");
                     // Add code to handle success (close modal, navigate, etc.)
                 } else if (res.status.toString().startsWith(4)) {
                     setDisabledButton(false);

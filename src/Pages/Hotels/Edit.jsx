@@ -30,10 +30,8 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
         })
         .nullable().max(30),
         logo: yup.mixed().test("file", "Logo must be a file", (value) => {
-            console.log(value)
-            // If no file is selected, allow the existing logo to pass validation
             if (!value) {
-                return true; // If there's an existing logo, it's considered valid.
+                return true; 
             }
             // If a new file is selected, it must be a valid file
             return value && value.size > 0; // Ensures the selected file has size > 0
@@ -105,7 +103,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                 setFileDetails({
                     name: file.name,
                     size: file.size,
-                    preview: reader.result, // Base64 string for the image preview
+                    preview: reader.result, 
                 });
             };
 
@@ -118,7 +116,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                 size: 0,
                 preview: "",
             });
-            setValue('logo', hotelToEdit.logo || null); // Set to null if no new file is selected
+            setValue('logo', hotelToEdit.logo || null);
         }
     };
 
@@ -145,7 +143,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
                         <Link>
                             <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={closeFn} />
                         </Link>
-                        <h1 className="text-[1.3rem] font-bold mb-2 mx-auto">Edit Hotel Details</h1>
+                        <h1 className="text-[1.3rem] font-bold mb-2 mx-auto">Edit Hotel Detail</h1>
                     </div>
 
 

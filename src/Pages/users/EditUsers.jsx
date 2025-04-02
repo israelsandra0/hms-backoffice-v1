@@ -98,7 +98,6 @@ export default function EditUserManagement({ closeFn, editId }) {
     })
 
     useEffect(() => {
-        // console.log(editUser)
         editUserRequest()
     }, [])
 
@@ -121,7 +120,7 @@ export default function EditUserManagement({ closeFn, editId }) {
                     <Link>
                         <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={closeFn} />
                     </Link>
-                    <h1 className="text-[1.3rem] font-bold mx-auto">Edit Users</h1>
+                    <h1 className="text-[1.3rem] font-bold mx-auto">Edit User</h1>
                 </div>
 
                 <form

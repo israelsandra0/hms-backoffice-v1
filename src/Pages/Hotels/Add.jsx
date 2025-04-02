@@ -7,12 +7,11 @@ import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { get, post } from "@/functions";
-import { BACKEND_URL } from "@/constants";
 import { Label } from "@/components/ui/label";
 import StateField from "@/components/ui/state-field";
 import { Link, useNavigate } from "react-router-dom";
 import UserAreaHeader from "@/components/UserAreaHeader";
-import { Check, Delete, DeleteIcon, Upload } from "lucide-react";
+import { Check, Upload } from "lucide-react";
 import IntlPhoneField from "@/components/ui/intlphone-field";
 import {
     AlertDialog,
@@ -26,9 +25,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import Spinner from "@/components/ui/spinner";
 import {
     Breadcrumb,
-    BreadcrumbEllipsis,
     BreadcrumbItem,
-    BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
@@ -183,7 +180,7 @@ export default function Add() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                    <BreadcrumbPage>Add Hotels</BreadcrumbPage>
+                    <BreadcrumbPage>Add Hotel</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>

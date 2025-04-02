@@ -1,4 +1,4 @@
-import { BACKEND_URL } from "@/constants";
+
 import { apiDelete, get, post } from "@/functions";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -25,9 +25,8 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import EditHotelModal from "./Edit";
 import { useConfirm } from "@/hooks/use-confirm";
-import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
-import { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from "@/components/ui/breadcrumb";
 import { Link, useNavigate } from "react-router-dom";
 
 
@@ -203,7 +202,7 @@ export default function HotelsPage() {
                     />
                 </div>
                 <ButtonLink to="/hotels/add" variant="primary">
-                    Add Hotels
+                    Add Hotel
                 </ButtonLink>
             </div>
 

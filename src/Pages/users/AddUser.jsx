@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
@@ -156,7 +156,7 @@ export default function AddUsers({ closeFn, roleData }) {
                             onClick={closeFn}
                         />
                     </Link>
-                    <h1 className="text-[1.3rem] font-bold mx-auto">Add New Users</h1>
+                    <h1 className="text-[1.3rem] font-bold mx-auto">Add New User</h1>
                 </div>
 
                 <form className="hotelForm text-left" onSubmit={handleSubmit(mutate)}>

@@ -8,7 +8,7 @@ import {
 import Spinner from "@/components/ui/spinner";
 import UserAreaHeader from "@/components/UserAreaHeader";
 import { get } from "@/functions";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
     Link,
@@ -49,7 +49,7 @@ export default function ViewHotelsPage() {
         "Overview",
         "Users",
         "Locations",
-        "Room Type",
+        "Room Types",
         "Subscription Plan",
         "Setting",
     ];
@@ -111,7 +111,7 @@ export default function ViewHotelsPage() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                    <BreadcrumbPage>View Hotels</BreadcrumbPage>
+                    <BreadcrumbPage>View Hotel</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>

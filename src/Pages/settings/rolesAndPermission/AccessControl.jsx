@@ -1,7 +1,6 @@
 import Pagination from "@/components/Pagination";
 import UserAreaHeader from "@/components/UserAreaHeader";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { apiDelete, get } from "@/functions";
@@ -9,19 +8,16 @@ import { useQuery } from "@tanstack/react-query";
 import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
 import { MoreVertical, Search, Shield } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import AddRole from "./AddRole";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import EditRole from "./EditRole";
 import { useConfirm } from "@/hooks/use-confirm";
 import { toast } from "@/hooks/use-toast";
+import { ButtonLink } from "@/components/ui/button_link";
 
 export default function AccessControl() {
 
-    const navigate = useNavigate()
     const [roles, setRoles] = useState([])
     const [searchFilter, setSearchFilter] = useState("");
-    const [addRoleBox, setAddRoleBox] = useState(false);
     const [editRoleBox, setEditRoleBox] = useState(false);
     const [roleId, setRoleId] = useState(null)
     const [pageIndex, setPageIndex] = useState(0);
@@ -165,10 +161,6 @@ export default function AccessControl() {
         })
     };
 
-    const closeAddRoleBox = () => {
-        setAddRoleBox(false)
-        fetchRoles()
-    }
     const handleEditClose = () => {
         setEditRoleBox(false)
         fetchRoles()
@@ -206,7 +198,9 @@ export default function AccessControl() {
                         <Shield className='w-[100px] h-[100px] text-primary' />
                     </div>
                     <h1 className="text-[1.5rem] my-6  font-bold">No Data Found!</h1>
-                    <Button variant='primary' onClick={() => (setAddRoleBox(true))}>Add</Button>
+                    <ButtonLink to="/setting/access_control/create" variant="primary">
+                        Add
+                    </ButtonLink>
                 </div>
             )}
             {!!roles?.length && (
@@ -222,7 +216,9 @@ export default function AccessControl() {
                                 className="border border-b-gray-300 pl-9 rounded px-4 py-2 w-[300px] outline-none"
                             />
                         </div>
-                        <Button variant='primary' onClick={() => (setAddRoleBox(true))}>Add</Button>
+                        <ButtonLink to="/setting/access_control/create" variant="primary">
+                            Add
+                        </ButtonLink>
                     </div>
                     <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
                         {table.getPageCount() > 0 && (
@@ -252,10 +248,6 @@ export default function AccessControl() {
 
                     </div>
                 </div>
-            )}
-
-            {!!addRoleBox && (
-                <AddRole closeFn={closeAddRoleBox} />
             )}
 
             {!!editRoleBox && <EditRole closeFn={handleEditClose} editId={roleId} />}
