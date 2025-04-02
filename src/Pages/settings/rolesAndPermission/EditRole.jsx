@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Spinner from "@/components/ui/spinner";
-import { put } from "@/functions";
+import { get, put } from "@/functions";
 import { useToast } from "@/hooks/use-toast";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Label } from "@radix-ui/react-label";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import * as yup from "yup";
@@ -18,6 +18,8 @@ import * as yup from "yup";
 export default function EditRole({ closeFn, editId }) {
 
     const [errorMessage, setErrorMessage] = useState("");
+    const [permissionCategories, setPermissionCategories] = useState([]);
+    const [selectedPermissions, setSelectedPermissions] = useState(editId.permissions?.map(permission => permission.id) || []);
 
     const yupBuild = yup.object({
         name: yup.string().required("Name is required").max(50),
@@ -27,7 +29,8 @@ export default function EditRole({ closeFn, editId }) {
     const { register, handleSubmit, setError, setValue, formState: { errors } } = useForm({
         defaultValues: {
             name: editId.name || "",
-            description: editId.description || ""
+            description: editId.description || "",
+            permissions: selectedPermissions
         },
         resolver: yupResolver(yupBuild),
     });
@@ -69,6 +72,37 @@ export default function EditRole({ closeFn, editId }) {
     })
 
 
+    const { refetch: permissionForRole } = useQuery({
+        queryKey: ["permissionsForRole"],
+        queryFn: async () => {
+            const res = await get(`/roles/${editId.id}/edit`);
+            if (!res.ok) {
+                throw new Error("Failed to edit data");
+            }
+            const response = await res.json();
+
+            
+            const PermissionData = response.data.permissionCategories;
+            setPermissionCategories(PermissionData);
+
+            return PermissionData;
+        },
+    });
+
+    useEffect(() => {
+        permissionForRole();
+    }, [permissionForRole]);
+
+    // Handle permission change
+    const handlePermissionChange = (permissionId) => {
+        const updatedPermissions = selectedPermissions.includes(permissionId)
+            ? selectedPermissions.filter((id) => id !== permissionId) // Remove if already selected
+            : [...selectedPermissions, permissionId]; // Add if not selected
+        
+        setSelectedPermissions(updatedPermissions); // Update local state
+        setValue("permissions", updatedPermissions); // Update form state
+    };
+
 
     return (
 
@@ -85,7 +119,7 @@ export default function EditRole({ closeFn, editId }) {
                     <Link>
                         <X className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" onClick={closeFn} />
                     </Link>
-                    <h1 className="text-[1.3rem] font-bold mx-auto">Add New Users</h1>
+                    <h1 className="text-[1.3rem] font-bold mx-auto">Edit Role and Permission</h1>
                 </div>
 
                 <form
@@ -105,6 +139,32 @@ export default function EditRole({ closeFn, editId }) {
                             <br />
                             <Input {...register("description")} id="description" maxLength='150' />
                             <p>{errors.description?.message}</p>
+                        </div>
+                        <div>
+                            <b>Select Role Permissions</b>
+                            <hr />
+                            <div>
+                                {permissionCategories.map((category) => (
+                                    <div key={category.id}>
+                                        <h3>{category.name}</h3>
+                                        <ul>
+                                            {category.permissions.map((permission) => (
+                                                <li key={permission.id}>
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            value={permission.id}
+                                                            checked={selectedPermissions.includes(permission.id)}
+                                                            onChange={() => handlePermissionChange(permission.id)}
+                                                        />
+                                                        {permission.name} - {permission.category}
+                                                    </label>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
