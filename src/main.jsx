@@ -33,6 +33,7 @@ import { ThemeProvider } from "./components/theme-provider";
 import Rooms from "./pages/hotels/viewHotels/viewHotelRooms/Rooms";
 import AccessControl from "./pages/settings/rolesAndPermission/AccessControl";
 import AddRole from "./pages/settings/rolesAndPermission/AddRole";
+import EditRole from "./pages/settings/rolesAndPermission/EditRole";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -62,6 +63,7 @@ const router = createBrowserRouter(
         <Route path="/support" element={<Support />} />
         <Route path="/setting/access_control" element={<AccessControl />} />
         <Route path="/setting/access_control/create" element={<AddRole />} />
+        <Route path="/setting/access_control/edit" element={<EditRole />} />
       </Route>
     </Route>
   )
