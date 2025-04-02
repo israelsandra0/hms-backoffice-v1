@@ -105,6 +105,14 @@ export async function post(urlPath, data = {}, method = 'POST') {
 
   const formData = new FormData()
   for (let key in data) {
+    if(Array.isArray(data[key])){
+
+      let i = 0;
+      for(const arrayItem of data[key]){
+        formData.append(`${key}[${i++}]`, arrayItem)
+      }
+      continue
+    }
     formData.append(key, data[key])
   }
 
