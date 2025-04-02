@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import UserAreaHeader from "@/components/UserAreaHeader";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import Spinner from "@/components/ui/spinner";
 
 export default function AddRole() {
 
@@ -35,7 +36,7 @@ export default function AddRole() {
         defaultValues: {
             name: "",
             description: "",
-            permissions: [] 
+            permissions: []
         },
         resolver: yupResolver(yupBuild),
     });
@@ -103,7 +104,7 @@ export default function AddRole() {
         },
     });
 
-    const { refetch: fetchPermissions } = useQuery({
+    const { refetch: fetchPermissions, isFetching } = useQuery({
         queryKey: ["permissions"],
         queryFn: async () => {
             const res = await get(`/roles/create`);
@@ -128,8 +129,8 @@ export default function AddRole() {
         const updatedPermissions = currentPermissions.includes(permissionId)
             ? currentPermissions.filter((id) => id !== permissionId) // Remove if already selected
             : [...currentPermissions, permissionId]; // Add if not selected
-    
-        setValue("permissions", updatedPermissions); 
+
+        setValue("permissions", updatedPermissions);
     };
 
 
@@ -187,28 +188,35 @@ export default function AddRole() {
                     <div>
                         <b>Select Role Permissions</b>
                         <hr />
-                        <div>
-                            {permissionCategories.map((category) => (
-                                <div key={category.id}>
-                                    <h3>{category.name}</h3>
-                                    <ul>
-                                        {category.permissions.map((permission) => (
-                                            <li key={permission.id}>
-                                                <label>
-                                                    <input
-                                                        type="checkbox"
-                                                        value={permission.id}
-                                                        checked={selectedPermissions.includes(permission.id)} 
-                                                        onChange={() => handlePermissionChange(permission.id)}
-                                                    />
-                                                    {permission.name} - {permission.category}
-                                                </label>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))}
-                        </div>
+                        {isFetching ? (
+                            <div className="text-center mt-4">
+                                <Spinner className="text-gray-300 h-16 w-16" />
+                                <p>Loading permissions...</p>
+                            </div>
+                        ) : (
+                            <div>
+                                {permissionCategories.map((category) => (
+                                    <div key={category.id}>
+                                        <h3>{category.name}</h3>
+                                        <ul>
+                                            {category.permissions.map((permission) => (
+                                                <li key={permission.id}>
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            value={permission.id}
+                                                            checked={selectedPermissions.includes(permission.id)}
+                                                            onChange={() => handlePermissionChange(permission.id)}
+                                                        />
+                                                        {permission.name} - {permission.category}
+                                                    </label>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <Button
