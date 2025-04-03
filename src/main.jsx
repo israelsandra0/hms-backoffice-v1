@@ -18,16 +18,15 @@ import Account from "./Pages/Account";
 import Reports from "./Pages/Reports";
 import Communication from "./Pages/Communication";
 import Support from "./Pages/Support";
-import Settings from "./pages/settings/rolesAndPermission/AccessControl";
-import Users from "./pages/users/Users";
+import Users from "./pages/settings/users/Users";
 import HotelsOverview from "./pages/hotels/viewHotels/Overview";
 import HotelPageUsers from "./pages/hotels/viewHotels/viewHotelUsers/Users";
 import Locations from "./pages/hotels/viewHotels/viewHotelLocations/Locations";
 import SubscriptionHistory from "./pages/hotels/viewHotels/viewHotelSubscription/Subscription";
 import PageSettings from "./pages/hotels/viewHotels/Settings";
 import ViewHotelsPage from "./pages/hotels/viewHotels/ViewHotelsPage";
-import Subscription from "./pages/subscriptionPage/Subscription";
-import SubscriptionPlan from "./pages/subscriptionPage/SubscriptionPlan";
+import Subscription from "./pages/settings/subscriptionPage/Subscription";
+import SubscriptionPlan from "./pages/settings/subscriptionPage/SubscriptionPlan";
 import AddSubscriptionPage from "./pages/hotels/viewHotels/viewHotelSubscription/AddSubscription";
 import { ThemeProvider } from "./components/theme-provider";
 import Rooms from "./pages/hotels/viewHotels/viewHotelRooms/Rooms";
@@ -51,19 +50,19 @@ const router = createBrowserRouter(
         <Route path="/hotels/view/suscription/add" element={<AddSubscriptionPage />} />
         <Route path="/hotels/view/settings" element={<PageSettings />} />
         <Route path="/hotels/add" element={<Add />} />
-        <Route path="/users" element={<Users />} />
         <Route path="/accounts" element={<Account />} />
-        <Route path="/subscriptions" element={<Subscription />} />
-        <Route
-          path="/subscriptions/subscription_plan"
-          element={<SubscriptionPlan />}
-        />
         <Route path="/reports" element={<Reports />} />
         <Route path="/communication" element={<Communication />} />
         <Route path="/support" element={<Support />} />
         <Route path="/setting/access_control" element={<AccessControl />} />
         <Route path="/setting/access_control/create" element={<AddRole />} />
         <Route path="/setting/access_control/edit" element={<EditRole />} />
+        <Route path="/setting/users" element={<Users />} />
+        <Route path="/setting/subscriptions" element={<Subscription />} />
+        <Route
+          path="/setting/subscriptions/subscription_plan"
+          element={<SubscriptionPlan />}
+        />
       </Route>
     </Route>
   )
