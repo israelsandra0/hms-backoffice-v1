@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ArrowBigLeft, ArrowLeft, X } from "lucide-react";
+import {  ArrowLeft } from "lucide-react";
 
 
 
@@ -142,8 +142,10 @@ export default function EditRole() {
                     </Alert>
                 )}
 
+                <Link to='/setting/access_control'>                  
+                    <ArrowLeft className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" />
+                </Link>
                 
-
                 <form
                     onSubmit={handleSubmit(mutate)}
                     className="hotelForm text-left w-[500px] mx-auto"

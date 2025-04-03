@@ -14,6 +14,7 @@ import { toast } from "@/hooks/use-toast";
 import UserAreaHeader from "@/components/UserAreaHeader";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import Spinner from "@/components/ui/spinner";
+import { ArrowLeft } from "lucide-react";
 
 export default function AddRole() {
 
@@ -163,6 +164,10 @@ export default function AddRole() {
                         <AlertDescription>{errorMessage}</AlertDescription>
                     </Alert>
                 )}
+
+                <Link to='/setting/access_control'>
+                    <ArrowLeft className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" />
+                </Link>
 
                 <form
                     onSubmit={handleSubmit(mutate)}
