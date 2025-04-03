@@ -100,17 +100,9 @@ export default function UserAreaHeader({ pages }) {
                             <HotelIcon />
                             Hotel Management
                         </NavLink>
-                        <NavLink to="/users" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
-                            <Users className="text-gray-500 w-4" />
-                            User
-                        </NavLink>
                         <NavLink to="/accounts" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
                             <AccountIcon size='w-4' />
                             Account
-                        </NavLink>
-                        <NavLink to="/subscriptions" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
-                            <Bell className="text-gray-500 w-4" />
-                            Subscription
                         </NavLink>
                         <NavLink to="/reports" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
                             <ReportIcon />
@@ -142,9 +134,18 @@ export default function UserAreaHeader({ pages }) {
                                 </div>
                             </CollapsibleTrigger>
                             <CollapsibleContent className="space-y-2 ml-9 mt-2">
+                                <NavLink to="/setting/users" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
+                                    <Users className="text-gray-500 w-4" />
+                                    User
+                                </NavLink>
                                 <NavLink to="/setting/access_control" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     Access Control
                                 </NavLink>
+                                <NavLink to="/setting/subscriptions" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                    <Bell className="text-gray-500 w-4" />
+                                    Subscription
+                                </NavLink>
+
                             </CollapsibleContent>
                         </Collapsible>
                     </nav>
