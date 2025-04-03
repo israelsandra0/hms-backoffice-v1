@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Spinner from "@/components/ui/spinner";
 import UserAreaHeader from "@/components/UserAreaHeader";
@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { ArrowBigLeft, ArrowLeft, X } from "lucide-react";
 
 
 
@@ -20,7 +21,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbS
 export default function EditRole() {
 
     const location = useLocation();
-    const { editId } = location.state || {};  
+    const { editId } = location.state || {};
     const [errorMessage, setErrorMessage] = useState("");
     const [permissionCategories, setPermissionCategories] = useState([]);
     const [selectedPermissions, setSelectedPermissions] = useState(editId.permissions?.map(permission => permission.id) || []);
@@ -86,7 +87,7 @@ export default function EditRole() {
             }
             const response = await res.json();
 
-            
+
             const PermissionData = response.data.permissionCategories;
             setPermissionCategories(PermissionData);
 
@@ -97,66 +98,68 @@ export default function EditRole() {
     useEffect(() => {
         permissionForRole();
     }, [permissionForRole]);
-    
+
 
     // Handle permission change
     const handlePermissionChange = (permissionId) => {
         const updatedPermissions = selectedPermissions.includes(permissionId)
             ? selectedPermissions.filter((id) => id !== permissionId) // Remove if already selected
             : [...selectedPermissions, permissionId]; // Add if not selected
-        
+
         setSelectedPermissions(updatedPermissions); // Update local state
         setValue("permissions", updatedPermissions); // Update form state
     };
 
     const breadcrumb = (
-            <Breadcrumb>
-                <BreadcrumbList>
-                    <BreadcrumbItem>
-                        Setting
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator className='mt-1' />
-                    <BreadcrumbItem>
-                        <Link onClick={() => navigate('/setting/access_control')}>Access Control</Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator className='mt-1' />
-                    <BreadcrumbItem>
-                        <BreadcrumbPage>Edit</BreadcrumbPage>
-                    </BreadcrumbItem>
-                </BreadcrumbList>
-            </Breadcrumb>
-        );
-    
+        <Breadcrumb>
+            <BreadcrumbList>
+                <BreadcrumbItem>
+                    Setting
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className='mt-1' />
+                <BreadcrumbItem>
+                    <Link onClick={() => navigate('/setting/access_control')}>Access Control</Link>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className='mt-1' />
+                <BreadcrumbItem>
+                    <BreadcrumbPage>Edit</BreadcrumbPage>
+                </BreadcrumbItem>
+            </BreadcrumbList>
+        </Breadcrumb>
+    );
+
 
 
     return (
 
-        <div>
+        <div className="bg-[#f1f1f1] h-full">
             <UserAreaHeader pages={breadcrumb} />
 
-            <CardContent>               
+            <CardContent>
                 {!!errorMessage?.length && (
                     <Alert className="alert text-red-900 border-0 h-full  bg-[#fee]">
                         <AlertDescription>{errorMessage}</AlertDescription>
                     </Alert>
                 )}
 
+                
+
                 <form
                     onSubmit={handleSubmit(mutate)}
-                    className="hotelForm text-left"
+                    className="hotelForm text-left w-[500px] mx-auto"
                 >
                     <div className="mt-4">
 
                         <div className="mb-2">
                             <Label htmlFor="name">Name</Label>
                             <br />
-                            <Input {...register("name")} id="name" maxLength='50' />
+                            <Input {...register("name")} id="name" maxLength='50' className='bg-white' />
                             <p>{errors.name?.message}</p>
                         </div>
                         <div className="mb-2">
                             <Label htmlFor="description">Description</Label>
                             <br />
-                            <Input {...register("description")} id="description" maxLength='150' />
+                            <Input {...register("description")} id="description" maxLength='150' className='bg-white mb-6' />
                             <p>{errors.description?.message}</p>
                         </div>
                         <div>
@@ -170,24 +173,29 @@ export default function EditRole() {
                             ) : (
                                 <div>
                                     {permissionCategories.map((category) => (
-                                        <div key={category.id}>
-                                            <h3>{category.name}</h3>
-                                            <ul>
-                                                {category.permissions.map((permission) => (
-                                                    <li key={permission.id}>
-                                                        <label>
-                                                            <input
-                                                                type="checkbox"
-                                                                value={permission.id}
-                                                                checked={selectedPermissions.includes(permission.id)}
-                                                                onChange={() => handlePermissionChange(permission.id)}
-                                                            />
-                                                            {permission.name} - {permission.category}
-                                                        </label>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
+                                        <Card key={category.id} className='border mt-6 rounded-[15px]'>
+                                            <CardHeader>
+                                                <CardTitle>{category.name}</CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                                <ul>
+                                                    {category.permissions.map((permission) => (
+                                                        <li key={permission.id}>
+                                                            <label>
+                                                                <input
+                                                                    className="mr-2"
+                                                                    type="checkbox"
+                                                                    value={permission.id}
+                                                                    checked={selectedPermissions.includes(permission.id)}
+                                                                    onChange={() => handlePermissionChange(permission.id)}
+                                                                />
+                                                                {permission.name} - {permission.category}
+                                                            </label>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </CardContent>
+                                        </Card>
                                     ))}
                                 </div>
                             )}

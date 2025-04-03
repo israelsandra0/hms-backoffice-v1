@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import React, { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -166,7 +166,7 @@ export default function AddRole() {
 
                 <form
                     onSubmit={handleSubmit(mutate)}
-                    className="hotelForm text-left"
+                    className="hotelForm text-left w-[500px] mx-auto"
                 >
                     <div className="mt-4">
                         <div className="mb-2">
@@ -176,7 +176,7 @@ export default function AddRole() {
                             <p>{errors.name?.message}</p>
                         </div>
 
-                        <div className="mb-2">
+                        <div>
                             <Label htmlFor="description">Description</Label>
                             <br />
                             <Input className="h-16 bg-white" {...register("description")} id="description" placeholder="description" maxLength='100' />
@@ -196,24 +196,29 @@ export default function AddRole() {
                         ) : (
                             <div>
                                 {permissionCategories.map((category) => (
-                                    <div key={category.id}>
-                                        <h3>{category.name}</h3>
-                                        <ul>
-                                            {category.permissions.map((permission) => (
-                                                <li key={permission.id}>
-                                                    <label>
-                                                        <input
-                                                            type="checkbox"
-                                                            value={permission.id}
-                                                            checked={selectedPermissions.includes(permission.id)}
-                                                            onChange={() => handlePermissionChange(permission.id)}
-                                                        />
-                                                        {permission.name} - {permission.category}
-                                                    </label>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
+                                    <Card key={category.id} className='border mt-6 rounded-[15px]'>
+                                        <CardHeader>
+                                            <CardTitle>{category.name}</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <ul>
+                                                {category.permissions.map((permission) => (
+                                                    <li key={permission.id}>
+                                                        <label>
+                                                            <input
+                                                                className="mr-2"
+                                                                type="checkbox"
+                                                                value={permission.id}
+                                                                checked={selectedPermissions.includes(permission.id)}
+                                                                onChange={() => handlePermissionChange(permission.id)}
+                                                            />
+                                                            {permission.name} - {permission.category}
+                                                        </label>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </CardContent>
+                                    </Card>
                                 ))}
                             </div>
                         )}
@@ -223,7 +228,7 @@ export default function AddRole() {
                         variant="primary"
                         disabled={disabledButton}
                         type="submit"
-                        className="w-full p-[16px] text-[16px] mt-28"
+                        className="w-full p-[16px] text-[16px] mt-6"
                     >
                         {disabledButton ? "Adding..." : "Add"}
                     </Button>
