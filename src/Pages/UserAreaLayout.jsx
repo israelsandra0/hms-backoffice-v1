@@ -9,25 +9,16 @@ import SupportIcon from "@/components/icons/Support";
 import SettingsIcon from "@/components/icons/Setting";
 import { Toaster } from "@/components/ui/toaster";
 import ConfirmModal from "@/components/ConfirmModal";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Moon, Sun } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useTheme } from "@/components/theme-provider"
 import { useEffect, useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { usePermission } from "@/hooks/use-permissions";
+import { PERMISSIONS } from "@/lib/permissions";
 
 
 
 export default function UserAreaLayout() {
 
+    
     // Check if the collapsible state is saved in localStorage, defaulting to false
     const [isOpen, setIsOpen] = useState(() => {
         const savedState = localStorage.getItem("collapsibleState");
@@ -38,6 +29,9 @@ export default function UserAreaLayout() {
     useEffect(() => {
         localStorage.setItem("collapsibleState", JSON.stringify(isOpen));
     }, [isOpen]);
+
+    const {hasPermission} = usePermission()
+    
 
 
 
@@ -57,10 +51,12 @@ export default function UserAreaLayout() {
                                     <LayoutDashboard className="text-gray-500 w-4" />
                                     Dashboard
                                 </NavLink>
-                                <NavLink to="/hotels" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                    <HotelIcon />
-                                    Hotel Management
-                                </NavLink>
+                                {hasPermission(PERMISSIONS.HOTEL_VIEW.name) && (
+                                    <NavLink to="/hotels" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                        <HotelIcon />
+                                        Hotel Management
+                                    </NavLink>
+                                )}
                                 <NavLink to="/accounts" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     <AccountIcon size='w-4' />
                                     Account

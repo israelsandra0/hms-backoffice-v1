@@ -22,6 +22,8 @@ import SettingsIcon from "./icons/Setting";
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "./theme-provider";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
+import { usePermission } from "@/hooks/use-permissions";
+import { PERMISSIONS } from "@/lib/permissions";
 
 export default function UserAreaHeader({ pages }) {
     const [openSidebar, setOpenSidebar] = useState(false);
@@ -29,6 +31,7 @@ export default function UserAreaHeader({ pages }) {
 
 
     const { setTheme } = useTheme()
+    const { hasPermission } = usePermission()
 
 
     useEffect(() => {
@@ -96,10 +99,12 @@ export default function UserAreaHeader({ pages }) {
                             <LayoutDashboard className="text-gray-500 w-4" />
                             Dashboard
                         </NavLink>
-                        <NavLink to="/hotels" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
-                            <HotelIcon />
-                            Hotel Management
-                        </NavLink>
+                        {hasPermission(PERMISSIONS.HOTEL_VIEW.name) && (
+                            <NavLink to="/hotels" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                <HotelIcon />
+                                Hotel Management
+                            </NavLink>
+                        )}
                         <NavLink to="/accounts" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`} onClick={handleClose}>
                             <AccountIcon size='w-4' />
                             Account
