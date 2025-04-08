@@ -169,36 +169,40 @@ export default function AddRole() {
                     <ArrowLeft className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" />
                 </Link>
 
-                <form
-                    onSubmit={handleSubmit(mutate)}
-                    className="hotelForm text-left w-[500px] mx-auto"
-                >
-                    <div className="mt-4">
-                        <div className="mb-2">
-                            <Label htmlFor="name">Name</Label>
-                            <br />
-                            <Input className="bg-white" {...register("name")} id="name" placeholder="name" maxLength='100' />
-                            <p>{errors.name?.message}</p>
+                {isFetching ? (
+
+                    <div className="text-center mt-28">
+                        <Spinner className="text-gray-300 mb-4 mx-auto h-16 w-16" />
+                        <p>Loading permissions...</p>
+                    </div>
+
+                ) : (
+
+                    <form
+                        onSubmit={handleSubmit(mutate)}
+                        className="hotelForm text-left w-[500px] mx-auto"
+                    >
+                        <div className="mt-4">
+                            <div className="mb-2">
+                                <Label htmlFor="name">Name</Label>
+                                <br />
+                                <Input className="bg-white" {...register("name")} id="name" placeholder="name" maxLength='100' />
+                                <p>{errors.name?.message}</p>
+                            </div>
+
+                            <div>
+                                <Label htmlFor="description">Description</Label>
+                                <br />
+                                <Input className="h-16 bg-white" {...register("description")} id="description" placeholder="description" maxLength='100' />
+                                <p>{errors.description?.message}</p>
+                            </div>
                         </div>
+                        <br />
 
                         <div>
-                            <Label htmlFor="description">Description</Label>
-                            <br />
-                            <Input className="h-16 bg-white" {...register("description")} id="description" placeholder="description" maxLength='100' />
-                            <p>{errors.description?.message}</p>
-                        </div>
-                    </div>
-                    <br />
+                            <b>Select Role Permissions</b>
+                            <hr />
 
-                    <div>
-                        <b>Select Role Permissions</b>
-                        <hr />
-                        {isFetching ? (
-                            <div className="text-center mt-4">
-                                <Spinner className="text-gray-300 h-16 w-16" />
-                                <p>Loading permissions...</p>
-                            </div>
-                        ) : (
                             <div>
                                 {permissionCategories.map((category) => (
                                     <Card key={category.id} className='border mt-6 rounded-[15px]'>
@@ -226,18 +230,18 @@ export default function AddRole() {
                                     </Card>
                                 ))}
                             </div>
-                        )}
-                    </div>
+                        </div>
 
-                    <Button
-                        variant="primary"
-                        disabled={disabledButton}
-                        type="submit"
-                        className="w-full p-[16px] text-[16px] mt-6"
-                    >
-                        {disabledButton ? "Adding..." : "Add"}
-                    </Button>
-                </form>
+                        <Button
+                            variant="primary"
+                            disabled={disabledButton}
+                            type="submit"
+                            className="w-full p-[16px] text-[16px] mt-6"
+                        >
+                            {disabledButton ? "Adding..." : "Add"}
+                        </Button>
+                    </form>
+                )}
             </CardContent>
 
         </div>

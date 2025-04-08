@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import {  ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 
 
@@ -142,37 +142,41 @@ export default function EditRole() {
                     </Alert>
                 )}
 
-                <Link to='/setting/access_control'>                  
+                <Link to='/setting/access_control'>
                     <ArrowLeft className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400" />
                 </Link>
-                
-                <form
-                    onSubmit={handleSubmit(mutate)}
-                    className="hotelForm text-left w-[500px] mx-auto"
-                >
-                    <div className="mt-4">
 
-                        <div className="mb-2">
-                            <Label htmlFor="name">Name</Label>
-                            <br />
-                            <Input {...register("name")} id="name" maxLength='50' className='bg-white' />
-                            <p>{errors.name?.message}</p>
-                        </div>
-                        <div className="mb-2">
-                            <Label htmlFor="description">Description</Label>
-                            <br />
-                            <Input {...register("description")} id="description" maxLength='150' className='bg-white mb-6' />
-                            <p>{errors.description?.message}</p>
-                        </div>
-                        <div>
-                            <b>Select Role Permissions</b>
-                            <hr />
-                            {isFetching ? (
-                                <div className="text-center mt-4">
-                                    <Spinner className="text-gray-300 h-16 w-16" />
-                                    <p>Loading permissions...</p>
-                                </div>
-                            ) : (
+                {isFetching ? (
+
+                    <div className="text-center mt-28">
+                        <Spinner className="text-gray-300 mb-4 mx-auto h-16 w-16" />
+                        <p>Loading permissions...</p>
+                    </div>
+
+                ) : (
+
+                    <form
+                        onSubmit={handleSubmit(mutate)}
+                        className="hotelForm text-left w-[500px] mx-auto"
+                    >
+                        <div className="mt-4">
+
+                            <div className="mb-2">
+                                <Label htmlFor="name">Name</Label>
+                                <br />
+                                <Input {...register("name")} id="name" maxLength='50' className='bg-white' />
+                                <p>{errors.name?.message}</p>
+                            </div>
+                            <div className="mb-2">
+                                <Label htmlFor="description">Description</Label>
+                                <br />
+                                <Input {...register("description")} id="description" maxLength='150' className='bg-white mb-6' />
+                                <p>{errors.description?.message}</p>
+                            </div>
+                            <div>
+                                <b>Select Role Permissions</b>
+                                <hr />
+
                                 <div>
                                     {permissionCategories.map((category) => (
                                         <Card key={category.id} className='border mt-6 rounded-[15px]'>
@@ -200,15 +204,16 @@ export default function EditRole() {
                                         </Card>
                                     ))}
                                 </div>
-                            )}
+                            </div>
                         </div>
-                    </div>
 
-                    <br />
-                    <Button variant="primary" type="submit" className="w-full p-[16px] text-[16px]" disabled={isPending}>
-                        {isPending ? <Spinner /> : 'continue'}
-                    </Button>
-                </form>
+                        <br />
+                        <Button variant="primary" type="submit" className="w-full p-[16px] text-[16px]" disabled={isPending}>
+                            {isPending ? <Spinner /> : 'continue'}
+                        </Button>
+                    </form>
+                )}
+
             </CardContent>
         </div>
     );
