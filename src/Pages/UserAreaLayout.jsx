@@ -92,14 +92,14 @@ export default function UserAreaLayout() {
                                     </CollapsibleTrigger>
                                     <CollapsibleContent className="space-y-2 ml-9 mt-2">
                                         <NavLink to="/setting/users" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                            <Users className="text-gray-500 w-4" />
+                                            {/* <Users className="text-gray-500 w-4" /> */}
                                             User
                                         </NavLink>
                                         <NavLink to="/setting/access_control" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                             Access Control
                                         </NavLink>
                                         <NavLink to="/setting/subscriptions" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                            <Bell className="text-gray-500 w-4" />
+                                            {/* <Bell className="text-gray-500 w-4" /> */}
                                             Subscription
                                         </NavLink>
                                     </CollapsibleContent>
