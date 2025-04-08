@@ -205,29 +205,31 @@ export default function AddRole() {
 
                             <div>
                                 {permissionCategories.map((category) => (
-                                    <Card key={category.id} className='border mt-6 rounded-[15px]'>
-                                        <CardHeader>
-                                            <CardTitle>{category.name}</CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <ul>
-                                                {category.permissions.map((permission) => (
-                                                    <li key={permission.id}>
-                                                        <label>
-                                                            <input
-                                                                className="mr-2"
-                                                                type="checkbox"
-                                                                value={permission.id}
-                                                                checked={selectedPermissions.includes(permission.id)}
-                                                                onChange={() => handlePermissionChange(permission.id)}
-                                                            />
-                                                            {permission.name}
-                                                        </label>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </CardContent>
-                                    </Card>
+                                    category.permissions && category.permissions.length > 0 && (
+                                        <Card key={category.id} className='border mt-6 rounded-[15px]'>
+                                            <CardHeader>
+                                                <CardTitle>{category.name}</CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                                <ul>
+                                                    {category.permissions.map((permission) => (
+                                                        <li key={permission.id}>
+                                                            <label>
+                                                                <input
+                                                                    className="mr-2"
+                                                                    type="checkbox"
+                                                                    value={permission.id}
+                                                                    checked={selectedPermissions.includes(permission.id)}
+                                                                    onChange={() => handlePermissionChange(permission.id)}
+                                                                />
+                                                                {permission.name}
+                                                            </label>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </CardContent>
+                                        </Card>
+                                    )
                                 ))}
                             </div>
                         </div>
