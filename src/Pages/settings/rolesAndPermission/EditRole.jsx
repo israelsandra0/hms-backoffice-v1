@@ -195,7 +195,7 @@ export default function EditRole() {
                                                                     checked={selectedPermissions.includes(permission.id)}
                                                                     onChange={() => handlePermissionChange(permission.id)}
                                                                 />
-                                                                {permission.name} - {permission.category}
+                                                                {permission.name} 
                                                             </label>
                                                         </li>
                                                     ))}
