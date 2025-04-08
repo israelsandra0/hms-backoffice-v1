@@ -28,6 +28,8 @@ import { useConfirm } from "@/hooks/use-confirm";
 import Spinner from "@/components/ui/spinner";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from "@/components/ui/breadcrumb";
 import { Link, useNavigate } from "react-router-dom";
+import { usePermission } from "@/hooks/use-permissions";
+import { PERMISSIONS } from "@/lib/permissions";
 
 
 export default function HotelsPage() {
@@ -37,6 +39,7 @@ export default function HotelsPage() {
     const { confirmAction } = useConfirm()
     const navigate = useNavigate()
     const [searchFilter, setSearchFilter] = useState("");
+    const { hasPermission } = usePermission()
 
 
     // handle hotel list
@@ -201,9 +204,11 @@ export default function HotelsPage() {
                         className="border border-b-gray-300 pl-9 rounded py-2 w-[300px] outline-none"
                     />
                 </div>
-                <ButtonLink to="/hotels/add" variant="primary">
-                    Add Hotel
-                </ButtonLink>
+                {hasPermission(PERMISSIONS.HOTEL_ADD.name) && (
+                    <ButtonLink to="/hotels/add" variant="primary">
+                        Add Hotel
+                    </ButtonLink>
+                )}
             </div>
 
             <Table className="content w-full rounded overflow-hidden">
@@ -241,18 +246,26 @@ export default function HotelsPage() {
                                         <MoreVertical className="cursor-pointer" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56 cursor-pointer">
-                                        <DropdownMenuItem onClick={() => navigate(`/hotels/view/${hotel.id}`)}>
-                                            <span>View</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem onClick={() => setHotelToEdit(hotel)}>
-                                            <span>Edit</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem onClick={() => handleActionClick(hotel.id, hotel.isActive ? 'Deactivate' : 'Activate')}>
-                                            <span>{hotel.isActive ? 'Deactivate' : 'Activate'}</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuSeparator />
+
+                                        {hasPermission(PERMISSIONS.HOTEL_VIEW.name) && (
+                                            <DropdownMenuItem onClick={() => navigate(`/hotels/view/${hotel.id}`)}>
+                                                <span>View</span>
+                                            </DropdownMenuItem>
+                                        )}
+
+                                        <DropdownMenuSeparator /> 
+
+                                        {hasPermission(PERMISSIONS.HOTEL_EDIT.name) && (
+                                            <DropdownMenuItem onClick={() => setHotelToEdit(hotel)}>
+                                                <span>Edit</span>
+                                            </DropdownMenuItem>
+                                        )}
+                                        
+                                        {hasPermission(PERMISSIONS.HOTEL_ACTIVATE.name) && (
+                                            <DropdownMenuItem onClick={() => handleActionClick(hotel.id, hotel.isActive ? 'Deactivate' : 'Activate')}>
+                                                <span>{hotel.isActive ? 'Deactivate' : 'Activate'}</span>
+                                            </DropdownMenuItem>
+                                        )}                                        
                                         <DropdownMenuItem
                                             onClick={() => handleActionClick(hotel.id, 'delete')}>
                                             <span>Delete</span>
