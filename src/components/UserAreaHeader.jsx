@@ -33,6 +33,11 @@ export default function UserAreaHeader({ pages }) {
     const { setTheme } = useTheme()
     const { hasPermission } = usePermission()
 
+    const hasAnyPermission =
+        hasPermission(PERMISSIONS.USER_MANAGEMENT.name) ||
+        hasPermission(PERMISSIONS.ACCESS_CONTROL.name) ||
+        hasPermission(PERMISSIONS.SUBSCRIPTION_MANAGMENT.name);
+
 
     useEffect(() => {
         // Get user data from localStorage
@@ -121,47 +126,50 @@ export default function UserAreaHeader({ pages }) {
                             <SupportIcon />
                             Support & help
                         </NavLink>
-                        <Collapsible
-                            open={isOpen}
-                            onOpenChange={setIsOpen}
-                        >
-                            <CollapsibleTrigger asChild className="mt-1">
-                                <div className="flex items-center ml-3 mt-2 justify-between">
-                                    <h4 className="text-sm flex gap-3 font-semibold cursor-pointer">
-                                        <SettingsIcon />
-                                        Setting
-                                    </h4>
-                                    {isOpen ? (
-                                        <ChevronDown className="h-4 w-4" />
-                                    ) : (
-                                        <ChevronRight className="h-4 w-4" />
+
+                        {hasAnyPermission && (
+                            <Collapsible
+                                open={isOpen}
+                                onOpenChange={setIsOpen}
+                            >
+                                <CollapsibleTrigger asChild className="mt-1">
+                                    <div className="flex items-center ml-3 mt-2 justify-between">
+                                        <h4 className="text-sm flex gap-3 font-semibold cursor-pointer">
+                                            <SettingsIcon />
+                                            Setting
+                                        </h4>
+                                        {isOpen ? (
+                                            <ChevronDown className="h-4 w-4" />
+                                        ) : (
+                                            <ChevronRight className="h-4 w-4" />
+                                        )}
+                                    </div>
+                                </CollapsibleTrigger>
+                                <CollapsibleContent className="space-y-2 ml-9 mt-2">
+                                    {hasPermission(PERMISSIONS.USER_MANAGEMENT.name) && (
+                                        <NavLink to="/setting/users" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                            {/* <Users className="text-gray-500 w-4" /> */}
+                                            User
+                                        </NavLink>
                                     )}
-                                </div>
-                            </CollapsibleTrigger>
-                            <CollapsibleContent className="space-y-2 ml-9 mt-2">
-                                {hasPermission(PERMISSIONS.USER_MANAGEMENT.name) && (
-                                    <NavLink to="/setting/users" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                        {/* <Users className="text-gray-500 w-4" /> */}
-                                        User
-                                    </NavLink>
-                                )}
 
-                                {hasPermission(PERMISSIONS.ACCESS_CONTROL.name) && (
-                                    <NavLink to="/setting/access_control" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                        Access Control
-                                    </NavLink>
-                                )}
+                                    {hasPermission(PERMISSIONS.ACCESS_CONTROL.name) && (
+                                        <NavLink to="/setting/access_control" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                            Access Control
+                                        </NavLink>
+                                    )}
 
-                                {hasPermission(PERMISSIONS.SUBSCRIPTION_MANAGMENT.name) && (
-                                    <NavLink to="/setting/subscriptions" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
-                                        {/* <Bell className="text-gray-500 w-4" /> */}
-                                        Subscription
-                                    </NavLink>
-                                )}
+                                    {hasPermission(PERMISSIONS.SUBSCRIPTION_MANAGMENT.name) && (
+                                        <NavLink to="/setting/subscriptions" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                            {/* <Bell className="text-gray-500 w-4" /> */}
+                                            Subscription
+                                        </NavLink>
+                                    )}
 
 
-                            </CollapsibleContent>
-                        </Collapsible>
+                                </CollapsibleContent>
+                            </Collapsible>                            
+                        )}
                     </nav>
 
                 </SheetContent>
