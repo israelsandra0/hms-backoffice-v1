@@ -26,6 +26,12 @@ export const HOTEL_ACTIVATE = {
     category: PermissionCategories.HOTEL_MANAGEMENT,
     code: "HOTEL_ACTIVATE"
 };
+
+export const HOTEL_DELETE = {
+    name: "delete hotel",
+    category: PermissionCategories.HOTEL_MANAGEMENT,
+    code: "HOTEL_DELETE"
+};
             
 export const MANAGE_HOTEL_LOCATIONS = {
     name: "manage hotel locations",
@@ -64,6 +70,7 @@ export const PERMISSIONS = {
     HOTEL_ADD,
     HOTEL_EDIT,
     HOTEL_ACTIVATE,
+    HOTEL_DELETE,
     MANAGE_HOTEL_LOCATIONS,
     MANAGE_HOTEL_ADMINS,
     USER_MANAGEMENT,

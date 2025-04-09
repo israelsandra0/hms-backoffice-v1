@@ -265,11 +265,14 @@ export default function HotelsPage() {
                                             <DropdownMenuItem onClick={() => handleActionClick(hotel.id, hotel.isActive ? 'Deactivate' : 'Activate')}>
                                                 <span>{hotel.isActive ? 'Deactivate' : 'Activate'}</span>
                                             </DropdownMenuItem>
-                                        )}                                        
-                                        <DropdownMenuItem
-                                            onClick={() => handleActionClick(hotel.id, 'delete')}>
-                                            <span>Delete</span>
-                                        </DropdownMenuItem>
+                                        )} 
+
+                                        {hasPermission(PERMISSIONS.HOTEL_DELETE.name) && (
+                                            <DropdownMenuItem
+                                                onClick={() => handleActionClick(hotel.id, 'delete')}>
+                                                <span>Delete</span>
+                                            </DropdownMenuItem>
+                                        )}                                       
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>
