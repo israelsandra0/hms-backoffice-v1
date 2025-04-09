@@ -199,7 +199,7 @@ export default function AccessControl() {
                     </div>
                     <h1 className="text-[1.5rem] my-6  font-bold">No Data Found!</h1>
                     <ButtonLink to="/setting/access_control/create" variant="primary">
-                        Add
+                        Add Role
                     </ButtonLink>
                 </div>
             )}
@@ -217,7 +217,7 @@ export default function AccessControl() {
                             />
                         </div>
                         <ButtonLink to="/setting/access_control/create" variant="primary">
-                            Add
+                            Add Role
                         </ButtonLink>
                     </div>
                     <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">

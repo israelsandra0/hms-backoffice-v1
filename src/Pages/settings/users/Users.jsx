@@ -279,7 +279,7 @@ export default function Users() {
                         <Shield className='w-[100px] h-[100px] text-primary' />
                     </div>
                     <h1 className="text-[1.5rem] my-6  font-bold">No Data Found!</h1>
-                    <Button variant='primary' onClick={() => (setAddUserBox(true))}>Add</Button>
+                    <Button variant='primary' onClick={() => (setAddUserBox(true))}>Add User</Button>
                 </div>
             )}
 
@@ -296,7 +296,7 @@ export default function Users() {
                                 className="border border-b-gray-300 pl-9 rounded px-4 py-2 w-[300px] outline-none"
                             />
                         </div>
-                        <Button variant='primary' onClick={() => (setAddUserBox(true))}>Add</Button>
+                        <Button variant='primary' onClick={() => (setAddUserBox(true))}>Add User</Button>
                     </div>
                     <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
                         {table.getPageCount() > 0 && (

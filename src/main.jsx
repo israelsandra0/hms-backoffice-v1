@@ -26,13 +26,13 @@ import SubscriptionHistory from "./pages/hotels/viewHotels/viewHotelSubscription
 import PageSettings from "./pages/hotels/viewHotels/Settings";
 import ViewHotelsPage from "./pages/hotels/viewHotels/ViewHotelsPage";
 import Subscription from "./pages/settings/subscriptionPage/Subscription";
-import SubscriptionPlan from "./pages/settings/subscriptionPage/SubscriptionPlan";
 import AddSubscriptionPage from "./pages/hotels/viewHotels/viewHotelSubscription/AddSubscription";
 import { ThemeProvider } from "./components/theme-provider";
 import Rooms from "./pages/hotels/viewHotels/viewHotelRooms/Rooms";
 import AccessControl from "./pages/settings/rolesAndPermission/AccessControl";
 import AddRole from "./pages/settings/rolesAndPermission/AddRole";
 import EditRole from "./pages/settings/rolesAndPermission/EditRole";
+import SubscriptionPlan from "./pages/settings/subscriptionPage/SubscriptionPlan";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

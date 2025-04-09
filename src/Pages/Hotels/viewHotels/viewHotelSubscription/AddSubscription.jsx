@@ -43,7 +43,7 @@ export default function AddSubscriptionPage() {
 
             <div>
                 <div className='w-[95%] m-auto'>
-                    <b className='ml-6'>Add Subscription</b>
+                    <b className='ml-6'>Add Subscription Plan</b>
                     <hr />
                 </div>
 
@@ -84,7 +84,7 @@ export default function AddSubscriptionPage() {
                     </div>
 
                     <ButtonLink variant="primary" className='flex justify-center mt-4'>
-                        + New Subscription
+                        Submit
                     </ButtonLink>
                 </Card>
             </div>

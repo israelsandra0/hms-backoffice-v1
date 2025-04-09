@@ -25,14 +25,14 @@ export default function Subscription() {
                     <SubscriptionImg className=''/>
                 </div>
                 <div className="p-4">
-                    <b  className='text-[24px]'>No Subscription Yet</b>
+                    <b  className='text-[24px]'>No Subscription Plan Yet</b>
                     <p className='text-gray-500 w-[450px] text-center'>
                         No subscription created yet. Get started by setting
                         up tailored subscription plans for your clients.
                     </p>
                 </div>
-                <ButtonLink to="/subscriptions/subscription_plan" variant="primary">
-                    Create Subscription Plan
+                <ButtonLink to="/setting/subscriptions/subscription_plan" variant="primary">
+                    Add Plan
                 </ButtonLink>
             </div>
         </>

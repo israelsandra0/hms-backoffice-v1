@@ -178,7 +178,7 @@ export default function SubscriptionPlan() {
                     </div>
 
                     <ButtonLink to="" variant="primary" className="ml-44 mt-6 mb-12 px-20">
-                        Create Plan
+                        Submit
                     </ButtonLink>
                 </div>
             </div>

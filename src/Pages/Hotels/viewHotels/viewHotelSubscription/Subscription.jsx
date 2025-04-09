@@ -139,7 +139,7 @@ export default function SubscriptionHistory() {
                 </Popover>
 
                 <ButtonLink variant="primary" onClick={() => navigate("/hotels/view/suscription/add")}>
-                    + New Subscription
+                    Add Plan
                 </ButtonLink>
             </div>
 

@@ -56,7 +56,7 @@ export default function HotelPageUsers({ hotelId }) {
                     </div>
                     <h1 className="text-[1.5rem] my-6  font-bold">No User Found!</h1>
                     <Button variant="primary" className='mb-[7rem]' onClick={() => setAddUserBox(true)}>
-                        + Add
+                        Add User
                     </Button>
                 </div>
             )}
@@ -73,7 +73,7 @@ export default function HotelPageUsers({ hotelId }) {
                         />
                     </div>
                     <Button variant="primary" onClick={() => setAddUserBox(true)}>
-                        + Add
+                        Add User
                     </Button>
                 </div>
             )}

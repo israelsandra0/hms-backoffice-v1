@@ -240,7 +240,7 @@ export default function AddRole() {
                             type="submit"
                             className="w-full p-[16px] text-[16px] mt-6"
                         >
-                            {disabledButton ? "Adding..." : "Add"}
+                            {disabledButton ? "Submitting..." : "Submit"}
                         </Button>
                     </form>
                 )}

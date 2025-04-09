@@ -235,7 +235,7 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
 
                     <br />
                     <Button variant="primary" type="submit" className="w-full p-[16px] text-[16px]" disabled={isPending}>
-                        {isPending ? <Spinner /> : 'continue'}
+                        {isPending ? <Spinner /> : 'Submit'}
                     </Button>
 
                 </form>
