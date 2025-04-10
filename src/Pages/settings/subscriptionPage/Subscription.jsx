@@ -32,7 +32,7 @@ export default function Subscription() {
                     </p>
                 </div>
                 <ButtonLink to="/setting/subscriptions/subscription_plan" variant="primary">
-                    Add Plan
+                    Add
                 </ButtonLink>
             </div>
         </>

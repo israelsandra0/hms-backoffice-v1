@@ -206,7 +206,7 @@ export default function HotelsPage() {
                 </div>
                 {hasPermission(PERMISSIONS.HOTEL_ADD.name) && (
                     <ButtonLink to="/hotels/add" variant="primary">
-                        Add Hotel
+                        Add
                     </ButtonLink>
                 )}
             </div>
@@ -224,16 +224,16 @@ export default function HotelsPage() {
                 </TableHeader>
                 <TableBody>
                     {filteredHotels.map((hotel) => (
-                        <TableRow key={hotel?.id}  className="hover:bg-grey">
+                        <TableRow key={hotel?.id} className="hover:bg-grey">
                             <TableCell>
                                 <Link onClick={() => navigate(`/hotels/view/${hotel.id}`)} className="text-primary">
                                     {hotel?.name}
                                 </Link>
                             </TableCell>
                             <TableCell>
-                                <a  href={`https://${hotel?.website}`} className="text-primary flex gap-1 items-center"  target="_blank" rel="noopener noreferrer">
+                                <a href={`https://${hotel?.website}`} className="text-primary flex gap-1 items-center" target="_blank" rel="noopener noreferrer">
                                     {hotel?.website}
-                                    <ExternalLink className='w-4'/>
+                                    <ExternalLink className='w-4' />
                                 </a>
                             </TableCell>
                             <TableCell>{hotel?.locations_count}</TableCell>
@@ -253,26 +253,30 @@ export default function HotelsPage() {
                                             </DropdownMenuItem>
                                         )}
 
-                                        <DropdownMenuSeparator /> 
+                                        <DropdownMenuSeparator />
 
                                         {hasPermission(PERMISSIONS.HOTEL_EDIT.name) && (
                                             <DropdownMenuItem onClick={() => setHotelToEdit(hotel)}>
                                                 <span>Edit</span>
                                             </DropdownMenuItem>
                                         )}
-                                        
+
+                                        <DropdownMenuSeparator />
+
                                         {hasPermission(PERMISSIONS.HOTEL_ACTIVATE.name) && (
                                             <DropdownMenuItem onClick={() => handleActionClick(hotel.id, hotel.isActive ? 'Deactivate' : 'Activate')}>
                                                 <span>{hotel.isActive ? 'Deactivate' : 'Activate'}</span>
                                             </DropdownMenuItem>
-                                        )} 
+                                        )}
+
+                                        <DropdownMenuSeparator />
 
                                         {hasPermission(PERMISSIONS.HOTEL_DELETE.name) && (
                                             <DropdownMenuItem
                                                 onClick={() => handleActionClick(hotel.id, 'delete')}>
                                                 <span>Delete</span>
                                             </DropdownMenuItem>
-                                        )}                                       
+                                        )}
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>
