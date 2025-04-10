@@ -150,7 +150,6 @@ export default function EditRole() {
 
                     <div className="text-center mt-28">
                         <Spinner className="text-gray-300 mb-4 mx-auto h-16 w-16" />
-                        <p>Loading permissions...</p>
                     </div>
 
                 ) : (
