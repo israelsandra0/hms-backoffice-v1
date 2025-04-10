@@ -186,7 +186,7 @@ export default function Users() {
         enabled: false
     });
 
-    const { isPending, refetch: fetchUsers } = useQuery({
+    const { isFetching, refetch: fetchUsers } = useQuery({
         queryKey: ["users"],
         queryFn: async () => {
             const res = await get(`/users`);
@@ -267,23 +267,23 @@ export default function Users() {
         <div>
             <UserAreaHeader pages={breadcrumb} />
 
-            {isPending && (
-                <div className="text-center flex items-center justify-center mx-auto my-5">
+            {isFetching && (
+                <div className="text-center flex items-center justify-center mx-auto mt-28">
                     <Spinner className="me-3 text-gray-300 h-16 w-16" />
                 </div>
             )}
 
-            {!isPending && !users?.length && (
+            {!isFetching && !users?.length && (
                 <div className='mx-auto items-center mt-16 grid place-items-center text-center'>
                     <div className="bg-grey w-[170px] grid place-items-center  h-[170px] rounded-[50%]">
                         <Shield className='w-[100px] h-[100px] text-primary' />
                     </div>
                     <h1 className="text-[1.5rem] my-6  font-bold">No Data Found!</h1>
-                    <Button variant='primary' onClick={() => (setAddUserBox(true))}>Add User</Button>
+                    <Button variant='primary' onClick={() => (setAddUserBox(true))}>Add</Button>
                 </div>
             )}
 
-            {!!users?.length && (
+            {!isFetching && !!users?.length && (
                 <div>
                     <div className="flex justify-between mx-6 my-8 ">
                         <div className="mb-4">
@@ -296,7 +296,7 @@ export default function Users() {
                                 className="border border-b-gray-300 pl-9 rounded px-4 py-2 w-[300px] outline-none"
                             />
                         </div>
-                        <Button variant='primary' onClick={() => (setAddUserBox(true))}>Add User</Button>
+                        <Button variant='primary' onClick={() => (setAddUserBox(true))}>Add </Button>
                     </div>
                     <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
                         {table.getPageCount() > 0 && (

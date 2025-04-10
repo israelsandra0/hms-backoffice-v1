@@ -113,7 +113,7 @@ export default function AccessControl() {
         getCoreRowModel: getCoreRowModel(),
     });
 
-    const { isLoading, refetch: fetchRoles } = useQuery({
+    const { isFetching, isLoading, refetch: fetchRoles } = useQuery({
         queryKey: ["roles"],
         queryFn: async () => {
             const res = await get(`/roles`);
@@ -165,8 +165,6 @@ export default function AccessControl() {
         })
     };
 
-
-
     const breadcrumb = (
         <Breadcrumb>
             <BreadcrumbList>
@@ -182,28 +180,30 @@ export default function AccessControl() {
     );
 
 
+
     return (
         <div>
             <UserAreaHeader pages={breadcrumb} />
 
-            {isLoading && (
-                <div className="text-center flex items-center justify-center mx-auto my-5">
+            {isFetching && (
+                <div className="text-center flex items-center justify-center mx-auto mt-28">
                     <Spinner className="me-3 text-gray-300 h-16 w-16" />
                 </div>
             )}
 
-            {!isLoading && !roles?.length && (
+            {!isFetching && !roles?.length && (
                 <div className='mx-auto items-center mt-16 grid place-items-center text-center'>
                     <div className="bg-grey w-[170px] grid place-items-center  h-[170px] rounded-[50%]">
                         <Shield className='w-[100px] h-[100px] text-primary' />
                     </div>
                     <h1 className="text-[1.5rem] my-6  font-bold">No Data Found!</h1>
                     <ButtonLink to="/setting/access_control/create" variant="primary">
-                        Add Role
+                        Add
                     </ButtonLink>
                 </div>
             )}
-            {!!roles?.length && (
+
+            {!isFetching && !!roles?.length && (
                 <div>
                     <div className="flex justify-between mx-6 my-8 ">
                         <div className="mb-4">
@@ -217,7 +217,7 @@ export default function AccessControl() {
                             />
                         </div>
                         <ButtonLink to="/setting/access_control/create" variant="primary">
-                            Add Role
+                            Add
                         </ButtonLink>
                     </div>
                     <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
