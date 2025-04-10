@@ -34,16 +34,28 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Rooms from "./viewHotelRooms/Rooms";
+import { HOTEL_VIEW, MANAGE_HOTEL_ADMINS, MANAGE_HOTEL_LOCATIONS } from "@/lib/permissions";
+import { usePermission } from "@/hooks/use-permissions";
+
+
+const TAB_PERMISSION_MAP = {
+    "Overview": HOTEL_VIEW.name,
+    "Users": MANAGE_HOTEL_ADMINS.name,
+    "Locations": MANAGE_HOTEL_LOCATIONS.name
+};
 
 export default function ViewHotelsPage() {
     const navigate = useNavigate();
     const [hotelToEdit, setHotelToEdit] = useState({});
     const [hotelLogo, setHotelLogo] = useState(false);
     const [hotel, setHotel] = useState({})
+    const { hasPermission } = usePermission();
 
     let [searchParams, setSearchParams] = useSearchParams();
 
     const { id } = useParams();
+
+
 
     const validTabs = [
         "Overview",
@@ -53,9 +65,12 @@ export default function ViewHotelsPage() {
         "Subscription Plan",
         "Setting",
     ];
+
+    const filteredTabs = validTabs.filter(tab => hasPermission(TAB_PERMISSION_MAP[tab]));
+
     const getInitialTab = () => {
         const requestedTab = searchParams.get("active");
-        return validTabs.includes(requestedTab) ? requestedTab : validTabs[0];
+        return filteredTabs.includes(requestedTab) ? requestedTab : filteredTabs[0];
     };
 
     const [activeTab, setActiveTab] = useState(getInitialTab());
@@ -65,7 +80,7 @@ export default function ViewHotelsPage() {
         setSearchParams(new URLSearchParams({ active: newTab }));
     };
 
-    const { 
+    const {
         isLoading,
         refetch: viewHotelRequest,
     } = useQuery({
@@ -80,8 +95,8 @@ export default function ViewHotelsPage() {
             return response.data;
         },
         enabled: !!id,
-        staleTime: 0,   
-        cacheTime: 0, 
+        staleTime: 0,
+        cacheTime: 0,
     });
 
     // Update the logo state when hotel data is loaded
@@ -90,8 +105,6 @@ export default function ViewHotelsPage() {
             setHotelLogo(hotel.logo);
         }
     }, [hotel]);
-
-    
 
     const handleEditClose = () => {
         setHotelToEdit({});
@@ -128,7 +141,6 @@ export default function ViewHotelsPage() {
         );
     }
 
-    // const locationId = hotel?.locations
 
     return (
         <div>
@@ -175,7 +187,7 @@ export default function ViewHotelsPage() {
 
             <Tabs className="w-full" value={activeTab}>
                 <TabsList className="w-[95%] ml-6 px-2 rounded-[3rem]">
-                    {validTabs.map((tab) => (
+                    {filteredTabs.map((tab) => (
                         <TabsTrigger
                             className="w-[50%] rounded-[3rem] py-1 my-6"
                             value={tab}
@@ -188,36 +200,48 @@ export default function ViewHotelsPage() {
                 </TabsList>
 
                 <div className="border border-b-0 border-l-0 border-r-0 mt-4">
-                    <TabsContent value={validTabs[0]}>
-                        <Card>
-                            <HotelsOverview />
-                        </Card>
-                    </TabsContent>
-                    <TabsContent value={validTabs[1]}>
-                        <Card>
-                            <HotelPageUsers hotelId={hotel.id} />
-                        </Card>
-                    </TabsContent>
-                    <TabsContent value={validTabs[2]}>
-                        <Card>
-                            <Locations hotelId={hotel.id} />
-                        </Card>
-                    </TabsContent>
-                    <TabsContent value={validTabs[3]}>
-                        <Card>
-                            <Rooms hotelId={hotel.id}/>
-                        </Card>
-                    </TabsContent>
-                    <TabsContent value={validTabs[4]}>
-                        <Card>
-                            <SubscriptionHistory hotelId={hotel.id} />
-                        </Card>
-                    </TabsContent>
-                    <TabsContent value={validTabs[5]}>
-                        <Card>
-                            <PageSettings hotelId={hotel.id} />
-                        </Card>
-                    </TabsContent>
+                    {filteredTabs.includes("Overview") && (
+                        <TabsContent value="Overview">
+                            <Card>
+                                <HotelsOverview />
+                            </Card>
+                        </TabsContent>
+                    )}
+                    {filteredTabs.includes("Users") && (
+                        <TabsContent value="Users">
+                            <Card>
+                                <HotelPageUsers hotelId={hotel.id} />
+                            </Card>
+                        </TabsContent>
+                    )}
+                    {filteredTabs.includes("Locations") && (
+                        <TabsContent value="Locations">
+                            <Card>
+                                <Locations hotelId={hotel.id} />
+                            </Card>
+                        </TabsContent>
+                    )}
+                    {filteredTabs.includes("Room Types") && (
+                        <TabsContent value="Room Types">
+                            <Card>
+                                <Rooms hotelId={hotel.id} />
+                            </Card>
+                        </TabsContent>
+                    )}
+                    {filteredTabs.includes("Subscription Plan") && (
+                        <TabsContent value="Subscription Plan">
+                            <Card>
+                                <SubscriptionHistory hotelId={hotel.id} />
+                            </Card>
+                        </TabsContent>
+                    )}
+                    {filteredTabs.includes("Setting") && (
+                        <TabsContent value="Setting">
+                            <Card>
+                                <PageSettings hotelId={hotel.id} />
+                            </Card>
+                        </TabsContent>
+                    )}
                 </div>
             </Tabs>
 

@@ -15,7 +15,9 @@ export const HOTEL_ADD = {
     name: "add hotel",
     category: PermissionCategories.HOTEL_MANAGEMENT,
     code: "HOTEL_ADD"
-};export const HOTEL_EDIT = {
+};
+
+export const HOTEL_EDIT = {
     name: "edit hotel",
     category: PermissionCategories.HOTEL_MANAGEMENT,
     code: "HOTEL_EDIT"
@@ -44,7 +46,6 @@ export const MANAGE_HOTEL_ADMINS = {
     category: PermissionCategories.HOTEL_MANAGEMENT,
     code: "MANAGE_HOTEL_ADMINS"
 };
-
 
 export const USER_MANAGEMENT = {
     name: "user management",
