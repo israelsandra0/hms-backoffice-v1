@@ -52,9 +52,9 @@ export default function EditHotelModal({ closeFn, hotelToEdit }) {
 
     const { mutate, isPending } = useMutation({
         mutationFn: async (data) => {
-            if (!data.logo) (
-                delete data.logo
-            )
+            if (!data.logo) {
+                delete data.logo;
+            }
             const res = await put(`/hotels/update/${hotelToEdit.id}`, data)
             if (res.ok) {
                 toast({
