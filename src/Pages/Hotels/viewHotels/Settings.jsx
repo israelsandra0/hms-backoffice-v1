@@ -124,7 +124,7 @@ export default function PageSettings({ closeFn, hotelId }) {
 
 
     return (
-        <div className="ml-4">
+        <div className="ml-4 mb-28">
 
             <div>
                 <Card className="border mt-6 rounded-[15px] ml-4 w-[500px]">
@@ -154,7 +154,7 @@ export default function PageSettings({ closeFn, hotelId }) {
                                     onClick={handleFileDelete}
                                 />
 
-                                <Button variant='outline'>Upload</Button>
+                                <Button variant='primary'>Upload</Button>
                             </form>
 
                         )}
@@ -220,7 +220,7 @@ export default function PageSettings({ closeFn, hotelId }) {
 
                                 <div className="w-[150px] h-[100px] object-cover  border border-gray-300">
                                     {!!hotelId.logo && (
-                                        <img src={hotelId.logo} alt="Logo" className="w-16 h-16 mx-auto my-auto object-cover" />
+                                        <img src={hotelId.logo} alt="Logo" className="w-[150px] h-[100px] mx-auto my-auto object-cover" />
                                     )}
 
                                     {!fileDetails?.preview && !hotelId.logo && (
@@ -277,6 +277,8 @@ export default function PageSettings({ closeFn, hotelId }) {
                                 <option value="Helvetica">Helvetica</option>
                             </select>
                         </div>
+
+                        <Button variant='primary'>Save</Button>
 
                     </CardContent>
                 </Card>
