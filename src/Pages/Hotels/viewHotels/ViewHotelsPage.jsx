@@ -61,7 +61,6 @@ export default function ViewHotelsPage() {
         "Overview",
         "Users",
         "Locations",
-        "Room Types",
         "Subscription Plan",
         "Setting",
     ];
@@ -221,13 +220,6 @@ export default function ViewHotelsPage() {
                             </Card>
                         </TabsContent>
                     )}
-                    {filteredTabs.includes("Room Types") && (
-                        <TabsContent value="Room Types">
-                            <Card>
-                                <Rooms hotelId={hotel.id} />
-                            </Card>
-                        </TabsContent>
-                    )}
                     {filteredTabs.includes("Subscription Plan") && (
                         <TabsContent value="Subscription Plan">
                             <Card>
@@ -238,7 +230,7 @@ export default function ViewHotelsPage() {
                     {filteredTabs.includes("Setting") && (
                         <TabsContent value="Setting">
                             <Card>
-                                <PageSettings hotelId={hotel.id} />
+                                <PageSettings closeFn={handleEditClose} hotelId={hotel} />
                             </Card>
                         </TabsContent>
                     )}
