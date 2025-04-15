@@ -47,6 +47,13 @@ export default function PageSettings({ hotelId }) {
                     duration: 5000,
                     title: 'Data updated successfully!'
                 });
+                
+                setFileDetails({
+                    name: "",
+                    size: 0,
+                    preview: "",
+                });
+                setValue('logo', null);
 
             } else if (res.status.toString().startsWith(4)) {
 
