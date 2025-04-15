@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import * as yup from "yup";
 
 
-export default function PageSettings({ hotelId }) {
+export default function PageSettings({ closeFn, hotelId }) {
 
     const { toast } = useToast()
 
@@ -48,6 +48,8 @@ export default function PageSettings({ hotelId }) {
                     title: 'Data updated successfully!'
                 });
                 
+                closeFn()
+
                 setFileDetails({
                     name: "",
                     size: 0,
