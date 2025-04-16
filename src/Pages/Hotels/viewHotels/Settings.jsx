@@ -131,7 +131,7 @@ export default function PageSettings({ closeFn, hotelId }) {
                 <Card className="border mt-6 rounded-[15px] ml-4 w-[500px]">
                     <CardHeader>
                         <CardTitle className="flex justify-between">
-                            Logo 
+                            Logo
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -150,6 +150,12 @@ export default function PageSettings({ closeFn, hotelId }) {
                                         </div>
                                     )}
                                 </div>
+                                <Button variant="primary" type="submit" className="w-full p-[16px] text-[16px]" disabled={isPending}>
+                                    {isPending ? <Spinner /> : 'Upload'}
+                                </Button>
+                                <Button variant="grey" onClick={handleFileDelete} className="ml-4 w-full p-[16px] text-[16px]" disabled={isPending}>
+                                    {isPending ? <Spinner /> : 'cancel'}
+                                </Button>
                             </form>
 
                         )}
