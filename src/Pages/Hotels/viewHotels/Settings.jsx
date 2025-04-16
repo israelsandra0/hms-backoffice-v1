@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Spinner from "@/components/ui/spinner";
 import { put } from "@/functions";
 import { useToast } from "@/hooks/use-toast";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -47,7 +48,7 @@ export default function PageSettings({ closeFn, hotelId }) {
                     duration: 5000,
                     title: 'Data updated successfully!'
                 });
-                
+
                 closeFn()
 
                 setFileDetails({
@@ -135,7 +136,7 @@ export default function PageSettings({ closeFn, hotelId }) {
                     </CardHeader>
                     <CardContent>
                         {!!fileDetails?.preview && (
-                            <form  onSubmit={handleSubmit(mutate)}>
+                            <form onSubmit={handleSubmit(mutate)}>
                                 <div className="flex justify-between gap-6 items-center mb-4">
 
                                     <div className="w-[150px] h-[100px] object-cover">
@@ -149,12 +150,6 @@ export default function PageSettings({ closeFn, hotelId }) {
                                         </div>
                                     )}
                                 </div>
-                                <RiDeleteBin2Line
-                                    className="text-red-500 cursor-pointer float-end"
-                                    onClick={handleFileDelete}
-                                />
-
-                                <Button variant='primary'>Upload</Button>
                             </form>
 
                         )}
@@ -179,7 +174,7 @@ export default function PageSettings({ closeFn, hotelId }) {
                                     onChange={(e) => {
                                         handleFileChange(e)
                                     }}
-                                /> 
+                                />
                             </form>
                         )}
                     </CardContent>
