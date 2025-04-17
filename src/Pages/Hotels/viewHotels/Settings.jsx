@@ -298,7 +298,7 @@ export default function PageSettings({ closeFn, hotelId }) {
                         <div>{(previewData.size / 1024).toFixed(2)} KB</div>
                     </div>
                 </div>
-                <Button type="submit" disabled={isLoading} className="p-4 text-[16px]">
+                <Button type="submit" variant="primary" disabled={isLoading} className="p-4 text-[16px]">
                     {isLoading ? <Spinner /> : "Upload"}
                 </Button>
                 <Button variant="grey" type="button" onClick={onDelete} disabled={isLoading} className="p-4 text-[16px] ml-4">
