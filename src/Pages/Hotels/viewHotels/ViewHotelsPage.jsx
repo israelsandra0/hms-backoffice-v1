@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import Spinner from "@/components/ui/spinner";
 import UserAreaHeader from "@/components/UserAreaHeader";
-import { get } from "@/functions";
-import { useQuery } from "@tanstack/react-query";
+import { apiDelete, get } from "@/functions";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
     Link,
@@ -36,6 +36,7 @@ import {
 import Rooms from "./viewHotelRooms/Rooms";
 import { HOTEL_VIEW, MANAGE_HOTEL_ADMINS, MANAGE_HOTEL_LOCATIONS } from "@/lib/permissions";
 import { usePermission } from "@/hooks/use-permissions";
+import { useToast } from "@/hooks/use-toast";
 
 
 const TAB_PERMISSION_MAP = {
@@ -47,15 +48,14 @@ const TAB_PERMISSION_MAP = {
 export default function ViewHotelsPage() {
     const navigate = useNavigate();
     const [hotelToEdit, setHotelToEdit] = useState({});
-    const [hotelLogo, setHotelLogo] = useState(false);
+    const [hotelLogo, setHotelLogo] = useState(null);
     const [hotel, setHotel] = useState({})
     const { hasPermission } = usePermission();
+    const { toast } = useToast()
 
     let [searchParams, setSearchParams] = useSearchParams();
 
     const { id } = useParams();
-
-
 
     const validTabs = [
         "Overview",
@@ -79,6 +79,10 @@ export default function ViewHotelsPage() {
         setSearchParams(new URLSearchParams({ active: newTab }));
     };
 
+    const handleLogoRemove = () => {
+        setHotelLogo(false);
+    };
+
     const {
         isLoading,
         refetch: viewHotelRequest,
@@ -97,6 +101,38 @@ export default function ViewHotelsPage() {
         staleTime: 0,
         cacheTime: 0,
     });
+ 
+    const { mutate: removeLogo, isPending } = useMutation({
+        mutationFn: async () => {
+            const res = await apiDelete(`/hotels/${id}/remove-logo`);
+            if (res.ok) {
+                toast({
+                    success: true,
+                    duration: 5000,
+                    title: "Logo successfully removed!",
+                });
+                handleLogoRemove();
+                viewHotelRequest();  
+            } else {
+                const errorData = await res.json();
+
+                if (errorData?.errors) {
+                    errorData.errors.forEach((error) => {
+                        setError(error.field, {
+                            type: "custom",
+                            message: error.message,
+                        });
+                    });
+                } else {
+                    toast({
+                        error: true,
+                        duration: 5000,
+                        title: "Failed to remove logo. Please try again.",
+                    });
+                }
+            }
+        },
+    });
 
     // Update the logo state when hotel data is loaded
     useEffect(() => {
@@ -110,10 +146,7 @@ export default function ViewHotelsPage() {
         viewHotelRequest();
     };
 
-    const handleLogoRemove = () => {
-        setHotelLogo(false); // Remove the logo by setting state to null
-        console.log("removed");
-    };
+
 
     const breadcrumb = (
         <Breadcrumb>
@@ -153,7 +186,7 @@ export default function ViewHotelsPage() {
                                 <img src={hotelLogo} className="w-16 h-16" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className=" ml-40 w-56">
-                                <DropdownMenuItem onClick={handleLogoRemove}>
+                                <DropdownMenuItem onClick={removeLogo}>
                                     Remove
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
