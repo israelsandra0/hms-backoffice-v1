@@ -136,6 +136,7 @@ export default function LoginPage() {
 									{/* registers the username as a data */}
 									<Label htmlFor="email">Email</Label>
 									<Input
+										maxLength='50'
 										{...register("email")}
 										type="email"
 										placeholder="info@atslng.com"
