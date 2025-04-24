@@ -37,6 +37,7 @@ import Rooms from "./viewHotelRooms/Rooms";
 import { HOTEL_VIEW, MANAGE_HOTEL_ADMINS, MANAGE_HOTEL_LOCATIONS } from "@/lib/permissions";
 import { usePermission } from "@/hooks/use-permissions";
 import { useToast } from "@/hooks/use-toast";
+import { useConfirm } from "@/hooks/use-confirm";
 
 
 const TAB_PERMISSION_MAP = {
@@ -52,6 +53,7 @@ export default function ViewHotelsPage() {
     const [hotel, setHotel] = useState({})
     const { hasPermission } = usePermission();
     const { toast } = useToast()
+    const { confirmAction } = useConfirm()
 
     let [searchParams, setSearchParams] = useSearchParams();
 
@@ -64,6 +66,12 @@ export default function ViewHotelsPage() {
         "Subscription Plan",
         "Setting",
     ];
+
+    useEffect(() => {
+        if (hotel?.logo) {
+            setHotelLogo(hotel.logo);
+        }
+    }, [hotel]);
 
     const filteredTabs = validTabs.filter(tab => hasPermission(TAB_PERMISSION_MAP[tab]));
 
@@ -79,14 +87,7 @@ export default function ViewHotelsPage() {
         setSearchParams(new URLSearchParams({ active: newTab }));
     };
 
-    const handleLogoRemove = () => {
-        setHotelLogo(false);
-    };
-
-    const {
-        isLoading,
-        refetch: viewHotelRequest,
-    } = useQuery({
+    const { isLoading, refetch: viewHotelRequest } = useQuery({
         queryKey: ["hotelData", id],
         queryFn: async () => {
             const res = await get(`/hotels/show/${id}`);
@@ -101,52 +102,77 @@ export default function ViewHotelsPage() {
         staleTime: 0,
         cacheTime: 0,
     });
- 
-    const { mutate: removeLogo, isPending } = useMutation({
-        mutationFn: async () => {
-            const res = await apiDelete(`/hotels/${id}/remove-logo`);
-            if (res.ok) {
-                toast({
-                    success: true,
-                    duration: 5000,
-                    title: "Logo successfully removed!",
-                });
-                handleLogoRemove();
-                viewHotelRequest();  
-            } else {
-                const errorData = await res.json();
 
-                if (errorData?.errors) {
-                    errorData.errors.forEach((error) => {
-                        setError(error.field, {
-                            type: "custom",
-                            message: error.message,
-                        });
-                    });
-                } else {
-                    toast({
-                        error: true,
-                        duration: 5000,
-                        title: "Failed to remove logo. Please try again.",
-                    });
+    const handleDeleteResponse = (res) => {
+        if (res.ok) {
+            toast({
+                success: true,
+                duration: 5000,
+                title: 'Hotel logo deleted successfully!'
+            });
+            viewHotelRequest();
+            setHotelLogo(false);
+        } else {
+            toast({
+                error: true,
+                duration: 5000,
+                title: 'Failed to delete hotel logo. Please try again.'
+            });
+        }
+    }
+
+    const confirmModalSetup = {
+        delete: {
+            title: 'Are you sure?',
+            message: "you're about to delete this hotel logo, This action cannot be undone.",
+            confirmButtonText: 'Delete',
+            buttonVariant: 'error',
+            cancelButtonText: 'Cancel'
+        },
+        activate: {
+            title: 'Activate Hotel?',
+            message: 'This action will activate the hotel and allow it to be visible to users.',
+            confirmButtonText: 'Activate',
+            buttonVariant: 'primary',
+            cancelButtonText: 'Cancel'
+        },
+        deactivate: {
+            title: 'Deactivate Hotel?',
+            message: 'This action will deactivate the hotel and allow it to be invisible to users.',
+            confirmButtonText: 'Deactivate',
+            buttonVariant: 'primary',
+            cancelButtonText: 'Cancel'
+        }
+    }
+    
+    const handleActionClick = (hotelId, actionType) => {
+        confirmAction({
+            ...confirmModalSetup[actionType.toLowerCase()],
+            isDestructive: actionType.toLowerCase() === 'delete',
+            confirmFn: () => handleConfirmation(hotelId, actionType),
+            completeFn: (res) => {
+                if (actionType.toLowerCase() === 'delete') {
+                    handleDeleteResponse(res)
                 }
             }
-        },
-    });
 
-    // Update the logo state when hotel data is loaded
-    useEffect(() => {
-        if (hotel?.logo) {
-            setHotelLogo(hotel.logo);
+        })
+    };
+
+    const handleConfirmation = async (hotelId, hotelAction) => {
+
+        if (hotelAction === 'Delete' || hotelAction === 'Deactivate') {
+            return await post(`/hotels/update-active-status/${hotelId}`, { isActive: hotelAction === 'Activate' })
+        } else {
+            return await apiDelete(`/hotels/${id}/remove-logo`)
+
         }
-    }, [hotel]);
+    }
 
     const handleEditClose = () => {
         setHotelToEdit({});
         viewHotelRequest();
     };
-
-
 
     const breadcrumb = (
         <Breadcrumb>
@@ -174,6 +200,7 @@ export default function ViewHotelsPage() {
     }
 
 
+
     return (
         <div>
             <UserAreaHeader pages={breadcrumb} />
@@ -186,7 +213,7 @@ export default function ViewHotelsPage() {
                                 <img src={hotelLogo} className="w-16 h-16" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className=" ml-40 w-56">
-                                <DropdownMenuItem onClick={removeLogo}>
+                                <DropdownMenuItem onClick={() => handleActionClick(hotel.id, 'delete')}>
                                     Remove
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
