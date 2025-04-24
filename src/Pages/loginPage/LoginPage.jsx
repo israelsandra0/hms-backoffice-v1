@@ -150,7 +150,7 @@ export default function LoginPage() {
 										<Label htmlFor="password">Password</Label>
 										<p className="float-right text-[12px] reset">
 											Forgotten password?{" "}
-											<Link className="text-[#8D561E]">Reset it</Link>
+											<Link to="/forgotten_password" className="text-[#8D561E]">Reset it</Link>
 										</p>
 									</div>
 									<Controller 
