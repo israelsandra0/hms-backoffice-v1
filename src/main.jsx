@@ -7,7 +7,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import LoginPage from "./Pages/LoginPage";
+import LoginPage from "./pages/loginPage/LoginPage";
 import { AuthProvider } from "./Pages/Auth";
 import UserAreaLayout from "./Pages/UserAreaLayout";
 import Dashboard from "./Pages/Dashboard";
@@ -33,11 +33,17 @@ import AccessControl from "./pages/settings/rolesAndPermission/AccessControl";
 import AddRole from "./pages/settings/rolesAndPermission/AddRole";
 import EditRole from "./pages/settings/rolesAndPermission/EditRole";
 import SubscriptionPlan from "./pages/settings/subscriptionPage/SubscriptionPlan";
+import ForgottenPassPage from "./pages/loginPage/forgottenPassword/ForgottenPassPage";
+import VerificationPage from "./pages/loginPage/forgottenPassword/OTPVerificationPage";
+import ResetPassPage from "./pages/loginPage/resetPassword/ResetPassPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<LoginPage />} />
+      <Route path="/forgotten_password" element={<ForgottenPassPage />} />
+      <Route path="/forgotten_password/verification" element={<VerificationPage />} />
+      <Route path="/reset_password" element={<ResetPassPage />} />
       <Route path="" element={<UserAreaLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/hotels" element={<HotelsPage />} />
