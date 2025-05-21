@@ -236,7 +236,7 @@ export default function HotelsPage() {
                                     <ExternalLink className='w-4' />
                                 </a>
                             </TableCell>
-                            <TableCell>{hotel?.locations_count}</TableCell>
+                            <TableCell>{hotel?.locationsCount}</TableCell>
                             <TableCell>{hotel?.subscription}</TableCell>
                             <TableCell><Badge variant={hotel?.isActive ? `success` : 'error'}>{hotel?.isActive ? `Active` : 'Inactive'}</Badge></TableCell>
                             {/* <TableCell></TableCell> */}
