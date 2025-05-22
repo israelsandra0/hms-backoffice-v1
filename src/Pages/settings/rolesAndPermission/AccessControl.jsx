@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { apiDelete, get } from "@/functions";
 import { useQuery } from "@tanstack/react-query";
 import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
-import { MoreVertical, Search, Shield } from "lucide-react";
+import { MoreVertical, Search, Shield, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import EditRole from "./EditRole";
@@ -14,10 +14,19 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { toast } from "@/hooks/use-toast";
 import { ButtonLink } from "@/components/ui/button_link";
 import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
+
 
 export default function AccessControl() {
 
     const [roles, setRoles] = useState([])
+    const [selectedRole, setSelectedRole] = useState(null)
     const [searchFilter, setSearchFilter] = useState("");
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10
@@ -54,11 +63,19 @@ export default function AccessControl() {
 
     const handleConfirmation = async (roleId) => await apiDelete(`/roles/${roleId}/destroy`)
 
-
     const columns = useMemo(() => [
         {
             header: "Name",
-            accessorKey: "name",
+            cell: (info) => {
+                return (
+                    <span
+                        className="cursor-pointer"
+                        onClick={() => setSelectedRole(info.row.original)}
+                    >
+                        {`${info.row.original.name}`}
+                    </span>
+                );
+            },
         },
         {
             header: "Description",
@@ -74,6 +91,9 @@ export default function AccessControl() {
                             <MoreVertical className="cursor-pointer" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56 cursor-pointer">
+                            <DropdownMenuItem onClick={() => setSelectedRole(row.original)}>
+                                <span>View</span>
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleEditRole(row.original)}>
                                 <span>Edit</span>
                             </DropdownMenuItem>
@@ -113,7 +133,7 @@ export default function AccessControl() {
         getCoreRowModel: getCoreRowModel(),
     });
 
-    const { isFetching, isLoading, refetch: fetchRoles } = useQuery({
+    const { isFetching, refetch: fetchRoles } = useQuery({
         queryKey: ["roles"],
         queryFn: async () => {
             const res = await get(`/roles`);
@@ -250,6 +270,59 @@ export default function AccessControl() {
                 )
 
             }
+
+            {!!selectedRole && (
+                <Card className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
+                    <CardContent className="fixed rounded sm:rounded-xl md:rounded-xl lg:rounded-xl left-[50%] top-[50%] z-50 grid w-[400px] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-white p-6 shadow-lg duration-200">
+                        <X
+                            className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400"
+                            onClick={() => setSelectedRole(null)}
+                        />
+                        <p>
+                            <h1 className="text-[1.2rem]">Role</h1>
+                            <strong>
+                                <i>{`${selectedRole.name}`}</i>
+                            </strong>
+                        </p>
+
+                        <p>
+                            <h1 className="text-[1.2rem]">Description</h1>
+                            <strong>
+                                <i>{`${selectedRole.description}`}</i>
+                            </strong>
+                        </p>
+
+                        <div>
+                            <h1 className="flex justify-between text-[1.2rem]">
+                                Role Permissions 
+                                <i className="text-[0.8rem]">{selectedRole.permissions.length} Permissions</i>
+                            </h1>
+
+                            <Accordion type="multiple" className="w-full">
+                                {Object.entries(
+                                    selectedRole.permissions.reduce((acc, perm) => {
+                                        if (!acc[perm.category]) acc[perm.category] = [];
+                                        acc[perm.category].push(perm.name);
+                                        return acc;
+                                    }, {})
+                                ).map(([category, names], index) => (
+                                    <AccordionItem key={category} value={`item-${index}`}>
+                                        <AccordionTrigger className="text-[1rem]">{category}</AccordionTrigger>
+                                        <AccordionContent>
+                                            <ul className="list-disc list-inside space-y-1">
+                                                {names.map((name, idx) => (
+                                                    <li key={idx}>{name}</li>
+                                                ))}
+                                            </ul>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
+                        </div>
+
+                    </CardContent>
+                </Card>
+            )}
 
             {/* {isFetching && (
                 <div className="text-center flex items-center justify-center mx-auto mt-28">
