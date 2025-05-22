@@ -80,12 +80,12 @@ export default function Users() {
                     info.row.original.isAdmin == 1 ? (
 
                         <span>
-                            <Badge variant='primary' className=" bg-lightPrimary text-primary">Admin <Star className=" p-1"/> </Badge>
+                            <Badge variant='primary' className=" bg-lightPrimary text-primary">Admin <Star className=" p-1" /> </Badge>
                         </span>
                     ) : (
                         <span>
                             <Badge variant='gray'>{`${info.row.original.role?.name}`}</Badge>
-                        </span> 
+                        </span>
                     )
                 );
             },
@@ -95,12 +95,12 @@ export default function Users() {
             cell: (info) => {
                 return (
                     <span>
-                       <Badge variant={info.row.original.isActive ? `success` : 'error'}>{info.row.original.isActive ? `Active` : 'Inactive'}</Badge>
+                        <Badge variant={info.row.original.isActive ? `success` : 'error'}>{info.row.original.isActive ? `Active` : 'Inactive'}</Badge>
                     </span>
                 );
             },
         },
-        
+
         // {
         //     header: "Email",
         //     cell: (info) => {
@@ -118,7 +118,7 @@ export default function Users() {
             cell: ({ row }) => {
 
                 const isLoggedInUser = row.original.id === loggedInUser.id;
-               
+
 
                 return (
                     <div>
@@ -267,7 +267,73 @@ export default function Users() {
         <div>
             <UserAreaHeader pages={breadcrumb} />
 
-            {isFetching && (
+            {isFetching ?
+                (
+                    <div className="text-center flex items-center justify-center mx-auto mt-28">
+                        <Spinner className="me-3 text-gray-300 h-16 w-16" />
+                    </div>
+                )
+                :
+                users && users?.length > 0 ? (
+                    <div>
+                        <div className="flex justify-between mx-6 my-8 ">
+                            <div className="mb-4">
+                                <Search className="text-gray-300 w-4 absolute mt-[10px] ml-4" />
+                                <input
+                                    type="text"
+                                    placeholder="Search"
+                                    value={searchFilter}
+                                    onChange={(e) => setSearchFilter(e.target.value)}
+                                    className="border border-b-gray-300 pl-9 rounded px-4 py-2 w-[300px] outline-none"
+                                />
+                            </div>
+                            <Button variant='primary' onClick={() => (setAddUserBox(true))}>Add </Button>
+                        </div>
+                        <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
+                            {table.getPageCount() > 0 && (
+                                <Table>
+                                    <TableHeader className="bg-lightPrimary">
+                                        <TableRow>
+                                            <TableHead>Name</TableHead>
+                                            <TableHead>Role</TableHead>
+                                            <TableHead>Status</TableHead>
+                                            <TableHead></TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {table.getRowModel().rows.map((row) => (
+                                            <TableRow key={row.id} className="hover:bg-grey">
+                                                {row.getVisibleCells().map((cell) => {
+
+                                                    return (
+                                                        <TableCell key={row.id}>
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            )}
+
+                            <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
+
+                        </div>
+                    </div>
+                ) : (
+                    <div className='mx-auto items-center mt-16 grid place-items-center text-center'>
+                        <div className="bg-grey w-[170px] grid place-items-center  h-[170px] rounded-[50%]">
+                            <Shield className='w-[100px] h-[100px] text-primary' />
+                        </div>
+                        <h1 className="text-[1.5rem] my-6  font-bold">No Data Found!</h1>
+                        <Button variant='primary' onClick={() => (setAddUserBox(true))}>Add</Button>
+                    </div>
+                )
+
+            }
+
+            {/* {isFetching && (
                 <div className="text-center flex items-center justify-center mx-auto mt-28">
                     <Spinner className="me-3 text-gray-300 h-16 w-16" />
                 </div>
@@ -330,7 +396,7 @@ export default function Users() {
 
                     </div>
                 </div>
-            )}
+            )} */}
 
             {!!addUserBox && (
                 <AddUsers closeFn={closeAddUserBox} roleData={roleData} />
