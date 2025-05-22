@@ -87,7 +87,7 @@ export default function ViewHotelsPage() {
         setSearchParams(new URLSearchParams({ active: newTab }));
     };
 
-    const { isLoading, refetch: viewHotelRequest } = useQuery({
+    const { isLoading, isFetching, refetch: viewHotelRequest } = useQuery({
         queryKey: ["hotelData", id],
         queryFn: async () => {
             const res = await get(`/hotels/show/${id}`);
@@ -144,7 +144,7 @@ export default function ViewHotelsPage() {
             cancelButtonText: 'Cancel'
         }
     }
-    
+
     const handleActionClick = (hotelId, actionType) => {
         confirmAction({
             ...confirmModalSetup[actionType.toLowerCase()],
@@ -205,97 +205,110 @@ export default function ViewHotelsPage() {
         <div>
             <UserAreaHeader pages={breadcrumb} />
 
-            <div className="flex justify-between mx-6">
-                <div className="flex gap-4 my-6">
-                    {!!hotelLogo && (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <img src={hotelLogo} className="w-16 h-16" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className=" ml-40 w-56">
-                                <DropdownMenuItem onClick={() => handleActionClick(hotel.id, 'delete')}>
-                                    Remove
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>Change</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    )}
-
-                    <div>
-                        <h1 className="font-bold text-[22px]">{hotel?.name}</h1>
-                        <p className="text-[13px] text-gray-500">Expiry Date</p>
-                        {/* <p>{hotel.createdAt}</p> */}
-                    </div>
+            {isFetching ?
+                <div className="text-center flex items-center justify-center mx-auto mt-40">
+                    <Spinner className="me-3 text-gray-300 h-16 w-16" />
                 </div>
+                
+                :
+
                 <div>
-                    <div className="flex gap-2">
-                        <Badge
-                            variant="outline"
-                            className="text-[#6A6779] cursor-pointer"
-                            onClick={() => setHotelToEdit(hotel)}
-                        >
-                            <RiEdit2Line className=" h-3" /> Edit
-                        </Badge>
-                        <Badge variant={hotel?.isActive ? `success` : "error"}>
-                            {hotel?.isActive ? `Active` : "Inactive"}
-                        </Badge>
+                    <div className="flex justify-between mx-6">
+                        <div className="flex gap-4 my-6">
+                            {!!hotelLogo && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <img src={hotelLogo} className="w-16 h-16" />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className=" ml-40 w-56">
+                                        <DropdownMenuItem onClick={() => handleActionClick(hotel.id, 'delete')}>
+                                            Remove
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem>Change</DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+
+                            <div>
+                                <h1 className="font-bold text-[22px]">{hotel?.name}</h1>
+                                <p className="text-[13px] text-gray-500">Expiry Date</p>
+                                {/* <p>{hotel.createdAt}</p> */}
+                            </div>
+                        </div>
+                        <div>
+                            <div className="flex gap-2">
+                                <Badge
+                                    variant="outline"
+                                    className="text-[#6A6779] cursor-pointer"
+                                    onClick={() => setHotelToEdit(hotel)}
+                                >
+                                    <RiEdit2Line className=" h-3" /> Edit
+                                </Badge>
+                                <Badge variant={hotel?.isActive ? `success` : "error"}>
+                                    {hotel?.isActive ? `Active` : "Inactive"}
+                                </Badge>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <Tabs className="w-full" value={activeTab}>
-                <TabsList className="w-[95%] ml-6 px-2 rounded-[3rem]">
-                    {filteredTabs.map((tab) => (
-                        <TabsTrigger
-                            className="w-[50%] rounded-[3rem] py-1 my-6"
-                            value={tab}
-                            key={tab}
-                            onClick={() => changeActiveTab(tab)}
-                        >
-                            {tab}
-                        </TabsTrigger>
-                    ))}
-                </TabsList>
+                    <Tabs className="w-full" value={activeTab}>
+                        <TabsList className="w-[95%] ml-6 px-2 rounded-[3rem]">
+                            {filteredTabs.map((tab) => (
+                                <TabsTrigger
+                                    className="w-[50%] rounded-[3rem] py-1 my-6"
+                                    value={tab}
+                                    key={tab}
+                                    onClick={() => changeActiveTab(tab)}
+                                >
+                                    {tab}
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
 
-                <div className="border border-b-0 border-l-0 border-r-0 mt-4">
-                    {filteredTabs.includes("Overview") && (
-                        <TabsContent value="Overview">
-                            <Card>
-                                <HotelsOverview />
-                            </Card>
-                        </TabsContent>
-                    )}
-                    {filteredTabs.includes("Users") && (
-                        <TabsContent value="Users">
-                            <Card>
-                                <HotelPageUsers hotelId={hotel.id} />
-                            </Card>
-                        </TabsContent>
-                    )}
-                    {filteredTabs.includes("Locations") && (
-                        <TabsContent value="Locations">
-                            <Card>
-                                <Locations hotelId={hotel.id} />
-                            </Card>
-                        </TabsContent>
-                    )}
-                    {filteredTabs.includes("Subscription Plan") && (
-                        <TabsContent value="Subscription Plan">
-                            <Card>
-                                <SubscriptionHistory hotelId={hotel.id} />
-                            </Card>
-                        </TabsContent>
-                    )}
-                    {filteredTabs.includes("Setting") && (
-                        <TabsContent value="Setting">
-                            <Card>
-                                <PageSettings closeFn={handleEditClose} hotelId={hotel} />
-                            </Card>
-                        </TabsContent>
-                    )}
+                        <div className="border border-b-0 border-l-0 border-r-0 mt-4">
+                            {filteredTabs.includes("Overview") && (
+                                <TabsContent value="Overview">
+                                    <Card>
+                                        <HotelsOverview />
+                                    </Card>
+                                </TabsContent>
+                            )}
+                            {filteredTabs.includes("Users") && (
+                                <TabsContent value="Users">
+                                    <Card>
+                                        <HotelPageUsers hotelId={hotel.id} />
+                                    </Card>
+                                </TabsContent>
+                            )}
+                            {filteredTabs.includes("Locations") && (
+                                <TabsContent value="Locations">
+                                    <Card>
+                                        <Locations hotelId={hotel.id} />
+                                    </Card>
+                                </TabsContent>
+                            )}
+                            {filteredTabs.includes("Subscription Plan") && (
+                                <TabsContent value="Subscription Plan">
+                                    <Card>
+                                        <SubscriptionHistory hotelId={hotel.id} />
+                                    </Card>
+                                </TabsContent>
+                            )}
+                            {filteredTabs.includes("Setting") && (
+                                <TabsContent value="Setting">
+                                    <Card>
+                                        <PageSettings closeFn={handleEditClose} hotelId={hotel} />
+                                    </Card>
+                                </TabsContent>
+                            )}
+                        </div>
+                    </Tabs>
                 </div>
-            </Tabs>
+
+            }
+
+
 
             {!!hotelToEdit?.id && (
                 <EditHotelModal closeFn={handleEditClose} hotelToEdit={hotelToEdit} />
