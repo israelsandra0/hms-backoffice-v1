@@ -15,14 +15,20 @@ export default function HotelPageUsers({ hotelId }) {
     const [searchFilter, setSearchFilter] = useState("");
     const [addUserBox, setAddUserBox] = useState(false);
     const [users, setUsers] = useState({})
+    const [errorMessage, setErrorMessage] = useState({})
 
 
-    const { isLoading, isPending, refetch: fetchHotelUsers } = useQuery({
+
+    const { isLoading, isFetching, refetch: fetchHotelUsers } = useQuery({
         queryKey: ["hotelUsers"],
         queryFn: async () => {
             const res = await get(`/hotels/${hotelId}/users`);
             if (!res.ok) {
                 throw new Error("Failed to fetch hotel users data");
+            }
+
+            if (res.status >= 500) {
+                setErrorMessage("An error occurred, please try again");
             }
             const response = await res.json();
             setUsers(response.data)
@@ -49,14 +55,23 @@ export default function HotelPageUsers({ hotelId }) {
 
     return (
         <div>
-            {!users?.length && (
+            {!!errorMessage && (
+                <div className='mx-auto items-center mt-16 grid place-items-center text-center'>
+                    <h1 className="text-[1.5rem] my-6  font-bold">An error occurred!</h1>
+                    <Button variant="primary" className='mb-[7rem]' onClick={() => fetchHotelUsers()}>
+                       Please try again
+                    </Button>
+                </div>
+            )}
+
+            {!users?.length < 0 && (
                 <div className='mx-auto items-center mt-16 grid place-items-center text-center'>
                     <div className="bg-grey w-[170px] grid place-items-center  h-[170px] rounded-[50%]">
                         <RiUser3Fill className='w-[100px] h-[100px] text-primary' />
                     </div>
                     <h1 className="text-[1.5rem] my-6  font-bold">No User Found!</h1>
                     <Button variant="primary" className='mb-[7rem]' onClick={() => setAddUserBox(true)}>
-                        Add 
+                        Add
                     </Button>
                 </div>
             )}
@@ -78,7 +93,7 @@ export default function HotelPageUsers({ hotelId }) {
                 </div>
             )}
 
-            {!isPending && users?.length > 0 && (
+            {!isFetching && users?.length > 0 && (
                 <UsersTable users={users} hotelId={hotelId} pageUpdate={fetchHotelUsers} searchFilter={searchFilter} />
             )}
 
