@@ -12,7 +12,7 @@ export default function Locations({ hotelId }) {
 
     const [searchFilter, setSearchFilter] = useState("");
 
-    const { data: locations, isLoading, isPending, refetch: fetchHotelLocations } = useQuery({
+    const { data: locations, isLoading, isFetching, refetch: fetchHotelLocations } = useQuery({
         queryKey: ["hotelLocations"],
         queryFn: async () => {
             // setLocations([])
@@ -63,9 +63,15 @@ export default function Locations({ hotelId }) {
                 </div>
             )}
 
-            {!isPending && locations?.length > 0 && (
-                <LocationsTable locations={locations}  searchFilter={searchFilter}  />
-            )}
+            {isFetching ?
+                <div className="text-center flex items-center justify-center mx-auto my-5">
+                    <Spinner className="me-3 text-gray-300 h-16 w-16" />
+                </div>
+
+                :
+                <LocationsTable locations={locations} searchFilter={searchFilter} />
+            }
+
         </div>
-    )
+    )    
 }
