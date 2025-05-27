@@ -63,7 +63,7 @@ export default function ViewHotelsPage() {
         "Overview",
         "Users",
         "Locations",
-        "Subscription Plan",
+        "Subscription",
         "Setting",
     ];
 
@@ -288,8 +288,8 @@ export default function ViewHotelsPage() {
                                     </Card>
                                 </TabsContent>
                             )}
-                            {filteredTabs.includes("Subscription Plan") && (
-                                <TabsContent value="Subscription Plan">
+                            {filteredTabs.includes("Subscription") && (
+                                <TabsContent value="Subscription">
                                     <Card>
                                         <SubscriptionHistory hotelId={hotel.id} />
                                     </Card>
