@@ -86,7 +86,7 @@ export default function UserAreaLayout() {
                                             <div className="flex items-center ml-3 mt-2 justify-between">
                                                 <h4 className="text-sm flex gap-3 font-semibold cursor-pointer">
                                                     <SettingsIcon />
-                                                    Settings
+                                                    Setting
                                                 </h4>
                                                 {isOpen ? (
                                                     <ChevronDown className="h-4 w-4" />
