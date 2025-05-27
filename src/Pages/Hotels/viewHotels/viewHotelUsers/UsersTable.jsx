@@ -56,17 +56,6 @@ export default function UsersTable({
                 },
             },
             {
-                header: "Location",
-                cell: (info) => {
-                    const hotelLocation = info.row.original.hotelLocation;
-                    return hotelLocation?.state ? (
-                        <span>{`${hotelLocation.city}, ${hotelLocation.state}, ${hotelLocation.country}`}</span>
-                    ) : (
-                        <span></span>
-                    );
-                },
-            },
-            {
                 header: "Status",
                 cell: (info) => {
                     const status = info.row.original.isActive;
@@ -228,7 +217,6 @@ export default function UsersTable({
                     <TableHeader className="bg-lightPrimary">
                         <TableRow>
                             <TableHead>Name</TableHead>
-                            <TableHead>Location</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead></TableHead>
                         </TableRow>
