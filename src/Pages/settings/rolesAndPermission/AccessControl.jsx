@@ -294,8 +294,7 @@ export default function AccessControl() {
 
                         <div>
                             <h1 className="flex justify-between text-[1.2rem]">
-                                Role Permissions 
-                                <i className="text-[0.8rem]">{selectedRole.permissions.length} Permissions</i>
+                                Permissions ({selectedRole.permissions.length}) 
                             </h1>
 
                             <Accordion type="multiple" className="w-full">
