@@ -293,7 +293,7 @@ export default function AccessControl() {
                         </p>
 
                         <div>
-                            <h1 className="flex justify-between text-[1.2rem]">
+                            <h1 className="text-[1.2rem]">
                                 Permissions ({selectedRole.permissions.length}) 
                             </h1>
 
