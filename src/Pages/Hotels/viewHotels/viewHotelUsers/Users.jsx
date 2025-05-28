@@ -15,13 +15,14 @@ export default function HotelPageUsers({ hotelId }) {
     const [searchFilter, setSearchFilter] = useState("");
     const [addUserBox, setAddUserBox] = useState(false);
     const [users, setUsers] = useState({})
-    const [errorMessage, setErrorMessage] = useState({})
+    const [errorMessage, setErrorMessage] = useState("")
 
 
 
     const { isLoading, isFetching, refetch: fetchHotelUsers } = useQuery({
         queryKey: ["hotelUsers"],
         queryFn: async () => {
+            setErrorMessage("")
             const res = await get(`/hotels/${hotelId}/users`);
             if (!res.ok) {
                 throw new Error("Failed to fetch hotel users data");
@@ -55,7 +56,7 @@ export default function HotelPageUsers({ hotelId }) {
 
     return (
         <div>
-            {!isFetching && !users?.length && !!errorMessage && (
+            {!!errorMessage?.length && (
                 <div className="mx-auto items-center mt-16 grid place-items-center text-center">
                     <h1 className="text-[1.5rem] my-6 font-bold">An error occurred!</h1>
                     <Button
