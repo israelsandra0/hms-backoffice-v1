@@ -57,7 +57,7 @@ export default function ViewHotelsPage() {
 
     let [searchParams, setSearchParams] = useSearchParams();
 
-    const { id } = useParams();
+    const { id } = useParams();   
 
     const validTabs = [
         "Overview",
@@ -88,6 +88,7 @@ export default function ViewHotelsPage() {
     };
 
     const { isLoading, isFetching, refetch: viewHotelRequest } = useQuery({
+        enabled: false,
         queryKey: ["hotelData", id],
         queryFn: async () => {
             const res = await get(`/hotels/show/${id}`);
@@ -98,10 +99,17 @@ export default function ViewHotelsPage() {
             setHotel(response.data)
             return response.data;
         },
-        enabled: !!id,
+
+        // enabled: !!id,
         staleTime: 0,
         cacheTime: 0,
     });
+
+    useEffect(() => {
+        if (id) {
+            viewHotelRequest();
+        }
+    }, [id]);
 
     const handleDeleteResponse = (res) => {
         if (res.ok) {
@@ -209,7 +217,7 @@ export default function ViewHotelsPage() {
                 <div className="text-center flex items-center justify-center mx-auto mt-40">
                     <Spinner className="me-3 text-gray-300 h-16 w-16" />
                 </div>
-                
+
                 :
 
                 <div>
