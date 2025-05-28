@@ -40,6 +40,7 @@ export default function Locations({ hotelId }) {
 
     return (
         <div>
+
             {!locations?.length && (
                 <div className='mx-auto items-center mt-16 grid place-items-center text-center'>
                     <div className="bg-grey w-[170px] grid place-items-center  h-[170px] rounded-[50%]">
@@ -63,15 +64,23 @@ export default function Locations({ hotelId }) {
                 </div>
             )}
 
-            {isFetching ?
+            {isFetching || !Array.isArray(locations) ? (
+                <div className="text-center flex items-center justify-center mx-auto my-5">
+                    <Spinner className="me-3 text-gray-300 h-16 w-16" />
+                </div>
+            ) : (
+                <LocationsTable locations={locations} searchFilter={searchFilter} />
+            )}
+
+            {/* {isFetching ?
                 <div className="text-center flex items-center justify-center mx-auto my-5">
                     <Spinner className="me-3 text-gray-300 h-16 w-16" />
                 </div>
 
                 :
                 <LocationsTable locations={locations} searchFilter={searchFilter} />
-            }
+            } */}
 
         </div>
-    )    
+    )
 }
