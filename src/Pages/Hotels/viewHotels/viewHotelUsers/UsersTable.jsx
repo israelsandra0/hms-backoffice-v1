@@ -94,12 +94,6 @@ export default function UsersTable({
                                         >
                                             <span>{user.isActive ? "Deactivate" : "Activate"}</span>
                                         </DropdownMenuItem>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem
-                                            onClick={() => handleActionClick(user.id, "delete")}
-                                        >
-                                            <span>Delete</span>
-                                        </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             )}
@@ -129,6 +123,23 @@ export default function UsersTable({
             });
         }
     };
+
+    const handleDeleteResponse = (res) => {
+        if (res.ok) {
+            toast({
+                success: true,
+                duration: 5000,
+                title: 'Hotel deleted successfully!'
+            });
+            pageUpdate();
+        } else {
+            toast({
+                error: true,
+                duration: 5000,
+                title: 'Failed to delete the hotel. Please try again.'
+            });
+        }
+    }
 
     const confirmModalSetup = {
         delete: {
@@ -178,8 +189,6 @@ export default function UsersTable({
             return await post(`/hotels/${hotelId.id}/users/${userId}/change-status`, {
                 is_active: hotelAction === "Activate",
             });
-        } else if (hotelAction === "delete") {
-            return await apiDelete(`/hotels/destroy/${hotelId}`);
         }
     };
 

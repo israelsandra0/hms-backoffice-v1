@@ -76,7 +76,7 @@ export default function HotelPageUsers({ hotelId }) {
                     </div>
                 )
                 :
-                !users?.length < 0 ? (
+                !users?.length ? (
                     <div className='mx-auto items-center mt-16 grid place-items-center text-center'>
                         <div className="bg-grey w-[170px] grid place-items-center  h-[170px] rounded-[50%]">
                             <RiUser3Fill className='w-[100px] h-[100px] text-primary' />
