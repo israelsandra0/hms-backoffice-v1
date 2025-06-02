@@ -29,6 +29,10 @@ export default function Subscription() {
     const pageSize = 10
     // const { confirmAction } = useConfirm ()
 
+    const handleEditPlan = (editId) => {
+        navigate('/setting/subscriptions/edit', { state: { editId } });
+    };
+
 
     const columns = useMemo(() => [
         {
@@ -56,7 +60,7 @@ export default function Subscription() {
                 return (
                     <ul>
                         {info.row.original.modules.map((module) => (
-                            <li>ID: {module.id}</li>
+                            <li>{module.name}</li>
                         ))}
                     </ul>
                 );
@@ -75,7 +79,7 @@ export default function Subscription() {
                             <DropdownMenuItem>
                                 <span>View</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleEditPlan(row.original)}>
                                 <span>Edit</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
