@@ -32,10 +32,11 @@ import Rooms from "./pages/hotels/viewHotels/viewHotelRooms/Rooms";
 import AccessControl from "./pages/settings/rolesAndPermission/AccessControl";
 import AddRole from "./pages/settings/rolesAndPermission/AddRole";
 import EditRole from "./pages/settings/rolesAndPermission/EditRole";
-import SubscriptionPlan from "./pages/settings/subscriptionPage/SubscriptionPlan";
+import SubscriptionPlan from "./pages/settings/subscriptionPage/AddSubscriptionPlan";
 import ForgottenPassPage from "./pages/loginPage/forgottenPassword/ForgottenPassPage";
 import VerificationPage from "./pages/loginPage/forgottenPassword/OTPVerificationPage";
 import ResetPassPage from "./pages/loginPage/resetPassword/ResetPassPage";
+import EditSubscriptionPlan from "./pages/settings/subscriptionPage/EditSubscriptionPlan";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -65,10 +66,8 @@ const router = createBrowserRouter(
         <Route path="/setting/access_control/edit" element={<EditRole />} />
         <Route path="/setting/users" element={<Users />} />
         <Route path="/setting/subscriptions" element={<Subscription />} />
-        <Route
-          path="/setting/subscriptions/subscription_plan"
-          element={<SubscriptionPlan />}
-        />
+        <Route path="/setting/subscriptions/subscription_plan" element={<SubscriptionPlan />} />
+        <Route path="/setting/subscriptions/edit" element={<EditSubscriptionPlan />} />
       </Route>
     </Route>
   )
