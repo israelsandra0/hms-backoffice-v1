@@ -178,7 +178,7 @@ export default function SubscriptionPlan() {
                         <hr />
                     </div>
 
-                    <Card className='w-[400px] ml-12 my-6'>
+                    <div className='w-[400px] ml-12 my-6 border-none'>
                         <div>
                             <Label>Plan Name</Label>
                             <Input {...register("name")} placeholder='Basic Plan' className='border-none mt-1 mb-2' />
@@ -189,7 +189,7 @@ export default function SubscriptionPlan() {
                             <Input {...register("price")} placeholder='₦250,000.00' className='border-none mt-1 mb-2' />
                             <p className="text-red-500 mb-2">{errors.price?.message}</p>
                         </div>
-                    </Card>
+                    </div>
 
                     <div className="ml-16 w-[400px]">
                         <b>Available Features</b>

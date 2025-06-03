@@ -49,7 +49,7 @@ export default function EditSubscriptionPlan() {
         mutationFn: async (data) => {
             setDisabledButton(true);
             const res = await put(`/subscription-plans/${editId.id}/update`, data)
-            
+
             if (res.ok) {
                 toast({
                     success: true,
@@ -107,11 +107,11 @@ export default function EditSubscriptionPlan() {
     }, [modulesForPlans]);
 
 
-    
+
 
     const handleModuleChange = (moduleId) => {
         const updatedModules = selectedModules.includes(moduleId)
-            ? selectedModules.filter((id) => id !== moduleId) 
+            ? selectedModules.filter((id) => id !== moduleId)
             : [...selectedModules, moduleId]; // Add if not selected
 
         setSelectedModules(updatedModules);
@@ -126,7 +126,7 @@ export default function EditSubscriptionPlan() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className='mt-1' />
                 <BreadcrumbItem>
-                    <Link onClick={() => navigate('/setting/subscription')}>Subscription</Link>
+                    <Link onClick={() => navigate('/setting/subscriptions')}>Subscription</Link>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className='mt-1' />
                 <BreadcrumbItem>
@@ -140,7 +140,7 @@ export default function EditSubscriptionPlan() {
 
     return (
 
-        <div className="bg-[#f1f1f1] h-full">
+        <div className="h-full">
             <UserAreaHeader pages={breadcrumb} />
 
             <CardContent>
@@ -169,18 +169,18 @@ export default function EditSubscriptionPlan() {
                             <hr />
                         </div>
 
-                        <Card className='w-[400px] ml-12 my-6'>
+                        <div className='w-[400px] ml-12 my-6 border-none'>
                             <div>
                                 <Label>Plan Name</Label>
-                                <Input {...register("name")} placeholder='Basic Plan' className='border-none mt-1 mb-2' />
+                                <Input {...register("name")} className='border-none mt-1 mb-2' />
                                 <p className="text-red-500 mb-2">{errors.name?.message}</p>
                             </div>
                             <div>
                                 <Label>Price</Label>
-                                <Input {...register("price")} placeholder='₦250,000.00' className='border-none mt-1 mb-2' />
+                                <Input {...register("price")} className='border-none mt-1 mb-2' />
                                 <p className="text-red-500 mb-2">{errors.price?.message}</p>
                             </div>
-                        </Card>
+                        </div>
 
                         <div className="ml-16 w-[400px]">
                             <b>Available Features</b>
