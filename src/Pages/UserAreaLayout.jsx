@@ -136,7 +136,7 @@ export default function UserAreaLayout() {
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col overflow-x-hidden">
                     <Outlet />
                 </div>
             </div>
