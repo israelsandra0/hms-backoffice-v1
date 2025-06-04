@@ -10,12 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Spinner from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { get } from "@/functions";
+import { apiDelete, get } from "@/functions";
+import { useConfirm } from "@/hooks/use-confirm";
 import { useQuery } from "@tanstack/react-query";
 import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
 import { Currency, MoreVertical, Search, Shield } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 export default function Subscription() {
 
@@ -27,11 +29,38 @@ export default function Subscription() {
     // const [userId, setUserId] = useState(null)
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10
-    // const { confirmAction } = useConfirm ()
+    const { confirmAction } = useConfirm()
+    
+
+    const confirmModalSetup = {
+        delete: {
+            title: 'Are you sure?',
+            message: "you're about to delete this Plan, This action cannot be undone.",
+            confirmButtonText: 'Delete',
+            buttonVariant: 'error',
+            cancelButtonText: 'Cancel'
+        },
+        activate: {
+            title: 'Activate Role?',
+            message: 'This action will activate the role and allow it to be visible to users.',
+            confirmButtonText: 'Activate',
+            buttonVariant: 'primary',
+            cancelButtonText: 'Cancel'
+        },
+        deactivate: {
+            title: 'Deactivate Role?',
+            message: 'This action will deactivate the role and allow it to be invisible to users.',
+            confirmButtonText: 'Deactivate',
+            buttonVariant: 'primary',
+            cancelButtonText: 'Cancel'
+        }
+    }
 
     const handleEditPlan = (editId) => {
         navigate('/setting/subscriptions/edit', { state: { editId } });
     };
+
+    const handleConfirmation = async (planId) => await apiDelete(`/subscription-plans/${planId}/destroy`)
 
 
     const columns = useMemo(() => [
@@ -82,7 +111,7 @@ export default function Subscription() {
                             <DropdownMenuItem onClick={() => handleEditPlan(row.original)}>
                                 <span>Edit</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleActionClick(row.original.id, 'delete')}>
                                 <span>Delete</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -140,6 +169,39 @@ export default function Subscription() {
         getCoreRowModel: getCoreRowModel(),
     });
 
+    const handleDeleteResponse = (res) => {
+        if (res.ok) {
+            toast({
+                success: true,
+                duration: 5000,
+                title: 'Plan deleted successfully!'
+            });
+            fetchSubscriptions()
+        } else {
+            toast({
+                error: true,
+                duration: 5000,
+                title: 'Failed to delete the Plan, Please try again.'
+            });
+        }
+    }
+
+    const handleActionClick = (planId, actionType) => {
+        confirmAction({
+            ...confirmModalSetup[actionType.toLowerCase()],
+            isDestructive: actionType.toLowerCase() === 'delete',
+            confirmFn: () => handleConfirmation(planId, actionType),
+            completeFn: (res) => {
+                if (actionType.toLowerCase() === 'delete') {
+                    handleDeleteResponse(res)
+                }
+                else {
+                    handleStatusUpdateResponse(res, actionType == 'Activate')
+                }
+            }
+
+        })
+    };
 
 
     const breadcrumb = (
