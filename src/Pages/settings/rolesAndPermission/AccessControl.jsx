@@ -274,10 +274,13 @@ export default function AccessControl() {
             {!!selectedRole && (
                 <Card className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
                     <CardContent className="fixed rounded sm:rounded-xl md:rounded-xl lg:rounded-xl left-[50%] top-[50%] z-50 grid w-[400px] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-white p-6 shadow-lg duration-200">
-                        <X
-                            className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400"
-                            onClick={() => setSelectedRole(null)}
-                        />
+                        <div className="flex">
+                            <X
+                                className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400"
+                                onClick={() => setSelectedRole(null)}
+                            />
+                            <h1 className="mx-auto text-[1.3rem] font-bold mb-2">Role Details</h1>
+                        </div>
                         <p>
                             <h1 className="text-[1.2rem]">Role</h1>
                             <strong>
