@@ -32,7 +32,7 @@ export default function LocationsTable({locations, searchFilter }) {
         },
         {
             header: "Rooms",
-            accessorKey: "rooms",
+            accessorKey: "rooms_count",
         },
     ], []);
    
