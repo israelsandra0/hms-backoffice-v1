@@ -244,7 +244,7 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
                                 <div className="mb-2">
                                     <Label htmlFor="discountValue">Discount Value</Label>
                                     <br />
-                                    <Input id="discountValue" {...register("discountValue")} maxLength="25" />
+                                    <Input type="number" max="100" id="discountValue" {...register("discountValue")} maxLength="25" />
                                     <p>{errors.discountValue?.message}</p>
                                 </div>
 
