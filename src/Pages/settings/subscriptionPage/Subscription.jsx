@@ -2,12 +2,7 @@ import Pagination from "@/components/Pagination";
 import UserAreaHeader from "@/components/UserAreaHeader";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { ButtonLink } from "@/components/ui/button_link";
-import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import Spinner from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { apiDelete, get } from "@/functions";
@@ -22,15 +17,11 @@ import { toast } from "@/hooks/use-toast";
 export default function Subscription() {
 
     const navigate = useNavigate()
-    // const [subscription, setSubscription] = useState([])
     const [searchFilter, setSearchFilter] = useState("");
-    // const [addUserBox, setAddUserBox] = useState(false);
-    // const [editUserBox, setEditUserBox] = useState(false);
-    // const [userId, setUserId] = useState(null)
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10
     const { confirmAction } = useConfirm()
-    
+
 
     const confirmModalSetup = {
         delete: {
@@ -111,9 +102,11 @@ export default function Subscription() {
                             <DropdownMenuItem onClick={() => handleEditPlan(row.original)}>
                                 <span>Edit</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleActionClick(row.original.id, 'delete')}>
-                                <span>Delete</span>
-                            </DropdownMenuItem>
+                            {row.original.subscriptions_count === 0 && (
+                                <DropdownMenuItem onClick={() => handleActionClick(row.original.id, 'delete')}>
+                                    <span>Delete</span>
+                                </DropdownMenuItem>
+                            )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
