@@ -135,7 +135,6 @@ export default function SubscriptionHistory({ hotelId }) {
     });
 
     useEffect(() => {
-        console.log("subs", Hotelsubscription)
         fetchHotelSubscriptions()
     }, [])
 

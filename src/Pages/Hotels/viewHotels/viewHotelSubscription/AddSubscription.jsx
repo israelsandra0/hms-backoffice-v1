@@ -43,7 +43,7 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
         },
         resolver: yupResolver(yupBuild),
     });
-    
+
 
     const [errorMessage, setErrorMessage] = useState("");
     const [disabledButton, setDisabledButton] = useState(false);
@@ -205,13 +205,24 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
                                 {/* Dynamic display of plan details */}
                                 {selectedPlan && (
                                     <div className="mt-2 text-sm mb-2 text-gray-700 rounded px-2 py-2 bg-red-100 border-2 border-red-500">
-                                        <h2 className="flex justify-between">
-                                            <strong>{selectedPlan.name} Plan</strong>
-                                            <strong>₦{Number(selectedPlan.price).toLocaleString()}.00/month</strong>
+                                        <h2 className="flex justify-between text-[1rem]">
+                                            <b>{selectedPlan.name} Plan</b>
+                                            <b>₦{Number(selectedPlan.price).toLocaleString()}.00/month</b>
                                         </h2>
                                         {selectedPlan.description && (
                                             <p className="text-[12px] text-gray-500">{selectedPlan.description}</p>
                                         )}
+
+                                        <div className="py-3">
+                                            <b className="text-[1rem] mt-2">Included Modules:</b>
+                                            <ul>
+                                                {selectedPlan.modules.map((module) => (
+                                                    <li className="text-[0.8rem] mt-2 list-disc ml-6" key={module.id}>
+                                                        {module.name}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
                                     </div>
                                 )}
 
