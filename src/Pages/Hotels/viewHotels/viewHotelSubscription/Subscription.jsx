@@ -83,7 +83,7 @@ export default function SubscriptionHistory({ hotelId }) {
                 return (
                     <span>
                         ₦
-                        {`${info.row.original.price}`}
+                        {`${info.row.original.paidAmount}`}
                     </span>
                 );
             },
