@@ -57,7 +57,7 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
             discountValue: ""
 
         },
-         resolver: yupResolver(yupBuild)
+        resolver: yupResolver(yupBuild)
     });
 
     const [errorMessage, setErrorMessage] = useState("");
@@ -175,6 +175,7 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
     const discountType = watch("discountType");
     const discountValue = watch("discountValue");
     const selectedPlanId = watch("subscriptionPlanId");
+    const startDate = watch("startDate");
 
     const selectedPlan = planData?.subscriptionPlans?.find(
         (plan) => String(plan.id) === String(selectedPlanId)
@@ -196,12 +197,23 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
     const grandTotal = total - discountAmount;
 
 
+    let expirationDate = "";
+    if (startDate && months > 0) {
+        const start = new Date(startDate);
+        const expiry = new Date(start.setMonth(start.getMonth() + months));
+        expirationDate = `${expiry.getDate().toString().padStart(2, "0")}-${(expiry.getMonth() + 1)
+            .toString()
+            .padStart(2, "0")}-${expiry.getFullYear()
+
+        }`;
+    }
+
+
 
     return (
         <div className="fixed inset-x-0 inset-y-0 bg-black/50 flex justify-center items-center">
 
-            <CardContent
-                style={{ borderRadius: "16px" }}
+            <CardContent style={{ borderRadius: "16px" }}
                 className="fixed overflow-hidden left-[50%] top-[50%] z-50 grid w-full max-w-2xl translate-x-[-50%] translate-y-[-50%] bg-white shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg dark:border-neutral-800 dark:bg-neutral-950"
             >
                 <div className="flex gap-6 mr-[-1.4rem]">
@@ -306,6 +318,15 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
                                     <br />
                                     <Input type="date" {...register("startDate")} id="datePaid" />
                                     <p>{errors.startDate?.message}</p>
+                                </div>
+
+                                <div className="mb-2 text-sm text-primary mt-1">
+                                    <span>
+                                        Expiration Date: 
+                                    </span>
+                                    <span className="ml-2">
+                                        {expirationDate ? expirationDate : "Select a start date and duration"}
+                                    </span>
                                 </div>
 
                             </div>
