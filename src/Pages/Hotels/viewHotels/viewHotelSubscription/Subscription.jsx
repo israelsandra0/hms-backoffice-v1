@@ -1,4 +1,4 @@
-import Pagination from "@/components/Pagination";import { Button } from "@/components/ui/button";
+import Pagination from "@/components/Pagination"; import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Spinner from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -6,7 +6,7 @@ import { apiDelete, get } from "@/functions";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useQuery } from "@tanstack/react-query";
 import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
-import { CalendarIcon, ChevronDown, Currency, MoreVertical, Search, Shield } from "lucide-react";
+import { CalendarIcon, ChevronDown, Currency, MoreVertical, Search, Shield, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
@@ -19,6 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function SubscriptionHistory({ hotelId }) {
 
@@ -27,40 +28,9 @@ export default function SubscriptionHistory({ hotelId }) {
     const [searchFilter, setSearchFilter] = useState("");
     const [addSubscriptionBox, setAddSubscriptionBox] = useState(false);
     const [pageIndex, setPageIndex] = useState(0);
+    const [selectedPlan, setSelectedPlan] = useState(null)
     const pageSize = 10
-    const { confirmAction } = useConfirm()
-
-
-    const confirmModalSetup = {
-        delete: {
-            title: 'Are you sure?',
-            message: "you're about to delete this Plan, This action cannot be undone.",
-            confirmButtonText: 'Delete',
-            buttonVariant: 'error',
-            cancelButtonText: 'Cancel'
-        },
-        activate: {
-            title: 'Activate Role?',
-            message: 'This action will activate the role and allow it to be visible to users.',
-            confirmButtonText: 'Activate',
-            buttonVariant: 'primary',
-            cancelButtonText: 'Cancel'
-        },
-        deactivate: {
-            title: 'Deactivate Role?',
-            message: 'This action will deactivate the role and allow it to be invisible to users.',
-            confirmButtonText: 'Deactivate',
-            buttonVariant: 'primary',
-            cancelButtonText: 'Cancel'
-        }
-    }
-
-    const handleEditPlan = (editId) => {
-        navigate('/setting/subscriptions/edit', { state: { editId } });
-    };
-
-    const handleConfirmation = async (planId) => await apiDelete(`/subscription-plans/${planId}/destroy`)
-
+    
 
     const columns = useMemo(() => [
         {
@@ -68,7 +38,9 @@ export default function SubscriptionHistory({ hotelId }) {
             cell: (info) => {
                 return (
                     <ul>
-                        <li>{info.row.original.subscriptionPlan.name}</li>
+                        <li onClick={() => setSelectedPlan(info.row.original)}>
+                            {info.row.original.subscriptionPlan.name}
+                        </li>
                     </ul>
                 );
             },
@@ -82,8 +54,14 @@ export default function SubscriptionHistory({ hotelId }) {
             cell: (info) => {
                 return (
                     <span>
-                        ₦
-                        {`${info.row.original.paidAmount}`}
+                        {info.row.original.paidAmount
+                            ? new Intl.NumberFormat("en-NG", {
+                                style: "currency",
+                                currency: "NGN",
+                                minimumFractionDigits: 2,
+                            }).format(Number(info.row.original.paidAmount))
+                            : "₦0.00"}
+
                     </span>
                 );
             },
@@ -102,14 +80,14 @@ export default function SubscriptionHistory({ hotelId }) {
                             <MoreVertical className="cursor-pointer" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56 cursor-pointer">
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setSelectedPlan(row.original)}>
                                 <span>View</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleEditPlan(row.original)}>
-                                <span>Edit</span>
+                            <DropdownMenuItem>
+                                <span>Upgrade</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleActionClick(row.original.id, 'delete')}>
-                                <span>Delete</span>
+                            <DropdownMenuItem>
+                                <span>Renew</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -117,7 +95,6 @@ export default function SubscriptionHistory({ hotelId }) {
             },
         },
     ], []);
-
 
     const { data: Hotelsubscription, isFetching, refetch: fetchHotelSubscriptions } = useQuery({
         queryKey: ["Hotelsubscription"],
@@ -135,6 +112,7 @@ export default function SubscriptionHistory({ hotelId }) {
     });
 
     useEffect(() => {
+        console.log(Hotelsubscription)
         fetchHotelSubscriptions()
     }, [])
 
@@ -164,40 +142,6 @@ export default function SubscriptionHistory({ hotelId }) {
         getPaginationRowModel: getPaginationRowModel(),
         getCoreRowModel: getCoreRowModel(),
     });
-
-    const handleDeleteResponse = (res) => {
-        if (res.ok) {
-            toast({
-                success: true,
-                duration: 5000,
-                title: 'Plan deleted successfully!'
-            });
-            fetchHotelSubscriptions()
-        } else {
-            toast({
-                error: true,
-                duration: 5000,
-                title: 'Failed to delete the Plan, Please try again.'
-            });
-        }
-    }
-
-    const handleActionClick = (planId, actionType) => {
-        confirmAction({
-            ...confirmModalSetup[actionType.toLowerCase()],
-            isDestructive: actionType.toLowerCase() === 'delete',
-            confirmFn: () => handleConfirmation(planId, actionType),
-            completeFn: (res) => {
-                if (actionType.toLowerCase() === 'delete') {
-                    handleDeleteResponse(res)
-                }
-                else {
-                    handleStatusUpdateResponse(res, actionType == 'Activate')
-                }
-            }
-
-        })
-    };
 
     const closeAddSubscriptionBox = () => {
         setAddSubscriptionBox(false)
@@ -287,6 +231,56 @@ export default function SubscriptionHistory({ hotelId }) {
                 )
 
             }
+
+            {!!selectedPlan && (
+                <Card className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
+                    <CardContent className="fixed rounded sm:rounded-xl md:rounded-xl lg:rounded-xl left-[50%] top-[50%] z-50 grid w-[400px] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-white p-6 shadow-lg duration-200">
+                        <div className="flex">
+                            <X
+                                className="ring-2 p-1 ring-[#F2F2F5] rounded-full text-gray-400"
+                                onClick={() => setSelectedPlan(null)}
+                            />
+                            <h1 className="mx-auto text-[1.3rem] font-bold mb-2">Subscription Details</h1>
+                        </div>
+
+                        <p className="text-[1rem]">
+                            <h1 className="">Subscription Plan</h1>
+                            <strong>
+                                {`${selectedPlan.subscriptionPlan.name}`}
+                            </strong>
+                        </p>
+
+                        <p className="text-[1rem]">
+                            <h1 className="">Amount</h1>
+                            <strong>
+                                {selectedPlan.paidAmount
+                                    ? new Intl.NumberFormat("en-NG", {
+                                        style: "currency",
+                                        currency: "NGN",
+                                        minimumFractionDigits: 2,
+                                    }).format(Number(selectedPlan.paidAmount))
+                                    : "₦0.00"}
+                            </strong>
+                        </p>
+
+                        <p className="text-[1rem]">
+                            <h1 className="">Start Date</h1>
+                            <strong>
+                                {`${selectedPlan.startDate ? format(new Date(selectedPlan.startDate), "do MMMM, yyyy") : "N/A"}`}
+                            </strong>
+                        </p>
+                        <p className="text-[1rem]">
+                            <h1 className="">Expiry Date</h1>
+                            <strong>
+                                {selectedPlan.expiryDate ? format(new Date(selectedPlan.expiryDate), "do MMMM, yyyy") : "N/A"}
+                            </strong>
+                        </p>
+
+
+
+                    </CardContent>
+                </Card>
+            )}
 
 
             {!!addSubscriptionBox && (
