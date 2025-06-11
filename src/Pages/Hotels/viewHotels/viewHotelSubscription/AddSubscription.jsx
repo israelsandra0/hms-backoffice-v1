@@ -16,10 +16,26 @@ import { useToast } from "@/hooks/use-toast";
 export default function AddSubscriptionPage({ closeFn, hotelId }) {
 
     const yupBuild = yup.object({
-        subscriptionPlanId: yup.number().required("name is required").max(25),
-        numberOfMonths: yup.string().required("duration is required").max(25),
+        subscriptionPlanId: yup.number().required("name is required"),
+        numberOfMonths: yup.string().required("duration is required"),
         discountType: yup.string().required("discountType is required"),
-        discountValue: yup.string().required("discountValue is required"),
+        discountValue: yup
+            .number()
+            .typeError("Discount value must be a number")
+            .required("Discount value is required")
+            .test("discount-check", "Flat discount cannot exceed total amount", function (value) {
+                const { discountType, subscriptionPlanId, numberOfMonths } = this.parent;
+                const planData = this.options.context?.planData;
+                if (!planData) return true;
+                const selectedPlan = planData.subscriptionPlans.find(plan => plan.id === subscriptionPlanId);
+                if (!selectedPlan) return true;
+                const total = selectedPlan.price * numberOfMonths;
+
+                if (discountType === "amount" && value > total) return false;
+                if (discountType === "percentage" && value > 100) return false;
+
+                return true;
+            }),
         startDate: yup.string().required("datePaid is required")
     });
 
@@ -41,9 +57,8 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
             discountValue: ""
 
         },
-        resolver: yupResolver(yupBuild),
+         resolver: yupResolver(yupBuild)
     });
-
 
     const [errorMessage, setErrorMessage] = useState("");
     const [disabledButton, setDisabledButton] = useState(false);
@@ -72,9 +87,36 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
 
     const { mutate } = useMutation({
         mutationFn: async () => {
-            const subscriptionInput = getValues();
-            setErrorMessage("");
             setDisabledButton(true);
+            const subscriptionInput = getValues();
+            const selectedPlan = planData?.subscriptionPlans?.find(
+                (plan) => String(plan.id) === String(subscriptionInput.subscriptionPlanId)
+            );
+            const pricePerMonth = selectedPlan ? Number(selectedPlan.price) : 0;
+            const months = subscriptionInput.numberOfMonths ? parseInt(subscriptionInput.numberOfMonths, 10) : 0;
+            const total = pricePerMonth * months;
+            const discountType = subscriptionInput.discountType;
+            const discountValue = parseFloat(subscriptionInput.discountValue);
+
+            if (discountType === "amount" && discountValue > total) {
+                setError("discountValue", {
+                    type: "manual",
+                    message: "Flat discount amount cannot exceed total amount",
+                });
+                setDisabledButton(false);
+                return; // stop submission
+            }
+
+            if (discountType === "percentage" && discountValue > 100) {
+                setError("discountValue", {
+                    type: "manual",
+                    message: "Percentage discount cannot exceed 100%",
+                });
+                setDisabledButton(false);
+                return;
+            }
+
+            // Proceed with mutation...
 
             try {
                 const planData = {
@@ -229,7 +271,7 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
                                 <div className="mb-2">
                                     <Label htmlFor="duration">Duration (months)</Label>
                                     <br />
-                                    <Input type="number" {...register("numberOfMonths")} id="duration" maxLength="25" />
+                                    <Input type="number" {...register("numberOfMonths")} id="duration" />
                                     <p>{errors.numberOfMonths?.message}</p>
                                 </div>
 
@@ -255,14 +297,14 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
                                 <div className="mb-2">
                                     <Label htmlFor="discountValue">Discount Value</Label>
                                     <br />
-                                    <Input type="number" max="100" id="discountValue" {...register("discountValue")} maxLength="25" />
+                                    <Input type="number" max="100" id="discountValue" {...register("discountValue")} />
                                     <p>{errors.discountValue?.message}</p>
                                 </div>
 
                                 <div className="mb-2">
                                     <Label htmlFor="datePaid">Start Date</Label>
                                     <br />
-                                    <Input type="date" {...register("startDate")} id="datePaid" maxLength="25" />
+                                    <Input type="date" {...register("startDate")} id="datePaid" />
                                     <p>{errors.startDate?.message}</p>
                                 </div>
 

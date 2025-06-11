@@ -30,7 +30,7 @@ export default function SubscriptionHistory({ hotelId }) {
     const [pageIndex, setPageIndex] = useState(0);
     const [selectedPlan, setSelectedPlan] = useState(null)
     const pageSize = 10
-    
+
 
     const columns = useMemo(() => [
         {
@@ -112,7 +112,6 @@ export default function SubscriptionHistory({ hotelId }) {
     });
 
     useEffect(() => {
-        console.log(Hotelsubscription)
         fetchHotelSubscriptions()
     }, [])
 
