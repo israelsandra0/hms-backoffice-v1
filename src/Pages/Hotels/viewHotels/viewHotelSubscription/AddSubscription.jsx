@@ -204,8 +204,8 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
 
                                 {/* Dynamic display of plan details */}
                                 {selectedPlan && (
-                                    <div className="mt-2 text-sm mb-2 text-gray-700 rounded px-2 py-2 bg-red-100 border-2 border-red-500">
-                                        <h2 className="flex justify-between text-[1rem]">
+                                    <div className="mt-2 text-sm mb-2 text-gray-700 rounded px-2 py-2 bg-[#F1E2D3] border-2 border-[#8D561E]">
+                                        <h2 className="flex justify-between text-[0.9rem]">
                                             <b>{selectedPlan.name} Plan</b>
                                             <b>₦{Number(selectedPlan.price).toLocaleString()}.00/month</b>
                                         </h2>
@@ -214,7 +214,7 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
                                         )}
 
                                         <div className="py-3">
-                                            <b className="text-[1rem] mt-2">Included Modules:</b>
+                                            <b className="text-[0.8rem] mt-2">Included Modules:</b>
                                             <ul>
                                                 {selectedPlan.modules.map((module) => (
                                                     <li className="text-[0.8rem] mt-2 list-disc ml-6" key={module.id}>
