@@ -87,36 +87,8 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
 
     const { mutate } = useMutation({
         mutationFn: async () => {
-            setDisabledButton(true);
-            const subscriptionInput = getValues();
-            const selectedPlan = planData?.subscriptionPlans?.find(
-                (plan) => String(plan.id) === String(subscriptionInput.subscriptionPlanId)
-            );
-            const pricePerMonth = selectedPlan ? Number(selectedPlan.price) : 0;
-            const months = subscriptionInput.numberOfMonths ? parseInt(subscriptionInput.numberOfMonths, 10) : 0;
-            const total = pricePerMonth * months;
-            const discountType = subscriptionInput.discountType;
-            const discountValue = parseFloat(subscriptionInput.discountValue);
-
-            if (discountType === "amount" && discountValue > total) {
-                setError("discountValue", {
-                    type: "manual",
-                    message: "Flat discount amount cannot exceed total amount",
-                });
-                setDisabledButton(false);
-                return; // stop submission
-            }
-
-            if (discountType === "percentage" && discountValue > 100) {
-                setError("discountValue", {
-                    type: "manual",
-                    message: "Percentage discount cannot exceed 100%",
-                });
-                setDisabledButton(false);
-                return;
-            }
-
-            // Proceed with mutation...
+            setDisabledButton(true)
+            const subscriptionInput = getValues()
 
             try {
                 const planData = {
@@ -205,7 +177,7 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
             .toString()
             .padStart(2, "0")}-${expiry.getFullYear()
 
-        }`;
+            }`;
     }
 
 
@@ -234,7 +206,40 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
                             <h1 className="text-[1.3rem] font-bold mx-auto">Add New Subscription</h1>
                         </div>
 
-                        <form className="hotelForm text-left" onSubmit={handleSubmit(mutate)}>
+                        <form className="hotelForm text-left"
+                            onSubmit={async(e) => {
+                                e.preventDefault()
+                                const subscriptionInput = getValues();
+                                const selectedPlan = planData?.subscriptionPlans?.find(
+                                    (plan) => String(plan.id) === String(subscriptionInput.subscriptionPlanId)
+                                );
+                                const pricePerMonth = selectedPlan ? Number(selectedPlan.price) : 0;
+                                const months = subscriptionInput.numberOfMonths ? parseInt(subscriptionInput.numberOfMonths, 10) : 0;
+                                const total = pricePerMonth * months;
+                                const discountType = subscriptionInput.discountType;
+                                const discountValue = parseFloat(subscriptionInput.discountValue);
+
+                                if (discountType === "flat_amount" && discountValue > total) {
+                                    setError("discountValue", {
+                                        type: "manual",
+                                        message: "Flat discount amount cannot exceed total amount",
+                                    });
+                                    setDisabledButton(false);
+                                    return; // stop submission
+                                }
+
+                                if (discountType === "percentage" && discountValue > 100) {
+                                    setError("discountValue", {
+                                        type: "manual",
+                                        message: "Percentage discount cannot exceed 100%",
+                                    });
+                                    setDisabledButton(false);
+                                    return;
+                                }
+                                await handleSubmit(mutate)(e)
+                                console.log(e)
+                            }}
+                        >
                             {/* {JSON.stringify(errors)} */}
                             <div className="mt-4">
 
@@ -309,7 +314,7 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
                                 <div className="mb-2">
                                     <Label htmlFor="discountValue">Discount Value</Label>
                                     <br />
-                                    <Input type="number" max="100" id="discountValue" {...register("discountValue")} />
+                                    <Input type="number" id="discountValue" {...register("discountValue")} />
                                     <p>{errors.discountValue?.message}</p>
                                 </div>
 
@@ -322,7 +327,7 @@ export default function AddSubscriptionPage({ closeFn, hotelId }) {
 
                                 <div className="mb-2 text-sm text-primary mt-1">
                                     <span>
-                                        Expiration Date: 
+                                        Expiration Date:
                                     </span>
                                     <span className="ml-2">
                                         {expirationDate ? expirationDate : "Select a start date and duration"}
