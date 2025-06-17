@@ -1,74 +1,169 @@
-import { Database, File, Hotel, Locate, Users } from "lucide-react";
-import { Table, TableCell, TableHead, TableRow } from "@/components/ui/table";
+import { Book, CalendarIcon, ChevronDown, DollarSign, DoorOpen, File, FileLineChart, Hotel, Hourglass, Info, LocateIcon, Map, MapPin, MessageSquareText, TrendingUp, User, Users } from "lucide-react"
+import { Pie, PieChart } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import {
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { useState } from "react"
 
 export default function HotelsOverview() {
 
+    const [date, setDate] = useState()
+    const chartConfig = {
+        desktop: {
+            label: "Desktop",
+            color: "hsl(var(--chart-6))",
+        },
+    }
+
+    const chartData = [
+        { month: "January", desktop: 260 },
+        { month: "February", desktop: 200 },
+        { month: "March", desktop: 240 },
+        { month: "April", desktop: 110 },
+        { month: "May", desktop: 305 },
+        { month: "June", desktop: 260 },
+        { month: "July", desktop: 260 },
+        { month: "August", desktop: 260 },
+        { month: "September", desktop: 305 },
+        { month: "October", desktop: 305 },
+        { month: "November", desktop: 140 },
+        { month: "December", desktop: 220 },
+    ]
+
+    const overflowCards = [
+        {
+            icon: <Hotel className="text-[#8D561E] w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />,
+            gig: '2.5/500 MB',
+            name: 'Database Usage'
+        },
+        {
+            icon: <FileLineChart className="text-[#8D561E] w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />,
+            gig: '100/500 MB',
+            name: 'File Storage'
+        },
+        {
+            icon: <MapPin className="text-[#8D61E] w-8 h-8  bg-lightPrimary p-[0.50rem] rounded-[50%]" />,
+            gig: '10',
+            name: 'Location'
+        },
+        {
+            icon: <Users className="text-[#8D561E] w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />,
+            gig: '45',
+            name: 'Users'
+        },
+        {
+            icon: <DoorOpen className="text-[#8D51E]  w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]" />,
+            gig: '100',
+            name: 'Rooms'
+        },
+    ]
+
 
     return (
-        <div className="mt-4">
-            <div className="flex justify-center gap-6 ml-6 text-gray-500">
-                <div className="flex w-[150px] px-2 py-4 rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
-                    <Database className="text-[#8D561E]  w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]"/>
-                    <div>
-                        <b>Database</b>
-                        <p className="text-gray-500 text-[12px]">20.5mb</p>
+        <div>
+            <div className="flex justify-center gap-7 mt-9">
+                {overflowCards.map((card) => (
+                    <div className="dashboardCards h-[120px] w-[170px]">
+                        <p>{card.icon}</p>
+                        <b>{card.gig}</b>
+                        <p className="py-2 text-[12px]">{card.name}</p>
                     </div>
-                </div>
-                <div className="flex w-[150px] px-2 py-4 rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
-                    <File className="text-[#8D561E] w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]"/>
-                    <div>
-                        <b>File Storage</b>
-                        <p className="text-gray-500 text-[12px]">20.5mb</p>
-                    </div>
-                </div>
-                <div className="flex w-[150px] px-2 py-4 rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
-                    <Locate className="text-[#8D561E] w-8 h-8  bg-lightPrimary p-[0.50rem] rounded-[50%]"/>
-                    <div>
-                        <b>Locations</b>
-                        <p className="text-gray-500 text-[12px]">20.5mb</p>
-                    </div>
-                </div>
-                <div className="flex w-[150px] px-2 py-4 rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
-                    <Users className="text-[#8D561E]  w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]"/>
-                    <div>
-                        <b>Users</b>
-                        <p className="text-gray-500 text-[12px]">20.5mb</p>
-                    </div>
-                </div>
-                <div className="flex w-[150px] px-2 py-4 rounded-[10px] shadow-[0_2px_25px_-16px_rgba(0,0,0,0.5)] items-center gap-2">
-                    <Hotel className="text-[#8D561E]  w-8 h-8 bg-lightPrimary p-[0.50rem] rounded-[50%]"/>
-                    <div>
-                        <b>Rooms</b>
-                        <p className="text-gray-500 text-[12px]">20.5mb</p>
-                    </div>
-                </div>
+                ))}
             </div>
 
+            <div className="my-10 mx-12">
+                <Card className="rounded-[1rem]  border shadow-[3px_3px_20px_-14px_rgba(0,0,0,0.5)]">
+                    <CardHeader className="flex gap-6 flex-row justify-between items-center">
+                        <CardTitle>Booking </CardTitle>
+                        <div>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                            "justify-between font-normal",
+                                            !date && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="h-4 mr-1" />
+                                        {date ? format(date, "PPP") : <span>Monthly</span>}
+                                        <ChevronDown className="h-4 ml-2" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={date}
+                                        onSelect={setDate}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="flex items-center justify-between">
+                        <div className="flex">
+                            <div className="flex flex-col gap-10 mb-4">
+                                <p>100%</p>
+                                <p>75%</p>
+                                <p>50%</p>
+                                <p>25%</p>
+                                <p>0%</p>
+                            </div>
+                            <ChartContainer config={chartConfig} className="h-[320px]">
+                                <BarChart accessibilityLayer data={chartData}>
+                                    <CartesianGrid vertical={false} />
+                                    <XAxis
+                                        dataKey="month"
+                                        tickLine={false}
+                                        tickMargin={10}
+                                        axisLine={false}
+                                        tickFormatter={(value) => value.slice(0, 3)}
+                                    />
+                                    <ChartTooltip
+                                        cursor={false}
+                                        content={<ChartTooltipContent hideLabel />}
+                                    />
+                                    <Bar dataKey="desktop" fill="var(--color-desktop)" barSize={20} />
+                                </BarChart>
+                            </ChartContainer>
 
-            <h1 className=" mt-8 ml-8 font-bold text-[1.5rem]">Top Modules</h1>
-            <Table  className="content w-[95%] my-6 mx-auto rounded  overflow-hidden border border-gray-200">
-                <TableRow className="bg-lightPrimary w-full p-8 mx-6">
-                    <TableHead>Modules</TableHead>
-                    <TableHead>Number of Clicks</TableHead>
-                </TableRow>
-                <TableRow  className="hover:bg-grey">
-                    <TableHead>Module 1</TableHead>
-                    <TableCell>20 Clicks</TableCell>
-                </TableRow>
-                <TableRow  className="hover:bg-grey">
-                    <TableHead>Module 2</TableHead>
-                    <TableCell>20 Clicks</TableCell>
-                </TableRow>
-                <TableRow  className="hover:bg-grey">
-                    <TableHead>Module 3</TableHead>
-                    <TableCell>20 Clicks</TableCell>
-                </TableRow>
-                <TableRow  className="hover:bg-grey">
-                    <TableHead>Module 4</TableHead>
-                    <TableCell>20 Clicks</TableCell>
-                </TableRow>
-            </Table>
+                        </div>
+
+                        <div className=" mt-9">
+                            <div className="dashboardCards h-[120px] w-[170px]">
+                                <b>847</b>
+                                <p className="py-2 text-[12px]">Total Bookings</p>
+                            </div>
+                            <div className="dashboardCards h-[120px] w-[170px]">
+                                <p className="py-2 text-[12px]">Last Booking</p>
+                                <b>847</b>
+                                <p className="py-2 text-[12px]">Jun 10, 2025</p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
 
         </div>
-    );
+    )
 }
