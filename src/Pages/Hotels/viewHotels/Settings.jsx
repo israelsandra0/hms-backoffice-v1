@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Spinner from "@/components/ui/spinner";
-import { put } from "@/functions";
+import { databaseRequest, put } from "@/functions";
 import { useToast } from "@/hooks/use-toast";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -250,7 +250,9 @@ export default function PageSettings({ closeFn, hotelId }) {
         const res = await put(`/hotels/${hotelId.id}/${endpoint}`, data);
 
         if (res.ok) {
-            toast({ success: true, duration: 5000, title: "Data updated successfully!" });
+            toast({ 
+                success: true, duration: 5000, title: "Data updated successfully!" 
+            });
             closeFn();
             setDetails({ name: "", size: 0, preview: "" });
             form.setValue(fieldName, null);
@@ -260,7 +262,9 @@ export default function PageSettings({ closeFn, hotelId }) {
                 form.setError(error.field, { type: "custom", message: error.message });
             });
         } else {
-            toast({ error: true, duration: 5000, title: "Failed to update data. Please try again." });
+            toast({ 
+                error: true, duration: 5000, title: "Failed to update data. Please try again." 
+            });
         }
     };
 
@@ -272,6 +276,35 @@ export default function PageSettings({ closeFn, hotelId }) {
         mutationFn: createMutation("update-home-image", bgForm, setBgDetails, "homeBgImage"),
     });
 
+    const { isFetching: loadingData, refetch: updateDatabase } = useQuery({
+        enabled: false,
+        queryKey: ["database"],
+        queryFn: async () => {
+            try {
+                const res = await databaseRequest();
+
+                if (res.ok) {
+                    toast({
+                        success: true,
+                        duration: 5000,
+                        title: 'Database updated successfully!'
+                    })
+                } else {
+                    toast({
+                        success: false,
+                        duration: 5000,
+                        title: 'Something went wrong.'
+                    })
+                }
+
+                const resData = await res.json();
+                console.log('res data', resData);
+
+            } catch (e) {
+                console.log('error', e);
+            }
+        }
+    })
 
     const renderUploadForm = ({
         type,
@@ -358,192 +391,21 @@ export default function PageSettings({ closeFn, hotelId }) {
                 </CardContent>
             </Card>
 
-            {/* <Card className="border mt-6 rounded-[15px] ml-4 w-[500px]">
-                <CardHeader><CardTitle>Appearance</CardTitle></CardHeader>
-                <CardContent className="space-y-6">
-                    <div className="grid gap-2">
-                        <Label htmlFor="primaryColor">Colors</Label>
-                        <Input id="primaryColor" type="color" defaultValue="#1E90FF" className="w-[100px] h-[40px] p-0 border-none" />
-                    </div>
-
-                    <div className="grid gap-2">
-                        <Label htmlFor="primaryFont">Fonts</Label>
-                        <select
-                            id="primaryFont"
-                            className="border rounded px-3 py-2 text-sm outline-none"
-                            defaultValue="Inter"
-                        >
-                            <option value="Inter">Inter</option>
-                            <option value="Roboto">Roboto</option>
-                            <option value="Poppins">Poppins</option>
-                            <option value="Open Sans">Open Sans</option>
-                            <option value="Helvetica">Helvetica</option>
-                        </select>
-                    </div>
-
-                    <Button variant="primary">Save</Button>
+            <Card className="border mt-6 rounded-[15px] ml-4 w-[500px]">
+                <CardHeader><CardTitle>Prepare / Update Database</CardTitle></CardHeader>
+                <CardContent>
+                    <Button variant='primary' onClick={updateDatabase}>
+                        {loadingData ? (
+                            <div className="text-center flex items-center justify-center mx-auto my-5">
+                                <Spinner className="me-3 text-gray-300 h-6 w-6" />
+                            </div>
+                        ) :
+                            ' Update'
+                        }
+                    </Button>
                 </CardContent>
-            </Card> */}
+            </Card>
+
         </div>
     );
 }
-
-// return (
-//     <div className="ml-4 mb-28">
-
-//         <div>
-//             <Card className="border mt-6 rounded-[15px] ml-4 w-[500px]">
-//                 <CardHeader>
-//                     <CardTitle className="flex justify-between">
-//                         Logo
-//                     </CardTitle>
-//                 </CardHeader>
-//                 <CardContent>
-//                     {!!fileDetails?.preview && (
-//                         <form onSubmit={handleSubmit(logoRequest)}>
-//                             <div className="flex justify-between gap-6 items-center mb-4">
-
-//                                 <div className="w-[150px] h-[100px] object-cover">
-//                                     <img src={fileDetails.preview} alt="File preview" className="w-[150px] h-[100px] object-cover" />
-//                                 </div>
-
-//                                 {fileDetails.name && (
-//                                     <div>
-//                                         <strong>{fileDetails.name}</strong><br />
-//                                         <h3>{(fileDetails.size / 1024).toFixed(2)} KB</h3>
-//                                     </div>
-//                                 )}
-//                             </div>
-//                             <Button variant="primary" type="submit" className="w-full p-[16px] text-[16px]" disabled={isPending}>
-//                                 {isPending ? <Spinner /> : 'Upload'}
-//                             </Button>
-//                             <Button variant="grey" onClick={handlelogoDelete} className="ml-4 w-full p-[16px] text-[16px]" disabled={isPending}>
-//                                 {isPending ? <Spinner /> : 'cancel'}
-//                             </Button>
-//                         </form>
-
-//                     )}
-
-//                     {!fileDetails?.preview && (
-//                         <form className=" grid grid-cols-2  items-center">
-
-//                             <div className="w-[150px] h-[100px] object-cover bg-gray-200  border border-gray-300">
-//                                 {!!hotelId.logo && (
-//                                     <img src={hotelId.logo} alt="Logo" className="w-[150px] h-[100px] mx-auto my-auto object-cover" />
-//                                 )}
-
-//                                 {!fileDetails?.preview && !hotelId.logo && (
-//                                     <div className="w-[150px] h-[100px] border-gray-300 flex items-center justify-center text-gray-700 pr-1"></div>
-//                                 )}
-//                             </div>
-
-//                             <Input
-//                                 {...register("logo")}
-//                                 type="file"
-//                                 id="file-upload"
-//                                 onChange={(e) => {
-//                                     handlelogoChange(e)
-//                                 }}
-//                             />
-//                         </form>
-//                     )}
-//                 </CardContent>
-//             </Card>
-
-//             <Card className="border mt-6 rounded-[15px] ml-4 w-[500px]">
-//                 <CardHeader>
-//                     <CardTitle>Home Page Background</CardTitle>
-//                 </CardHeader>
-//                 <CardContent>
-//                     {!!fileDetails?.preview && (
-//                         <form onSubmit={handleSubmit(backgroudimageRequest)}>
-//                             {/* {JSON.stringify(errors)} */}
-//                             <div className="flex justify-between gap-6 items-center mb-4">
-
-//                                 <div className="w-[150px] h-[100px] object-cover">
-//                                     <img src={fileDetails.preview} alt="File preview" className="w-[150px] h-[100px] object-cover" />
-//                                 </div>
-
-//                                 {fileDetails.name && (
-//                                     <div>
-//                                         <strong>{fileDetails.name}</strong><br />
-//                                         <h3>{(fileDetails.size / 1024).toFixed(2)} KB</h3>
-//                                     </div>
-//                                 )}
-//                             </div>
-//                             <Button variant="primary" type="submit" className="w-full p-[16px] text-[16px]" disabled={loader}>
-//                                 {loader ? <Spinner /> : 'Upload'}
-//                             </Button>
-//                             <Button variant="grey" onClick={handleBgDelete} className="ml-4 w-full p-[16px] text-[16px]" disabled={loader}>
-//                                 {loader ? <Spinner /> : 'cancel'}
-//                             </Button>
-//                         </form>
-
-//                     )}
-
-//                     {!fileDetails?.preview && (
-//                         <form className=" grid grid-cols-2  items-center">
-
-//                             <div className="w-[150px] h-[100px] object-cover bg-gray-200  border border-gray-300">
-//                                 {!!hotelId.homeBgImage && (
-//                                     <img src={hotelId.homeBgImage} alt="Logo" className="w-[150px] h-[100px] mx-auto my-auto object-cover" />
-//                                 )}
-
-//                                 {!fileDetails?.preview && !hotelId.homeBgImage && (
-//                                     <div className="w-[150px] h-[100px] border-gray-300 flex items-center justify-center text-gray-700 pr-1"></div>
-//                                 )}
-//                             </div>
-
-//                             <Input
-//                                 {...register("homeBgImage")}
-//                                 type="file"
-//                                 id="file-upload"
-//                                 onChange={(e) => {
-//                                     handleBgChange(e)
-//                                 }}
-//                             />
-//                         </form>
-//                     )}
-//                 </CardContent>
-//             </Card>
-
-//             <Card className="border mt-6 rounded-[15px] ml-4 w-[500px]">
-//                 <CardHeader>
-//                     <CardTitle>Appearance</CardTitle>
-//                 </CardHeader>
-//                 <CardContent className="space-y-6">
-
-//                     {/* Color */}
-//                     <div className="grid gap-2">
-//                         <Label htmlFor="primaryColor">Colors</Label>
-//                         <Input
-//                             id="primaryColor"
-//                             type="color"
-//                             defaultValue="#1E90FF"
-//                             className="w-[100px] h-[40px] p-0 border-none"
-//                         />
-//                     </div>
-
-//                     {/* Font */}
-//                     <div className="grid gap-2">
-//                         <Label htmlFor="primaryFont">Fonts</Label>
-//                         <select
-//                             id="primaryFont"
-//                             className="border rounded px-3 py-2 text-sm outline-none"
-//                             defaultValue="Inter"
-//                         >
-//                             <option value="Inter">Inter</option>
-//                             <option value="Roboto">Roboto</option>
-//                             <option value="Poppins">Poppins</option>
-//                             <option value="Open Sans">Open Sans</option>
-//                             <option value="Helvetica">Helvetica</option>
-//                         </select>
-//                     </div>
-
-//                     <Button variant='primary'>Save</Button>
-
-//                 </CardContent>
-//             </Card>
-//         </div>
-//     </div>
-// )
