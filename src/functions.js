@@ -1,4 +1,4 @@
-import { AUTH_DATA_KEY, BACKEND_URL } from "./constants";
+import { AUTH_DATA_KEY, BACKEND_URL, DATABASE_KEY } from "./constants";
 
 function bytesToBase64(bytes) {
   const binString = Array.from(bytes, (byte) =>
@@ -20,7 +20,7 @@ function secretReplace(plain) {
     .replace(/[\=]/g, "");
 }
 function secretReplaceReverse(plain) {
-  if (!plain) return '';  
+  if (!plain) return '';
   return plain
     .replace(/(\?x_)/g, "a")
     .replace(/(\?n_)/g, "m")
@@ -86,7 +86,7 @@ export function setData(key, value) {
 // reueable function for accessToken
 export async function get(urlPath) {
   const token = getDataObject(AUTH_DATA_KEY).accessToken;
-  
+
   const fullUrl = `${BACKEND_URL}${urlPath}`;
 
   return fetch(fullUrl, {
@@ -105,10 +105,10 @@ export async function post(urlPath, data = {}, method = 'POST') {
 
   const formData = new FormData()
   for (let key in data) {
-    if(Array.isArray(data[key])){
+    if (Array.isArray(data[key])) {
 
       let i = 0;
-      for(const arrayItem of data[key]){
+      for (const arrayItem of data[key]) {
         formData.append(`${key}[${i++}]`, arrayItem)
       }
       continue
@@ -125,10 +125,38 @@ export async function post(urlPath, data = {}, method = 'POST') {
   });
 }
 
-export async function apiDelete(urlPath){
+export async function apiDelete(urlPath) {
   return post(urlPath, {}, 'DELETE')
 }
 
-export async function put(urlPath, data){
+export async function put(urlPath, data) {
   return post(urlPath, data, 'PUT')
+}
+
+export async function databaseRequest() {
+  const data = {
+    data: {
+      id: 147
+    }
+  };
+
+  try {
+    const response = await fetch(`https://hms-v1.atslng.com/process/hotels/run-db-migrations?key=${DATABASE_KEY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Response error! status: ${response.status}`);
+    }
+
+    return response;
+
+  } catch (error) {
+    console.error('Request error:', error);
+    throw error;
+  }
 }
