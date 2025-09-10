@@ -133,20 +133,14 @@ export async function put(urlPath, data) {
   return post(urlPath, data, 'PUT')
 }
 
-export async function databaseRequest() {
-  const data = {
-    data: {
-      id: 147
-    }
-  };
-
+export async function databaseRequest(id) {
   try {
     const response = await fetch(`https://hms-v1.atslng.com/process/hotels/run-db-migrations?key=${DATABASE_KEY}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify({ data: { id } }), 
     });
 
     if (!response.ok) {
@@ -160,3 +154,4 @@ export async function databaseRequest() {
     throw error;
   }
 }
+
