@@ -223,65 +223,74 @@ export default function HotelsPage() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {filteredHotels.map((hotel) => (
-                        <TableRow key={hotel?.id} className="hover:bg-grey">
-                            <TableCell>
-                                <Link onClick={() => navigate(`/hotels/view/${hotel.id}`)} className="text-primary">
-                                    {hotel?.name}
-                                </Link>
-                            </TableCell>
-                            <TableCell>
-                                <a href={`https://${hotel?.website}`} className="text-primary flex gap-1 items-center" target="_blank" rel="noopener noreferrer">
-                                    {hotel?.website}
-                                    <ExternalLink className='w-4' />
-                                </a>
-                            </TableCell>
-                            <TableCell>{hotel?.locationsCount}</TableCell>
-                            <TableCell>{hotel?.subscription}</TableCell>
-                            <TableCell><Badge variant={hotel?.isActive ? `success` : 'error'}>{hotel?.isActive ? `Active` : 'Inactive'}</Badge></TableCell>
-                            {/* <TableCell></TableCell> */}
-                            <TableCell>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <MoreVertical className="cursor-pointer" />
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56 cursor-pointer">
+                    {filteredHotels.length > 0 ? (
+                        filteredHotels.map((hotel) => (
+                            <TableRow key={hotel?.id} className="hover:bg-grey">
+                                <TableCell>
+                                    <Link onClick={() => navigate(`/hotels/view/${hotel.id}`)} className="text-primary">
+                                        {hotel?.name}
+                                    </Link>
+                                </TableCell>
+                                <TableCell>
+                                    <a href={`https://${hotel?.website}`} className="text-primary flex gap-1 items-center" target="_blank" rel="noopener noreferrer">
+                                        {hotel?.website}
+                                        <ExternalLink className='w-4' />
+                                    </a>
+                                </TableCell>
+                                <TableCell>{hotel?.locationsCount}</TableCell>
+                                <TableCell>{hotel?.subscription}</TableCell>
+                                <TableCell><Badge variant={hotel?.isActive ? `success` : 'error'}>{hotel?.isActive ? `Active` : 'Inactive'}</Badge></TableCell>
+                                {/* <TableCell></TableCell> */}
+                                <TableCell>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <MoreVertical className="cursor-pointer" />
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="w-56 cursor-pointer">
 
-                                        {hasPermission(PERMISSIONS.HOTEL_VIEW.name) && (
-                                            <DropdownMenuItem onClick={() => navigate(`/hotels/view/${hotel.id}`)}>
-                                                <span>View</span>
-                                            </DropdownMenuItem>
-                                        )}
+                                            {hasPermission(PERMISSIONS.HOTEL_VIEW.name) && (
+                                                <DropdownMenuItem onClick={() => navigate(`/hotels/view/${hotel.id}`)}>
+                                                    <span>View</span>
+                                                </DropdownMenuItem>
+                                            )}
 
-                                        <DropdownMenuSeparator />
+                                            <DropdownMenuSeparator />
 
-                                        {hasPermission(PERMISSIONS.HOTEL_EDIT.name) && (
-                                            <DropdownMenuItem onClick={() => setHotelToEdit(hotel)}>
-                                                <span>Edit</span>
-                                            </DropdownMenuItem>
-                                        )}
+                                            {hasPermission(PERMISSIONS.HOTEL_EDIT.name) && (
+                                                <DropdownMenuItem onClick={() => setHotelToEdit(hotel)}>
+                                                    <span>Edit</span>
+                                                </DropdownMenuItem>
+                                            )}
 
-                                        <DropdownMenuSeparator />
+                                            <DropdownMenuSeparator />
 
-                                        {hasPermission(PERMISSIONS.HOTEL_ACTIVATE.name) && (
-                                            <DropdownMenuItem onClick={() => handleActionClick(hotel.id, hotel.isActive ? 'Deactivate' : 'Activate')}>
-                                                <span>{hotel.isActive ? 'Deactivate' : 'Activate'}</span>
-                                            </DropdownMenuItem>
-                                        )}
+                                            {hasPermission(PERMISSIONS.HOTEL_ACTIVATE.name) && (
+                                                <DropdownMenuItem onClick={() => handleActionClick(hotel.id, hotel.isActive ? 'Deactivate' : 'Activate')}>
+                                                    <span>{hotel.isActive ? 'Deactivate' : 'Activate'}</span>
+                                                </DropdownMenuItem>
+                                            )}
 
-                                        <DropdownMenuSeparator />
+                                            <DropdownMenuSeparator />
 
-                                        {hasPermission(PERMISSIONS.HOTEL_DELETE.name) && (
-                                            <DropdownMenuItem
-                                                onClick={() => handleActionClick(hotel.id, 'delete')}>
-                                                <span>Delete</span>
-                                            </DropdownMenuItem>
-                                        )}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                            {hasPermission(PERMISSIONS.HOTEL_DELETE.name) && (
+                                                <DropdownMenuItem
+                                                    onClick={() => handleActionClick(hotel.id, 'delete')}>
+                                                    <span>Delete</span>
+                                                </DropdownMenuItem>
+                                            )}
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                            </TableRow>
+                        ))
+
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={6} className="text-center pt-[5rem]">
+                                <p className="text-gray-500 text-[1.7rem]">No hotels match your search.</p>
                             </TableCell>
                         </TableRow>
-                    ))}
+                    )}
                 </TableBody>
             </Table>
 

@@ -221,7 +221,7 @@ export default function UsersTable({
 
     return (
         <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
-            {table.getPageCount() > 0 && (
+            {filteredUsers.length > 0 ? (
                 <Table>
                     <TableHeader className="bg-lightPrimary">
                         <TableRow>
@@ -234,7 +234,7 @@ export default function UsersTable({
                         {table.getRowModel().rows.map((row) => (
                             <TableRow key={row.id} className="hover:bg-grey">
                                 {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={row.id}>
+                                    <TableCell key={cell.id}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                     </TableCell>
                                 ))}
@@ -242,7 +242,12 @@ export default function UsersTable({
                         ))}
                     </TableBody>
                 </Table>
+            ) : (
+                <div className="text-center py-20">
+                    <p className="text-gray-500 text-[1.5rem]">No users match your search.</p>
+                </div>
             )}
+
 
             {!!selectedUser && (
                 <Card className="fixed inset-x-0 inset-y-0 bg-black/50 h-screen flex justify-center items-center">
@@ -278,11 +283,14 @@ export default function UsersTable({
                 </Card>
             )}
 
-            <Pagination
-                table={table}
-                pageIndex={pageIndex}
-                setPageIndex={setPageIndex}
-            />
+            {filteredUsers.length > 0 && (
+                <Pagination
+                    table={table}
+                    pageIndex={pageIndex}
+                    setPageIndex={setPageIndex}
+                />
+            )}
+
         </div>
     );
 }

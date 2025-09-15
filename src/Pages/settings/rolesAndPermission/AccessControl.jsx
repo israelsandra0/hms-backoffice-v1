@@ -230,7 +230,7 @@ export default function AccessControl() {
                             </ButtonLink>
                         </div>
                         <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
-                            {table.getPageCount() > 0 && (
+                            {filteredRole.length > 0 ? (
                                 <Table>
                                     <TableHeader className="bg-lightPrimary">
                                         <TableRow>
@@ -251,9 +251,15 @@ export default function AccessControl() {
                                         ))}
                                     </TableBody>
                                 </Table>
+                            ) : (
+                                <div className="text-center py-20">
+                                    <p className="text-gray-500 text-[1.5rem]">No roles match your search.</p>
+                                </div>
                             )}
 
-                            <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
+                            {filteredRole.length > 0 && (
+                                <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
+                            )}
 
                         </div>
                     </div>
@@ -297,7 +303,7 @@ export default function AccessControl() {
 
                         <div>
                             <h1 className="text-[1.2rem]">
-                                Permissions ({selectedRole.permissions.length}) 
+                                Permissions ({selectedRole.permissions.length})
                             </h1>
 
                             <Accordion type="multiple" className="w-full">

@@ -276,7 +276,7 @@ export default function PageSettings({ closeFn, hotelId }) {
         mutationFn: createMutation("update-home-image", bgForm, setBgDetails, "homeBgImage"),
     });
 
-    const id = hotelId?.id
+    const id = hotelId?.id 
 
     const { isFetching: loadingData, refetch: updateDatabase } = useQuery({
         enabled: false,

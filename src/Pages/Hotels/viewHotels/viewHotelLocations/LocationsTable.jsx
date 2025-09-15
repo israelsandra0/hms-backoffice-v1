@@ -1,14 +1,14 @@
 import Pagination from "@/components/Pagination";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { flexRender, useReactTable } from "@tanstack/react-table";
-import {useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { getCoreRowModel, getPaginationRowModel } from "@tanstack/react-table";
 
-export default function LocationsTable({locations, searchFilter }) {
+export default function LocationsTable({ locations, searchFilter }) {
 
     const [pageIndex, setPageIndex] = useState(0);
     const pageSize = 10
-    
+
     const columns = useMemo(() => [
         {
             header: "Name",
@@ -35,14 +35,14 @@ export default function LocationsTable({locations, searchFilter }) {
             accessorKey: "rooms_count",
         },
     ], []);
-   
+
 
     const filteredLocations = useMemo(() => {
         if (!searchFilter) return locations;
 
         const lowerCaseFilter = searchFilter.toLowerCase();
 
-        return locations.filter(location => 
+        return locations.filter(location =>
             location.name.toLowerCase().includes(lowerCaseFilter) ||
             location.address.toLowerCase().includes(lowerCaseFilter) ||
             location.state.toLowerCase().includes(lowerCaseFilter)
@@ -67,7 +67,7 @@ export default function LocationsTable({locations, searchFilter }) {
 
     return (
         <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
-            {table.getPageCount() > 0 && (
+            {filteredLocations.length > 0 ? (
                 <Table>
                     <TableHeader className="bg-lightPrimary">
                         <TableRow>
@@ -81,7 +81,7 @@ export default function LocationsTable({locations, searchFilter }) {
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}  className="hover:bg-grey">
+                            <TableRow key={row.id} className="hover:bg-grey">
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={row.id}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -91,9 +91,16 @@ export default function LocationsTable({locations, searchFilter }) {
                         ))}
                     </TableBody>
                 </Table>
+            ) : (
+                <div className="text-center py-20">
+                    <p className="text-gray-500 text-[1.5rem]">No locations match your search.</p>
+                </div>
             )}
 
-            <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
+            {filteredLocations.length > 0 && (
+                <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
+            )}
+
 
         </div>
     )

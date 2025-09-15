@@ -235,7 +235,7 @@ export default function Subscription() {
                             <Button variant='primary' onClick={() => navigate("/setting/subscriptions/subscription_plan")}>Add </Button>
                         </div>
                         <div className="content w-[95%] my-6 mx-auto rounded-[8px] border border-gray-200 overflow-hidden">
-                            {table.getPageCount() > 0 && (
+                            {filteredPlan.length > 0 ? (
                                 <Table>
                                     <TableHeader className="bg-lightPrimary">
                                         <TableRow>
@@ -261,9 +261,16 @@ export default function Subscription() {
                                         ))}
                                     </TableBody>
                                 </Table>
+                            ) : (
+                                <div className="text-center py-20">
+                                    <p className="text-gray-500 text-[1.5rem]">No plans match your search.</p>
+                                </div>
                             )}
 
-                            <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
+                            {filteredPlan.length > 0 && (
+                                <Pagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
+                            )}
+
 
                         </div>
                     </div>
