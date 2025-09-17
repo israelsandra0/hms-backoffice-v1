@@ -98,30 +98,63 @@ export async function get(urlPath) {
 }
 
 // reueable function for user login
-export async function post(urlPath, data = {}, method = 'POST') {
+// export async function post(urlPath, data = {}, method = 'POST') {
 
+//   const token = getDataObject(AUTH_DATA_KEY).accessToken;
+//   const fullUrl = `${BACKEND_URL}${urlPath}`;
+
+//   const formData = new FormData()
+//   for (let key in data) {
+//     if (Array.isArray(data[key])) {
+
+//       let i = 0;
+//       for (const arrayItem of data[key]) {
+//         formData.append(`${key}[${i++}]`, arrayItem)
+//       }
+//       continue
+//     }
+//     formData.append(key, data[key])
+//   }
+
+//   return fetch(fullUrl, {
+//     method,
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     body: formData,
+//   });
+// }
+
+export async function post(urlPath, data = {}, method = 'POST') {
   const token = getDataObject(AUTH_DATA_KEY).accessToken;
   const fullUrl = `${BACKEND_URL}${urlPath}`;
 
-  const formData = new FormData()
-  for (let key in data) {
-    if (Array.isArray(data[key])) {
+  let body;
+  let headers = {
+    Authorization: `Bearer ${token}`,
+  };
 
-      let i = 0;
-      for (const arrayItem of data[key]) {
-        formData.append(`${key}[${i++}]`, arrayItem)
+  if (data instanceof FormData) {
+    body = data;
+  } else {
+    const formData = new FormData();
+    for (let key in data) {
+      if (Array.isArray(data[key])) {
+        let i = 0;
+        for (const arrayItem of data[key]) {
+          formData.append(`${key}[${i++}]`, arrayItem);
+        }
+      } else {
+        formData.append(key, data[key]);
       }
-      continue
     }
-    formData.append(key, data[key])
+    body = formData;
   }
 
   return fetch(fullUrl, {
     method,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
+    headers,
+    body,
   });
 }
 
@@ -140,7 +173,7 @@ export async function databaseRequest(id) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ data: { id } }), 
+      body: JSON.stringify({ data: { id } }),
     });
 
     if (!response.ok) {

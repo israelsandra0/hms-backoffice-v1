@@ -7,9 +7,9 @@ import {
 } from "@/components/ui/breadcrumb";
 import Spinner from "@/components/ui/spinner";
 import UserAreaHeader from "@/components/UserAreaHeader";
-import { apiDelete, get } from "@/functions";
+import { apiDelete, get, put } from "@/functions";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     Link,
     useNavigate,
@@ -22,7 +22,6 @@ import HotelsOverview from "./Overview";
 import HotelPageUsers from "./viewHotelUsers/Users";
 import Locations from "./viewHotelLocations/Locations";
 import SubscriptionHistory from "./viewHotelSubscription/Subscription";
-import PageSettings from "./Settings";
 import { Badge } from "@/components/ui/badge";
 import { RiEdit2Line } from "@remixicon/react";
 import EditHotelModal from "../Edit";
@@ -38,6 +37,7 @@ import { HOTEL_VIEW, MANAGE_HOTEL_ADMINS, MANAGE_HOTEL_LOCATIONS } from "@/lib/p
 import { usePermission } from "@/hooks/use-permissions";
 import { useToast } from "@/hooks/use-toast";
 import { useConfirm } from "@/hooks/use-confirm";
+import PageSettings from "./Settings";
 
 
 const TAB_PERMISSION_MAP = {
@@ -57,7 +57,7 @@ export default function ViewHotelsPage() {
 
     let [searchParams, setSearchParams] = useSearchParams();
 
-    const { id } = useParams();   
+    const { id } = useParams();
 
     const validTabs = [
         "Overview",
@@ -110,6 +110,32 @@ export default function ViewHotelsPage() {
             viewHotelRequest();
         }
     }, [id]);
+
+    // Logo update mutation
+    const { mutate: updateLogo, isPending: logoUpdatePending } = useMutation({ 
+        mutationFn: async (formData) => {
+            const res = await put(`/hotels/${id}/update-logo`, formData);
+            if (!res.ok) {
+                throw new Error("Failed to update logo");
+            }
+            return res;
+        },
+        onSuccess: () => {
+            toast({
+                success: true,
+                duration: 5000,
+                title: 'Hotel logo updated successfully!'
+            });
+            viewHotelRequest();
+        },
+        onError: () => {
+            toast({
+                error: true,
+                duration: 5000,
+                title: 'Failed to update hotel logo. Please try again.'
+            });
+        }
+    });
 
     const handleDeleteResponse = (res) => {
         if (res.ok) {
@@ -182,6 +208,23 @@ export default function ViewHotelsPage() {
         viewHotelRequest();
     };
 
+    const fileInputRef = useRef(null);
+
+    const handleChangeClick = () => {
+        fileInputRef.current?.click();
+    };
+
+
+    const handleFileChange = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('logo', file);
+        
+        updateLogo(formData);
+    };
+
     const breadcrumb = (
         <Breadcrumb>
             <BreadcrumbList>
@@ -207,13 +250,11 @@ export default function ViewHotelsPage() {
         );
     }
 
-
-
     return (
         <div>
             <UserAreaHeader pages={breadcrumb} />
 
-            {isFetching ?
+            {isFetching || logoUpdatePending ?
                 <div className="text-center flex items-center justify-center mx-auto mt-40">
                     <Spinner className="me-3 text-gray-300 h-16 w-16" />
                 </div>
@@ -226,17 +267,27 @@ export default function ViewHotelsPage() {
                             {!!hotelLogo && (
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <img src={hotelLogo} className="w-16 h-16" />
+                                        <img src={hotelLogo} className="w-16 h-16 cursor-pointer" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className=" ml-40 w-56">
                                         <DropdownMenuItem onClick={() => handleActionClick(hotel.id, 'delete')}>
                                             Remove
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem>Change</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={handleChangeClick}>
+                                            Change
+                                        </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             )}
+
+                            <input
+                                type="file"
+                                accept="image/*"
+                                ref={fileInputRef}
+                                onChange={handleFileChange}
+                                style={{ display: 'none' }}
+                            />
 
                             <div>
                                 <h1 className="font-bold text-[22px]">{hotel?.name}</h1>
@@ -315,8 +366,6 @@ export default function ViewHotelsPage() {
                 </div>
 
             }
-
-
 
             {!!hotelToEdit?.id && (
                 <EditHotelModal closeFn={handleEditClose} hotelToEdit={hotelToEdit} />
