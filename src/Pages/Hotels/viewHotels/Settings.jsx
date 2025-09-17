@@ -251,7 +251,7 @@ export default function PageSettings({ closeFn, hotelId }) {
 
         if (res.ok) {
             toast({ 
-                success: true, duration: 5000, title: "Data updated successfully!" 
+                success: true, duration: 5000, title: "Logo updated successfully!" 
             });
             closeFn();
             setDetails({ name: "", size: 0, preview: "" });
@@ -263,7 +263,7 @@ export default function PageSettings({ closeFn, hotelId }) {
             });
         } else {
             toast({ 
-                error: true, duration: 5000, title: "Failed to update data. Please try again." 
+                error: true, duration: 5000, title: "Failed to update logo. Please try again." 
             });
         }
     };

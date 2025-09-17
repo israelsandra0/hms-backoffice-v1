@@ -186,7 +186,7 @@ export default function UsersTable({
     // handle delete, activation / deactivation fetching
     const handleConfirmation = async (userId, hotelAction) => {
         if (hotelAction === "Activate" || hotelAction === "Deactivate") {
-            return await post(`/hotels/${hotelId.id}/users/${userId}/change-status`, {
+            return await post(`/hotels/${hotelId}/users/${userId}/change-status`, {
                 is_active: hotelAction === "Activate",
             });
         }
