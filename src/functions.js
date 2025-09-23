@@ -189,6 +189,6 @@ export async function databaseRequest(id) {
 }
 
 export function isProduction() {
-  return window.location.host.includes("theinvista")
+  return window.location.host.includes("theinnvista")
 }
 
