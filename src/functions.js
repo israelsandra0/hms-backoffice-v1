@@ -168,7 +168,7 @@ export async function put(urlPath, data) {
 
 export async function databaseRequest(id) {
   try {
-    const response = await fetch(`https://hms-v1.atslng.com/process/hotels/run-db-migrations?key=${DATABASE_KEY}`, {
+    const response = await fetch(`${BACKEND_URL}/process/hotels/run-db-migrations?key=${DATABASE_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -186,5 +186,9 @@ export async function databaseRequest(id) {
     console.error('Request error:', error);
     throw error;
   }
+}
+
+export function isProduction() {
+  return window.location.host.includes("theinvista")
 }
 
