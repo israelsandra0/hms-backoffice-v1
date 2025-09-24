@@ -168,13 +168,7 @@ export async function put(urlPath, data) {
 
 export async function databaseRequest(id) {
   try {
-    const response = await fetch(`${BACKEND_URL}/hotels/${id}/update-database`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ data: { id } }),
-    });
+    const response = await post(`${BACKEND_URL}/hotels/${id}/update-database`, {id})
 
     if (!response.ok) {
       throw new Error(`Response error! status: ${response.status}`);
