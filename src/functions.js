@@ -168,7 +168,7 @@ export async function put(urlPath, data) {
 
 export async function databaseRequest(id) {
   try {
-    const response = await post(`${BACKEND_URL}/hotels/${id}/update-database`, {id})
+    const response = await post(`/hotels/${id}/update-database`, {id})
 
     if (!response.ok) {
       throw new Error(`Response error! status: ${response.status}`);
