@@ -1,4 +1,4 @@
-import { AUTH_DATA_KEY, BACKEND_URL, DATABASE_KEY } from "./constants";
+import { AUTH_DATA_KEY, BACKEND_URL } from "./constants";
 
 function bytesToBase64(bytes) {
   const binString = Array.from(bytes, (byte) =>
@@ -168,7 +168,7 @@ export async function put(urlPath, data) {
 
 export async function databaseRequest(id) {
   try {
-    const response = await fetch(`${BACKEND_URL}/process/hotels/run-db-migrations?key=${DATABASE_KEY}`, {
+    const response = await fetch(`${BACKEND_URL}/hotels/${id}/update-database`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -191,4 +191,3 @@ export async function databaseRequest(id) {
 export function isProduction() {
   return window.location.host.includes("theinnvista")
 }
-
