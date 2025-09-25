@@ -227,15 +227,27 @@ export default function HotelsPage() {
                         filteredHotels.map((hotel) => (
                             <TableRow key={hotel?.id} className="hover:bg-grey">
                                 <TableCell>
-                                    <Link onClick={() => navigate(`/hotels/view/${hotel.id}`)} className="text-primary">
-                                        {hotel?.name}
-                                    </Link>
+                                    {hotel?.setupCompleted === true ? (
+                                        <Link onClick={() => navigate(`/hotels/view/${hotel.id}`)} className="text-primary">
+                                            {hotel?.name}
+                                        </Link>
+                                    ) : (
+                                        <p className="text-primary">
+                                            {hotel?.name}
+                                        </p>
+                                    )}
                                 </TableCell>
                                 <TableCell>
-                                    <a href={`https://${hotel?.website}`} className="text-primary flex gap-1 items-center" target="_blank" rel="noopener noreferrer">
-                                        {hotel?.website}
-                                        <ExternalLink className='w-4' />
-                                    </a>
+                                    {hotel?.setupCompleted === true ? (
+                                        <a className="text-primary flex gap-1 items-center" target="_blank" rel="noopener noreferrer">
+                                            {hotel?.website}
+                                            <ExternalLink className='w-4' />
+                                        </a>
+                                    ) : (
+                                        <p className="text-primary flex gap-1 items-center">
+                                            {hotel?.website}
+                                        </p>
+                                    )}
                                 </TableCell>
                                 <TableCell>{hotel?.locationsCount}</TableCell>
                                 <TableCell>{hotel?.subscription}</TableCell>
@@ -248,7 +260,7 @@ export default function HotelsPage() {
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent className="w-56 cursor-pointer">
 
-                                            {hasPermission(PERMISSIONS.HOTEL_VIEW.name) && (
+                                            {hasPermission(PERMISSIONS.HOTEL_VIEW.name) && hotel?.setupCompleted === true && (
                                                 <DropdownMenuItem onClick={() => navigate(`/hotels/view/${hotel.id}`)}>
                                                     <span>View</span>
                                                 </DropdownMenuItem>
