@@ -151,6 +151,13 @@ export async function post(urlPath, data = {}, method = 'POST') {
     body = formData;
   }
 
+  // else if (typeof data[key] === 'object' && !(data[key] instanceof File)) {
+  //       // formData.append(key, data[key]);
+  //       formData.append(key, JSON.stringify(data[key]));
+  //     } else {
+  //       formData.append(key, data[key]);
+  //     }
+
   return fetch(fullUrl, {
     method,
     headers,
