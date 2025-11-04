@@ -5,17 +5,16 @@ import { Label } from "@/components/ui/label";
 import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Check } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button_link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { post } from "@/functions";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
 const schema = yup.object({
-    email: yup.string().required("Email is required").email(),
     password: yup
         .string()
         .required("Password is required")
@@ -27,10 +26,16 @@ const schema = yup.object({
         .oneOf([yup.ref("password"), null], "Passwords must match"),
 });
 
-export default function ResetPassPage() {
+export default function ResetPassPage({ email }) {
     const navigate = useNavigate();
     const [isSuccess, setIsSuccess] = useState(false);
     const [disabledButton, setDisabledButton] = useState(false);
+
+    const maskEmail = (email) => {
+        const [user, domain] = email.split("@")
+        const maskedUser = user.length > 3 ? `${user.slice(0, 3)}***` : `${user[0]}***`
+        return `${maskedUser}@${domain}`
+    }
 
     const {
         register,
@@ -39,7 +44,7 @@ export default function ResetPassPage() {
         getValues,
     } = useForm({
         resolver: yupResolver(schema),
-        defaultValues: { email: "", password: "", confirmPassword: "" },
+        defaultValues: { password: "", confirmPassword: "" },
     });
 
     // const { mutate, error } = useMutation({
@@ -97,7 +102,7 @@ export default function ResetPassPage() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email: data.email,
+                    email,
                     password: data.password,
                 }),
             });
@@ -147,23 +152,23 @@ export default function ResetPassPage() {
                             Create a new password
                         </CardTitle>
                         <p>
-                            Kindly provide your password that fits into the criteria provided
+                            Kindly provide a new password for
+                            <span className="font-semibold"> {maskEmail(email)} </span>
                         </p>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="grid w-full items-center gap-4 login">
-                                <div className="flex flex-col space-y-1.5">
-                                    <Label htmlFor="email">Email</Label>
+                                {/* <div className="flex flex-col space-y-1.5">
                                     <Input
                                         maxLength={50}
                                         {...register("email")}
-                                        type="email"
+                                        type="hidden"
                                         placeholder="info@atslng.com"
                                         id="email"
                                     />
                                     <p className="text-red-600 text-sm">{errors.email?.message}</p>
-                                </div>
+                                </div> */}
 
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="password">Password</Label>

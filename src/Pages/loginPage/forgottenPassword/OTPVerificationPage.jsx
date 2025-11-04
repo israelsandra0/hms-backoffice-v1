@@ -4,13 +4,14 @@ import { post } from "@/functions"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import OTPInput from "otp-input-react"
+import ResetPassPage from "../resetPassword/ResetPassPage"
 
 export default function VerificationPage({ email }) {
-    const navigate = useNavigate()
     const [OTP, setOTP] = useState("")
     const [disabledButton, setDisabledButton] = useState(false)
+    const [showResetPage, setShowResetPage] = useState(false)
 
     // Function to mask the email like "isr***@gmail.com"
     const maskEmail = (email) => {
@@ -39,7 +40,7 @@ export default function VerificationPage({ email }) {
                         duration: 4000,
                         title: responseData.message,
                     })
-                    navigate("/reset_password")
+                    setShowResetPage(true)
                 } else {
                     toast({
                         error: true,
@@ -74,6 +75,8 @@ export default function VerificationPage({ email }) {
         }
         mutate()
     }
+
+    if (showResetPage) return <ResetPassPage email={email} />
 
     return (
         <div className="grid place-items-center gap-12 mt-8">
