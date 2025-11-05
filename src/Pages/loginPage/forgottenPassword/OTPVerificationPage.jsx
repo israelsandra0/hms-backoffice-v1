@@ -1,10 +1,9 @@
-import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { post } from "@/functions"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Link } from "react-router-dom"
 import OTPInput from "otp-input-react"
 import ResetPassPage from "../resetPassword/ResetPassPage"
 
@@ -12,6 +11,9 @@ export default function VerificationPage({ email }) {
     const [OTP, setOTP] = useState("")
     const [disabledButton, setDisabledButton] = useState(false)
     const [showResetPage, setShowResetPage] = useState(false)
+    const [toastText, setToastText] = useState("")
+    const [countdown, setCountdown] = useState(0)
+
 
     // Function to mask the email like "isr***@gmail.com"
     const maskEmail = (email) => {
@@ -20,6 +22,16 @@ export default function VerificationPage({ email }) {
         const maskedUser = user.length > 3 ? `${user.slice(0, 3)}***` : `${user[0]}***`
         return `${maskedUser}@${domain}`
     }
+
+
+    useEffect(() => {
+        if (countdown <= 0) return
+        const timer = setInterval(() => {
+            setCountdown((prev) => prev - 1)
+        }, 1000)
+        return () => clearInterval(timer)
+    }, [countdown])
+
 
     const { mutate } = useMutation({
         mutationFn: async () => {
@@ -40,6 +52,7 @@ export default function VerificationPage({ email }) {
                         duration: 4000,
                         title: responseData.message,
                     })
+                    setToastText(responseData.message)
                     setShowResetPage(true)
                 } else {
                     toast({
@@ -47,6 +60,7 @@ export default function VerificationPage({ email }) {
                         duration: 4000,
                         title: responseData.message,
                     })
+                    setToastText(responseData.message)
                 }
 
                 setDisabledButton(false)
@@ -62,6 +76,26 @@ export default function VerificationPage({ email }) {
             }
         },
     })
+
+
+    // Resend OTP
+    const handleResend = async () => {
+        if (countdown > 0) return;
+        setCountdown(30) // 30s timer
+        try {
+            const res = await post("/auth/resend_otp", { email })
+            const data = await res.json()
+
+            if (res.ok) {
+                toast({ success: true, title: data.message || "OTP resent successfully!" })
+            } else {
+                toast({ error: true, title: data.message || "Failed to resend OTP." })
+            }
+        } catch (error) {
+            console.error("Resend error:", error)
+            toast({ error: true, title: "Error resending OTP." })
+        }
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -93,6 +127,9 @@ export default function VerificationPage({ email }) {
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit}>
+                        <p className="text-red-700">
+                            <span>{toastText}</span>
+                        </p>
                         <div className="flex justify-center mt-8">
                             <OTPInput
                                 value={OTP}
@@ -107,9 +144,15 @@ export default function VerificationPage({ email }) {
 
                         <p className="text-center text-[12px] mt-4">
                             Didn’t get the code?{" "}
-                            <Link className="text-[#8D561E]" to="#">
-                                Resend
-                            </Link>
+                            <button
+                                type="button"
+                                onClick={handleResend}
+                                className={`text-[#8D561E] text-[0.8rem] ${countdown > 0 ? "opacity-50 cursor-not-allowed" : ""
+                                    }`}
+                                disabled={countdown > 0}
+                            >
+                                {countdown > 0 ? `Resend in ${countdown}s` : "Resend"}
+                            </button>
                         </p>
 
                         <br />

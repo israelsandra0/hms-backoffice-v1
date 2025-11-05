@@ -47,51 +47,7 @@ export default function ResetPassPage({ email }) {
         defaultValues: { password: "", confirmPassword: "" },
     });
 
-    // const { mutate, error } = useMutation({
-    //     mutationFn: async (userInput) => {
-
-    //         setDisabledButton(true)
-    //         setErrorMessage("")
-
-    //         try {
-
-    //             const res = await post('/auth/reset_password', {
-    //                 email: userInput.email,
-    //                 password: userInput.password,
-    //             })
-    //             const responseData = await res.json()
-
-    //             console.log("back", responseData)
-
-    //             if (res.ok) {
-    //                 toast({
-    //                     success: true,
-    //                     duration: 4000,
-    //                     title: responseData.message,
-    //                 })
-    //                 navigate('/')
-    //             } else {
-    //                 toast({
-    //                     error: true,
-    //                     duration: 4000,
-    //                     title: responseData.message,
-    //                 })
-    //             }
-
-    //             setDisabledButton(false)
-    //             return responseData
-    //         } catch (error) {
-    //             console.error('Error resetting password:', error)
-    //             setDisabledButton(false)
-    //             toast({
-    //                 error: true,
-    //                 duration: 4000,
-    //                 title: 'An unexpected error occurred.',
-    //             })
-    //         }
-    //     },
-    // })
-
+    
     const onSubmit = async (data) => {
         setDisabledButton(true);
 
@@ -113,8 +69,6 @@ export default function ResetPassPage({ email }) {
             } catch {
                 responseData = {};
             }
-
-            console.log("errorr", responseData)
 
             if (res.ok) {
                 toast({
