@@ -5,19 +5,21 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
 import { post } from "@/functions";
 import { toast, useToast } from "@/hooks/use-toast";
 import VerificationPage from "./OTPVerificationPage";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList } from "@/components/ui/breadcrumb";
+import { ArrowLeft } from "lucide-react";
 
 export default function ForgottenPassPage() {
 
-	const navigate = useNavigate()
 	const [showVerification, setShowVerification] = useState(false);
 	const [userEmail, setUserEmail] = useState("")
 	const [dbError, setDbError] = useState("")
+	const navigate = useNavigate()
 
 
 	const yupBuild = yup.object({
@@ -39,7 +41,7 @@ export default function ForgottenPassPage() {
 	const { mutate } = useMutation({
 		mutationFn: async () => {
 			const userInput = getValues();
-			
+
 			setDisabledButton(true);
 
 			try {
@@ -70,13 +72,6 @@ export default function ForgottenPassPage() {
 					setDbError(responseData.message)
 				}
 
-				console.log('toast', responseData)
-
-				// setData(AUTH_DATA_KEY, responseData.data);
-
-				// await getAuthUser();
-
-				// setTimeout(() => (window.location.href = "/dashboard"), 100);
 
 				setDisabledButton(false);
 				return responseData;
@@ -86,47 +81,62 @@ export default function ForgottenPassPage() {
 		},
 	});
 
+
+	const breadcrumb = (
+		<Breadcrumb>
+			<BreadcrumbList>
+				<ArrowLeft />
+				<BreadcrumbItem>
+					<Link onClick={() => navigate('/')}>Login</Link>
+				</BreadcrumbItem>
+			</BreadcrumbList>
+		</Breadcrumb>
+	);
+
 	return (
 		<>
 			{showVerification ? (
-				<VerificationPage email={userEmail} />  
+				<VerificationPage email={userEmail} />
 			) : (
-				<div className="grid place-items-center gap-12 mt-8">
-					<Card className="w-2/5 static rounded-[15px] p-4 mt-8">
-						<CardHeader>
-							<CardTitle className="loginText text-center text-[1.8rem]">
-								Forgot your password?
-							</CardTitle>
-							<p className="text-center text-[1rem]">
-								Enter your email address to receive password reset instructions.
-							</p>
-						</CardHeader>
-						<CardContent>
-							<form onSubmit={handleSubmit(mutate)}>
-								<div className="flex flex-col space-y-1.5 mt-8">
-									<Label htmlFor="email">Email</Label>
-									<Input
-										maxLength="50"
-										{...register("email")}
-										type="email"
-										placeholder="info@atslng.com"
-										id="email"
-									/>
-									<p className="text-red-700">{errors.email?.message ? errors.email?.message : dbError}</p>
-									{/* <p className="text-red-700">{dbError}</p> */}
-								</div>
-								<br />
-								<Button
-									variant="primary"
-									disabled={!!disabledButton}
-									type="submit"
-									className="w-full p-[16px] rounded-r-[1.3rem] rounded-l-[1.3rem] text-[16px]"
-								>
-									{disabledButton ? "Submitting..." : "Submit"}
-								</Button>
-							</form>
-						</CardContent>
-					</Card>
+				<div>
+					<button className="pt-6 ml-8">{breadcrumb}</button>
+
+					<div className="grid place-items-center gap-12 mt-8">
+						<Card className="w-2/5 static rounded-[15px] p-4 mt-8">
+							<CardHeader>
+								<CardTitle className="loginText text-center text-[1.8rem]">
+									Forgot your password?
+								</CardTitle>
+								<p className="text-center text-[1rem]">
+									Enter your email address to receive password reset instructions.
+								</p>
+							</CardHeader>
+							<CardContent>
+								<form onSubmit={handleSubmit(mutate)}>
+									<div className="flex flex-col space-y-1.5 mt-8">
+										<Label htmlFor="email">Email</Label>
+										<Input
+											maxLength="50"
+											{...register("email")}
+											type="email"
+											placeholder="info@atslng.com"
+											id="email"
+										/>
+										<p className="text-red-700">{errors.email?.message ? errors.email?.message : dbError}</p>
+									</div>
+									<br />
+									<Button
+										variant="primary"
+										disabled={!!disabledButton}
+										type="submit"
+										className="w-full p-[16px] rounded-r-[1.3rem] rounded-l-[1.3rem] text-[16px]"
+									>
+										{disabledButton ? "Submitting..." : "Submit"}
+									</Button>
+								</form>
+							</CardContent>
+						</Card>
+					</div>
 				</div>
 			)}
 		</>
