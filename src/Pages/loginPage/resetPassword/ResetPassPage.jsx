@@ -13,6 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import { post } from "@/functions";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { BACKEND_URL } from "@/constants";
 
 const schema = yup.object({
     password: yup
@@ -52,7 +53,7 @@ export default function ResetPassPage({ email }) {
         setDisabledButton(true);
 
         try {
-            const res = await fetch("http://localhost:3330/auth/reset_password", {
+            const res = await fetch(`${BACKEND_URL}/auth/reset_password`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

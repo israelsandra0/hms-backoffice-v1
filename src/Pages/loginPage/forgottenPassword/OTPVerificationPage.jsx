@@ -87,13 +87,22 @@ export default function VerificationPage({ email }) {
             const data = await res.json()
 
             if (res.ok) {
-                toast({ success: true, title: data.message || "OTP resent successfully!" })
+                toast({ 
+                    success: true, 
+                    title: data.message || "OTP resent successfully!" 
+                })
             } else {
-                toast({ error: true, title: data.message || "Failed to resend OTP." })
+                toast({ 
+                    error: true, 
+                    title: data.message || "Failed to resend OTP." 
+                })
             }
         } catch (error) {
             console.error("Resend error:", error)
-            toast({ error: true, title: "Error resending OTP." })
+            toast({ 
+                error: true, 
+                title: "Error resending OTP." 
+            })
         }
     }
 
