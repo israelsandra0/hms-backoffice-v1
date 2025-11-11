@@ -51,7 +51,7 @@ export default function Article() {
                 <p className="text-gray-500 mb-6">
                     You haven’t added any articles yet.
                 </p>
-                <ButtonLink to="/setting/user_guide/add" variant="primary">
+                <ButtonLink to="/documentations/user_guide/add" variant="primary">
                     Add New Article
                 </ButtonLink>
             </div>
@@ -62,7 +62,7 @@ export default function Article() {
         <div className="px-6 py-8">
 
             <div className="flex justify-end mb-6">
-                <ButtonLink to="/setting/user_guide/add" variant="primary">
+                <ButtonLink to="/documentations/user_guide/add" variant="primary">
                     Add Article
                 </ButtonLink>
             </div>
@@ -74,38 +74,35 @@ export default function Article() {
                         className="bg-white p-6 rounded-2xl shadow-sm border hover:shadow-md transition-shadow"
                     >
                         <header className="mb-4">
-                            <div className="flex items-center text-sm text-gray-500 mb-2">
-                                {article?.subcategory && (
-                                    <span className="capitalize">{article.subcategory.name}</span>
-                                )}
-                                {article?.subcategory && (
-                                    <ArrowRight className="mx-2 text-gray-400 w-3 h-3" />
-                                )}
-                                <span className="font-medium text-gray-700">
-                                    {article.category?.name}
-                                </span>
-                            </div>
 
                             <h2 className="text-2xl font-semibold text-gray-900 mb-1">
                                 {article.title}
                             </h2>
-                            <p className="text-gray-500 text-sm">
-                                {new Date(article.createdAt).toLocaleDateString()}
-                            </p>
+
+                            <div className="flex justify-between">
+                                <div className="flex items-center text-sm text-gray-500 mb-2">
+                                    {article?.subcategory && (
+                                        <span className="capitalize">{article.subcategory.name}</span>
+                                    )}
+                                    {article?.subcategory && (
+                                        <ArrowRight className="mx-2 text-gray-400 w-3 h-3" />
+                                    )}
+                                    <span className="font-medium text-gray-700">
+                                        {article.category?.name}
+                                    </span>
+                                    <p className="ml-6 text-gray-500 text-sm">
+                                        {new Date(article.updatedAt).toLocaleDateString()}
+                                    </p>
+                                </div>
+
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                >
+                                    Edit
+                                </Button>
+                            </div>
                         </header>
-
-                        <section className="text-gray-700 leading-relaxed text-base whitespace-pre-line">
-                            {article.content}
-                        </section>
-
-                        <footer className="flex justify-end mt-6">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                            >
-                                Edit
-                            </Button>
-                        </footer>
                     </article>
                 ))}
             </div>

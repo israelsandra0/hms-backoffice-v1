@@ -28,7 +28,7 @@ export default function AddCategory({
     const schema = yup.object({
         name: yup.string().required("Name is required").max(50),
         description: yup.string().nullable(),
-        categoryId: yup.number().nullable(),
+        categoryId: yup.number().nonNullable(),
     });
 
     const {
