@@ -37,6 +37,8 @@ import ForgottenPassPage from "./pages/loginPage/forgottenPassword/ForgottenPass
 import VerificationPage from "./pages/loginPage/forgottenPassword/OTPVerificationPage";
 import ResetPassPage from "./pages/loginPage/resetPassword/ResetPassPage";
 import EditSubscriptionPlan from "./pages/settings/subscriptionPage/EditSubscriptionPlan";
+import UserGuide from "./Pages/documentations/userGuide/Index";
+import AddArticle from "./Pages/documentations/userGuide/article/AddArticle";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -68,6 +70,8 @@ const router = createBrowserRouter(
         <Route path="/setting/subscriptions" element={<Subscription />} />
         <Route path="/setting/subscriptions/subscription_plan" element={<SubscriptionPlan />} />
         <Route path="/setting/subscriptions/edit" element={<EditSubscriptionPlan />} />
+        <Route path="/documentations/user_guide" element={<UserGuide />} />
+        <Route path="/documentations/user_guide/add" element={<AddArticle />} />
       </Route>
     </Route>
   )

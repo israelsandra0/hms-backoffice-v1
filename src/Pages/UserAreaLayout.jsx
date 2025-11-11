@@ -1,5 +1,5 @@
 import { NavLink, Outlet, } from "react-router-dom"
-import { ChevronDown, ChevronRight, LayoutDashboard } from "lucide-react"
+import { Book, BookCheck, ChevronDown, ChevronRight, LayoutDashboard } from "lucide-react"
 import { RequireAuth } from "./Auth";
 import AccountIcon from "@/components/icons/account";
 import HotelIcon from "@/components/icons/hotel";
@@ -79,6 +79,35 @@ export default function UserAreaLayout() {
                                     <SupportIcon />
                                     Support & help
                                 </NavLink>
+
+                                <Collapsible
+                                    open={isOpen}
+                                    onOpenChange={setIsOpen}
+                                >
+                                    <CollapsibleTrigger asChild className="mt-1">
+                                        <div className="flex items-center ml-3 mt-2 justify-between">
+                                            <h4 className="text-sm flex gap-3 font-semibold cursor-pointer">
+                                                <BookCheck width={16} className="text-gray-500" />
+                                                Documentation
+                                            </h4>
+                                            {isOpen ? (
+                                                <ChevronDown className="h-4 w-4" />
+                                            ) : (
+                                                <ChevronRight className="h-4 w-4" />
+                                            )}
+                                        </div>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent className="space-y-2 ml-9 mt-2">
+                                        <NavLink to="/documentations/user_guide" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                            User Guide
+                                        </NavLink>
+
+                                        <NavLink to="/#" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                            Technical Guide
+                                        </NavLink>
+
+                                    </CollapsibleContent>
+                                </Collapsible>
 
                                 {hasAnyPermission && (
                                     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
