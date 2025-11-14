@@ -76,7 +76,7 @@ export default function Article() {
                         className="bg-white p-5 rounded-2xl shadow-sm border hover:shadow-md transition-all flex flex-col justify-between"
                     >
                         <div>
-                            <h2 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
+                            <h2 onClick={() => navigate(`/documentations/user_guide/view/${article.id}`)} className="text-xl cursor-pointer font-semibold text-gray-900 mb-2 line-clamp-2">
                                 {article.title}
                             </h2>
 
@@ -91,10 +91,6 @@ export default function Article() {
                                     {article.category?.name}
                                 </span>
                             </div>
-
-                            <p className="text-gray-600 text-sm line-clamp-3 mb-4">
-                                {article.content}
-                            </p>
                         </div>
 
                         <div className="flex items-center justify-between mt-auto">
