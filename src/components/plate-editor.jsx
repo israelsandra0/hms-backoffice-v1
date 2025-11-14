@@ -9,7 +9,7 @@ import { EditorKit } from '@/components/editor-kit';
 import { SettingsDialog } from '@/components/settings-dialog';
 import { Editor, EditorContainer } from '@/components/ui/editor';
 
-export function PlateEditor({value, onChange }) {
+export function PlateEditor({readOnly, value, onChange }) {
   const editor = usePlateEditor({
     plugins: EditorKit,
     value,
@@ -17,6 +17,7 @@ export function PlateEditor({value, onChange }) {
 
   return (
     <Plate
+      readOnly={!!readOnly}
       editor={editor}
       value={value}
       onChange={onChange}

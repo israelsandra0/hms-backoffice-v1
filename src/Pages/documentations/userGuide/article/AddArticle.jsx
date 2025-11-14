@@ -15,24 +15,8 @@ import { toast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { get, post } from "@/functions";
-import { FixedToolbar } from "@/components/ui/fixed-toolbar";
-import { MarkToolbarButton } from "@/components/ui/mark-toolbar-button";
-import { Editor, EditorContainer } from "@/components/ui/editor";
-import { Plate, usePlateEditor } from 'platejs/react';
 import * as React from 'react';
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import {
-    BlockquotePlugin,
-    BoldPlugin,
-    H1Plugin,
-    H2Plugin,
-    H3Plugin,
-    ItalicPlugin,
-    UnderlinePlugin,
-} from '@platejs/basic-nodes/react';
-import { BlockquoteElement } from '@/components/ui/blockquote-node';
-import { H1Element, H2Element, H3Element } from '@/components/ui/heading-node';
-import { ToolbarButton } from '@/components/ui/toolbar';
 import { PlateEditor } from "@/components/plate-editor";
 import { Toaster } from "sonner";
 
@@ -58,41 +42,13 @@ const initialValue = [
 ];
 
 
-function extractPlainText(nodes) {
-    if (!Array.isArray(nodes)) return "";
-    return nodes
-        .map((node) => {
-            if (node.text) return node.text;
-            if (node.children) return extractPlainText(node.children);
-            return "";
-        })
-        .join(" ");
-}
-
 
 export default function AddArticle() {
     const navigate = useNavigate();
     const [disabledButton, setDisabledButton] = useState(false)
     const [categories, setCategories] = useState([])
     const [subcategories, setSubcategories] = useState([])
-
-    const editor = usePlateEditor({
-        plugins: [
-            BoldPlugin,
-            ItalicPlugin,
-            UnderlinePlugin,
-            H1Plugin.withComponent(H1Element),
-            H2Plugin.withComponent(H2Element),
-            H3Plugin.withComponent(H3Element),
-            BlockquotePlugin.withComponent(BlockquoteElement),
-        ],
-        value: () => {
-            const savedValue = localStorage.getItem(
-                `nextjs-plate-value-demo-${new Date().toISOString().split('T')[0]}`
-            );
-            return savedValue ? JSON.parse(savedValue) : initialValue;
-        },
-    });
+    const [editorValue, setEditorValue] = useState([]);
 
     const schema = yup.object({
         title: yup.string().required("Title is required").max(50),
@@ -149,11 +105,6 @@ export default function AddArticle() {
         }
     }, [selectedCategoryId, categories]);
 
-    //Watch editor value changes and sync with form
-    const handleEditorChange = (value) => {
-        setValue("content", value, { shouldValidate: true });
-    };
-
 
     const onSubmit = async (values) => {
         setDisabledButton(true);
@@ -179,7 +130,7 @@ export default function AddArticle() {
 
             const inputData = {
                 title: values.title,
-                content: extractPlainText(values.content),
+                content: values.content,
                 category_id: categoryId,
                 subcategory_id: subcategoryId,
             };
@@ -198,7 +149,7 @@ export default function AddArticle() {
                 reset();
                 navigate("/documentations/user_guide");
             } else {
-                let message = data.message || "Something went wrong";
+                let message = "Failed, Something went wrong";
 
                 if (message.includes("foreign key constraint fails")) {
                     message = "Select a value.";
@@ -221,7 +172,6 @@ export default function AddArticle() {
             setDisabledButton(false);
         }
     };
-
 
     const breadcrumb = (
         <Breadcrumb>
@@ -291,42 +241,15 @@ export default function AddArticle() {
                         </div>
 
                         <div className="h-[400px] w-full">
-                            <Plate
-                                editor={editor}
-                                onChange={(e) => {
-                                    handleEditorChange(editor.children);
-                                }}>
-                                <FixedToolbar className="flex justify-start gap-1 rounded-t-lg">
-                                    <ToolbarButton onClick={() => editor.tf.h1.toggle()}>H1</ToolbarButton>
-                                    <ToolbarButton onClick={() => editor.tf.h2.toggle()}>H2</ToolbarButton>
-                                    <ToolbarButton onClick={() => editor.tf.h3.toggle()}>H3</ToolbarButton>
-                                    <ToolbarButton onClick={() => editor.tf.blockquote.toggle()}>
-                                        Quote
-                                    </ToolbarButton>
-                                    <MarkToolbarButton nodeType="bold" tooltip="Bold (⌘+B)">
-                                        B
-                                    </MarkToolbarButton>
-                                    <MarkToolbarButton nodeType="italic" tooltip="Italic (⌘+I)">
-                                        I
-                                    </MarkToolbarButton>
-                                    <MarkToolbarButton nodeType="underline" tooltip="Underline (⌘+U)">
-                                        U
-                                    </MarkToolbarButton>
-                                    <div className="flex-1" />
-                                    <ToolbarButton
-                                        className="px-2"
-                                        onClick={() => {
-                                            editor.tf.setValue(initialValue);
-                                        }}
-                                    >
-                                        Reset
-                                    </ToolbarButton>
-                                </FixedToolbar>
-
-                                <EditorContainer>
-                                    <Editor placeholder="Type your amazing content here..." />
-                                </EditorContainer>
-                            </Plate>
+                            <PlateEditor
+                                value={editorValue}
+                                onChange={(newValue) => {
+                                    setEditorValue(newValue);
+                                    console.log('new value',JSON.stringify(newValue.value))
+                                    setValue("content", JSON.stringify(newValue.value), { shouldValidate: true });
+                                }}
+                            />
+                            <Toaster />
                         </div>
 
                         {/* Buttons */}
