@@ -1,15 +1,17 @@
-import Pagination from "@/components/Pagination";
-import UserAreaHeader from "@/components/UserAreaHeader";
 import { Button } from "@/components/ui/button";
 import { ButtonLink } from "@/components/ui/button_link";
 import Spinner from "@/components/ui/spinner";
 import { get } from "@/functions";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Shield } from "lucide-react";
+import { ArrowRight, Search, Shield } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Article() {
     const navigate = useNavigate();
+    const [searchFilter, setSearchFilter] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 6;
 
     const {
         data: articles,
@@ -24,6 +26,16 @@ export default function Article() {
             return res.json();
         },
     });
+
+
+    const filteredArticles = articles.filter((article) =>
+        article.title.toLowerCase().includes(searchFilter.toLowerCase())
+    );
+
+    // Pagination calculations
+    const totalPages = Math.ceil(filteredArticles.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedArticles = filteredArticles.slice(startIndex, startIndex + itemsPerPage);
 
     if (isLoading || isFetching) {
         return (
@@ -58,19 +70,35 @@ export default function Article() {
         );
     }
 
-     return (
-        <div className="px-6 py-8">
+
+    return (
+        <div className="px-6 py-6">
             {/* Header + Add button */}
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-2xl font-semibold text-gray-800">All Articles</h1>
+
+                <div className="relative">
+                    <Search className="text-gray-300 w-4 absolute top-1/2 -translate-y-1/2 left-3" />
+                    <input
+                        type="text"
+                        placeholder="Search articles..."
+                        value={searchFilter}
+                        onChange={(e) => {
+                            setSearchFilter(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                        className="border border-gray-300 pl-9 rounded-lg py-2 w-[250px] outline-none"
+                    />
+                </div>
+
                 <ButtonLink to="/documentations/user_guide/add" variant="primary">
                     Add Article
                 </ButtonLink>
             </div>
+            {/* <h1 className="text-2xl font-semibold text-gray-800">All Articles</h1> */}
 
             {/* Responsive grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {articles.map((article) => (
+                {paginatedArticles.map((article) => (
                     <article
                         key={article.id}
                         className="bg-white p-5 rounded-2xl shadow-sm border hover:shadow-md transition-all flex flex-col justify-between"
@@ -109,8 +137,38 @@ export default function Article() {
                 ))}
             </div>
 
-            {/* Optional Pagination */}
-            {/* <Pagination /> */}
+            {/* Pagination */}
+            <div className="w-full flex items-center justify-center mt-8 gap-2">
+
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => prev - 1)}
+                    className="px-2 py-1 text-xs border rounded-md disabled:opacity-40"
+                >
+                    Prev
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => (
+                    <button
+                        key={i}
+                        onClick={() => setCurrentPage(i + 1)}
+                        className={`px-2 py-1 text-xs border rounded-md ${currentPage === i + 1 ? "bg-primary text-white" : ""
+                            }`}
+                    >
+                        {i + 1}
+                    </button>
+                ))}
+
+                <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                    className="px-2 py-1 text-xs border rounded-md disabled:opacity-40"
+                >
+                    Next
+                </button>
+
+            </div>
+
         </div>
     );
 }
