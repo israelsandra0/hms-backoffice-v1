@@ -58,54 +58,63 @@ export default function Article() {
         );
     }
 
-    return (
+     return (
         <div className="px-6 py-8">
-
-            <div className="flex justify-end mb-6">
+            {/* Header + Add button */}
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-2xl font-semibold text-gray-800">All Articles</h1>
                 <ButtonLink to="/documentations/user_guide/add" variant="primary">
                     Add Article
                 </ButtonLink>
             </div>
 
-            <div className="space-y-10 max-w-3xl mx-auto">
+            {/* Responsive grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {articles.map((article) => (
                     <article
                         key={article.id}
-                        className="bg-white p-6 rounded-2xl shadow-sm border hover:shadow-md transition-shadow"
+                        className="bg-white p-5 rounded-2xl shadow-sm border hover:shadow-md transition-all flex flex-col justify-between"
                     >
-                        <header className="mb-4">
-
-                            <h2 className="text-2xl font-semibold text-gray-900 mb-1">
+                        <div>
+                            <h2 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
                                 {article.title}
                             </h2>
 
-                            <div className="flex justify-between">
-                                <div className="flex items-center text-sm text-gray-500 mb-2">
-                                    {article?.subcategory && (
+                            <div className="flex flex-wrap items-center text-sm text-gray-500 mb-3">
+                                {article?.subcategory && (
+                                    <>
                                         <span className="capitalize">{article.subcategory.name}</span>
-                                    )}
-                                    {article?.subcategory && (
                                         <ArrowRight className="mx-2 text-gray-400 w-3 h-3" />
-                                    )}
-                                    <span className="font-medium text-gray-700">
-                                        {article.category?.name}
-                                    </span>
-                                    <p className="ml-6 text-gray-500 text-sm">
-                                        {new Date(article.updatedAt).toLocaleDateString()}
-                                    </p>
-                                </div>
-
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                >
-                                    Edit
-                                </Button>
+                                    </>
+                                )}
+                                <span className="font-medium text-gray-700">
+                                    {article.category?.name}
+                                </span>
                             </div>
-                        </header>
+
+                            <p className="text-gray-600 text-sm line-clamp-3 mb-4">
+                                {article.content}
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-between mt-auto">
+                            <p className="text-xs text-gray-400">
+                                {new Date(article.updatedAt).toLocaleDateString()}
+                            </p>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => navigate(`/documentations/user_guide/edit/${article.id}`)}
+                            >
+                                Edit
+                            </Button>
+                        </div>
                     </article>
                 ))}
             </div>
+
+            {/* Optional Pagination */}
+            {/* <Pagination /> */}
         </div>
     );
 }
