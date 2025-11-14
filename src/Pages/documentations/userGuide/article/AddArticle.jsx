@@ -15,6 +15,60 @@ import { toast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { get, post } from "@/functions";
+import { FixedToolbar } from "@/components/ui/fixed-toolbar";
+import { MarkToolbarButton } from "@/components/ui/mark-toolbar-button";
+import { Editor, EditorContainer } from "@/components/ui/editor";
+import { Plate, usePlateEditor } from 'platejs/react';
+import * as React from 'react';
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import {
+    BlockquotePlugin,
+    BoldPlugin,
+    H1Plugin,
+    H2Plugin,
+    H3Plugin,
+    ItalicPlugin,
+    UnderlinePlugin,
+} from '@platejs/basic-nodes/react';
+import { BlockquoteElement } from '@/components/ui/blockquote-node';
+import { H1Element, H2Element, H3Element } from '@/components/ui/heading-node';
+import { ToolbarButton } from '@/components/ui/toolbar';
+import { PlateEditor } from "@/components/plate-editor";
+import { Toaster } from "sonner";
+
+
+
+const initialValue = [
+    {
+        children: [{ text: 'Title' }],
+        type: 'h3',
+    },
+    {
+        children: [{ text: 'This is a quote.' }],
+        type: 'blockquote',
+    },
+    {
+        children: [
+            { text: 'With some ' },
+            { bold: true, text: 'bold' },
+            { text: ' text for emphasis!' },
+        ],
+        type: 'p',
+    },
+];
+
+
+function extractPlainText(nodes) {
+    if (!Array.isArray(nodes)) return "";
+    return nodes
+        .map((node) => {
+            if (node.text) return node.text;
+            if (node.children) return extractPlainText(node.children);
+            return "";
+        })
+        .join(" ");
+}
+
 
 export default function AddArticle() {
     const navigate = useNavigate();
@@ -22,10 +76,28 @@ export default function AddArticle() {
     const [categories, setCategories] = useState([])
     const [subcategories, setSubcategories] = useState([])
 
+    const editor = usePlateEditor({
+        plugins: [
+            BoldPlugin,
+            ItalicPlugin,
+            UnderlinePlugin,
+            H1Plugin.withComponent(H1Element),
+            H2Plugin.withComponent(H2Element),
+            H3Plugin.withComponent(H3Element),
+            BlockquotePlugin.withComponent(BlockquoteElement),
+        ],
+        value: () => {
+            const savedValue = localStorage.getItem(
+                `nextjs-plate-value-demo-${new Date().toISOString().split('T')[0]}`
+            );
+            return savedValue ? JSON.parse(savedValue) : initialValue;
+        },
+    });
+
     const schema = yup.object({
         title: yup.string().required("Title is required").max(50),
-        content: yup.string().required("Content is required"),
-        category_id: yup.number().nonNullable(),
+        content: yup.mixed().required("Content is required"),
+        category_id: yup.number().required("Category is required").typeError("Category is required"),
         subcategory_id: yup.number().nullable(),
     });
 
@@ -33,16 +105,16 @@ export default function AddArticle() {
         register,
         handleSubmit,
         formState: { errors },
-        getValues,
         watch,
+        setValue,
         reset,
     } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
             title: "",
             content: "",
-            category_id: 0,
-            subcategory_id: 0
+            category_id: "",
+            subcategory_id: null
         },
     });
 
@@ -77,18 +149,42 @@ export default function AddArticle() {
         }
     }, [selectedCategoryId, categories]);
 
-    const onSubmit = async () => {
-        const values = getValues();
-        setDisabledButton(true)
+    //Watch editor value changes and sync with form
+    const handleEditorChange = (value) => {
+        setValue("content", value, { shouldValidate: true });
+    };
+
+
+    const onSubmit = async (values) => {
+        setDisabledButton(true);
 
         try {
+            // Convert IDs to numbers or null
+            const categoryId = Number(values.category_id)
+            const subcategoryId =
+                values.subcategory_id && values.subcategory_id !== ""
+                    ? Number(values.subcategory_id)
+                    : null;
+
+            // Validate subcategory belongs to category
+            if (subcategoryId && !subcategories.some((s) => s.id === subcategoryId)) {
+                toast({
+                    title: "Error",
+                    description: "Please select a valid subcategory for the chosen category.",
+                    duration: 4000,
+                });
+                setDisabledButton(false);
+                return;
+            }
 
             const inputData = {
                 title: values.title,
-                content: values.content,
-                category_id: values.category_id,
-                subcategory_id: values.subcategory_id
-            }
+                content: extractPlainText(values.content),
+                category_id: categoryId,
+                subcategory_id: subcategoryId,
+            };
+
+            console.log("Submitting article:", inputData);
 
             const res = await post("/userguide/articles/store", inputData);
             const data = await res.json();
@@ -96,16 +192,21 @@ export default function AddArticle() {
             if (res.ok) {
                 toast({
                     title: "Success",
-                    description: `New article added successfully`,
+                    description: "New article added successfully",
                     duration: 4000,
                 });
                 reset();
-                navigate("/documentations/user_guide")
-                setDisabledButton(false)
+                navigate("/documentations/user_guide");
             } else {
+                let message = data.message || "Something went wrong";
+
+                if (message.includes("foreign key constraint fails")) {
+                    message = "Select a value.";
+                }
+
                 toast({
                     title: "Error",
-                    description: data.message || "",
+                    description: message,
                     duration: 5000,
                 });
             }
@@ -116,9 +217,11 @@ export default function AddArticle() {
                 description: "Something went wrong",
                 duration: 5000,
             });
-            setDisabledButton(false)
+        } finally {
+            setDisabledButton(false);
         }
     };
+
 
     const breadcrumb = (
         <Breadcrumb>
@@ -135,7 +238,7 @@ export default function AddArticle() {
     );
 
     return (
-        <>
+        <TooltipProvider>
             <UserAreaHeader pages={breadcrumb} />
             <div className="flex flex-col items-center justify-center w-full px-4">
                 <div className="w-full max-w-2xl">
@@ -178,7 +281,7 @@ export default function AddArticle() {
                                 {...register("subcategory_id")}
                                 className="w-full border border-input bg-background rounded-md px-3 py-2 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                             >
-                                <option value="">Select a subcategory</option>
+                                <option >Select a subcategory</option>
                                 {subcategories.map(sub => (
                                     <option key={sub.id} value={sub.id}>
                                         {sub.name}
@@ -187,17 +290,43 @@ export default function AddArticle() {
                             </select>
                         </div>
 
-                        {/* Content */}
-                        <div className="flex flex-col space-y-2">
-                            <label className="text-sm font-medium text-gray-700">Content</label>
-                            <textarea
-                                {...register("content")}
-                                placeholder="Write your content here..."
-                                className="w-full outline-none border border-input bg-background rounded-md px-3 py-2 text-sm min-h-[150px]"
-                            />
-                            {errors.content && (
-                                <p className="text-red-500 text-sm">{errors.content.message}</p>
-                            )}
+                        <div className="h-[400px] w-full">
+                            <Plate
+                                editor={editor}
+                                onChange={(e) => {
+                                    handleEditorChange(editor.children);
+                                }}>
+                                <FixedToolbar className="flex justify-start gap-1 rounded-t-lg">
+                                    <ToolbarButton onClick={() => editor.tf.h1.toggle()}>H1</ToolbarButton>
+                                    <ToolbarButton onClick={() => editor.tf.h2.toggle()}>H2</ToolbarButton>
+                                    <ToolbarButton onClick={() => editor.tf.h3.toggle()}>H3</ToolbarButton>
+                                    <ToolbarButton onClick={() => editor.tf.blockquote.toggle()}>
+                                        Quote
+                                    </ToolbarButton>
+                                    <MarkToolbarButton nodeType="bold" tooltip="Bold (⌘+B)">
+                                        B
+                                    </MarkToolbarButton>
+                                    <MarkToolbarButton nodeType="italic" tooltip="Italic (⌘+I)">
+                                        I
+                                    </MarkToolbarButton>
+                                    <MarkToolbarButton nodeType="underline" tooltip="Underline (⌘+U)">
+                                        U
+                                    </MarkToolbarButton>
+                                    <div className="flex-1" />
+                                    <ToolbarButton
+                                        className="px-2"
+                                        onClick={() => {
+                                            editor.tf.setValue(initialValue);
+                                        }}
+                                    >
+                                        Reset
+                                    </ToolbarButton>
+                                </FixedToolbar>
+
+                                <EditorContainer>
+                                    <Editor placeholder="Type your amazing content here..." />
+                                </EditorContainer>
+                            </Plate>
                         </div>
 
                         {/* Buttons */}
@@ -216,7 +345,7 @@ export default function AddArticle() {
                     </form>
                 </div>
             </div>
-        </>
+        </TooltipProvider>
     );
 
 }
