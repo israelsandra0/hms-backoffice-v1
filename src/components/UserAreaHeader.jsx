@@ -77,6 +77,11 @@ export default function UserAreaHeader({ pages }) {
         return savedState ? JSON.parse(savedState) : false;
     });
 
+    const [nowOpen, setNowOpen] = useState(() => {
+        const savedState = localStorage.getItem("collapsibleState");
+        return savedState ? JSON.parse(savedState) : false;
+    });
+
     // Update localStorage whenever the state changes
     useEffect(() => {
         localStorage.setItem("collapsibleState", JSON.stringify(isOpen));
@@ -128,8 +133,8 @@ export default function UserAreaHeader({ pages }) {
                         </NavLink>
 
                         <Collapsible
-                            open={isOpen}
-                            onOpenChange={setIsOpen}
+                            open={nowOpen}
+                            onOpenChange={setNowOpen}
                         >
                             <CollapsibleTrigger asChild className="mt-1">
                                 <div className="flex items-center ml-3 mt-2 justify-between">
@@ -149,7 +154,7 @@ export default function UserAreaHeader({ pages }) {
                                     User Guide
                                 </NavLink>
 
-                                <NavLink  to="/documentations/technical_guide" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                <NavLink to="/documentations/technical_guide" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     Technical Guide
                                 </NavLink>
 
