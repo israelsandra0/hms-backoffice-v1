@@ -149,7 +149,7 @@ export default function UserAreaHeader({ pages }) {
                                     User Guide
                                 </NavLink>
 
-                                <NavLink to="/#" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
+                                <NavLink  to="/documentations/technical_guide" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive ? 'active' : 'text-muted-foreground'}`}>
                                     Technical Guide
                                 </NavLink>
 
