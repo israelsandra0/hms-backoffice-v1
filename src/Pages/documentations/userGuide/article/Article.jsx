@@ -28,9 +28,11 @@ export default function Article() {
     });
 
 
-    const filteredArticles = articles.filter((article) =>
-        article.title.toLowerCase().includes(searchFilter.toLowerCase())
-    );
+    const filteredArticles = Array.isArray(articles)
+        ? articles.filter((article) =>
+            article.title.toLowerCase().includes(searchFilter.toLowerCase())
+        )
+        : [];
 
     // Pagination calculations
     const totalPages = Math.ceil(filteredArticles.length / itemsPerPage);
